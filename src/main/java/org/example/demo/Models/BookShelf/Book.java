@@ -216,6 +216,7 @@ public class Book {
                 statement4.addBatch();
             }
             statement4.executeBatch();
+            JDBC.closeConnection(connection);
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }

@@ -18,4 +18,13 @@ public class JDBC {
         String JDBC_PASSWORD = properties.getProperty("jdbc.password");
         return DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD);
     }
+    public static void closeConnection(Connection connection){
+        if (connection != null) {
+            try {
+                connection.close(); // Đóng kết nối
+            } catch (SQLException e) {
+                System.err.println("Lỗi khi đóng kết nối: " + e.getMessage());
+            }
+        }
+    }
 }
