@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import javafx.scene.image.Image;
+import org.example.demo.Database.JDBC;
 
 public class User extends Person {
 
@@ -43,11 +44,8 @@ public class User extends Person {
   public static void deleteFromDb(int id) {
     Connection conn = null;
     PreparedStatement pstmt = null;
-    String dbURL = "jdbc:mysql://localhost:3306/library";
-    String user = "root";
-    String password = "encoding1105";
     try {
-      conn = DriverManager.getConnection(dbURL, user, password);
+      conn = JDBC.getConnection();
 
       String sql = "DELETE FROM user WHERE id_user = ?";
       pstmt = conn.prepareStatement(sql);
@@ -91,12 +89,8 @@ public class User extends Person {
     Connection connection = null;
     PreparedStatement preparedStatement = null;
 
-    String dbURL = "jdbc:mysql://localhost:3306/library";
-    String user = "root";
-    String password = "encoding1105";
-
     try {
-      connection = DriverManager.getConnection(dbURL, user, password);
+      connection = JDBC.getConnection();
       System.out.println("Connection successful!");
 
       String query =
@@ -104,7 +98,6 @@ public class User extends Person {
               + "VALUES ( ?, ?, ?, ?, ?, ?, ?)";
 
       if (getAddressId(this.getAddress()) == -1) {
-        connection = DriverManager.getConnection(dbURL, user, password);
         System.out.println("Connection successful!");
         String q = "INSERT INTO address(name_address) "
             + "VALUES (?)";

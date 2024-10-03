@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javafx.scene.image.Image;
+import org.example.demo.Database.JDBC;
 
 public class Librarian extends Person {
 
@@ -90,11 +91,8 @@ public class Librarian extends Person {
   public static void deleteFromDb(int id) {
     Connection conn = null;
     PreparedStatement pstmt = null;
-    String dbURL = "jdbc:mysql://localhost:3306/library";
-    String user = "root";
-    String password = "encoding1105";
     try {
-      conn = DriverManager.getConnection(dbURL, user, password);
+      conn = JDBC.getConnection();
       String sql = "DELETE FROM librarian WHERE id_librarian = ?";
       pstmt = conn.prepareStatement(sql);
       pstmt.setInt(1, id);
@@ -134,17 +132,13 @@ public class Librarian extends Person {
     // add to db:
     Connection conn = null;
     PreparedStatement pstmt = null;
-    String dbURL = "jdbc:mysql://localhost:3306/library";
-    String user = "root";
-    String password = "encoding1105";
     try {
-      conn = DriverManager.getConnection(dbURL, user, password);
+      conn = JDBC.getConnection();
       System.out.println("Insert into user table...");
       String sql =
           "INSERT INTO librarian (name_librarian, birthday, phone_number_librarian, email_librarian, id_address, username_account, password_account, avatar)"
               + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
       if (getAddressId(this.getAddress()) == -1) {
-        conn = DriverManager.getConnection(dbURL, user, password);
         System.out.println("Connection successful!");
         String q = "INSERT INTO address(name_address) "
             + "VALUES (?)";

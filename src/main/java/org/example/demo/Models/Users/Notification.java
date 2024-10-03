@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import org.example.demo.Database.JDBC;
 
 public class Notification {
 
@@ -89,11 +90,8 @@ public class Notification {
     // add to db:
     Connection conn = null;
     PreparedStatement pstmt = null;
-    String dbURL = "jdbc:mysql://localhost:3306/library";
-    String user = "root";
-    String password = "encoding1105";
     try {
-      conn = DriverManager.getConnection(dbURL, user, password);
+      conn = JDBC.getConnection();
       System.out.println("Insert into user table...");
       String sql =
           "INSERT INTO notifications (title, content, id_user, is_seen) "

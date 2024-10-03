@@ -17,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javax.imageio.ImageIO;
+import org.example.demo.Database.JDBC;
 
 public abstract class Person {
 
@@ -170,10 +171,7 @@ public abstract class Person {
 
   protected static void retrieveImageFromDB(String outputImagePath)
       throws SQLException, IOException {
-    String url = "jdbc:mysql://localhost:3306/library";
-    String username = "root";
-    String password = "encoding1105";
-    Connection connection = DriverManager.getConnection(url, username, password);
+    Connection connection = JDBC.getConnection();
 
     String query = "SELECT image FROM test LIMIT 1";  // Lấy dòng đầu tiên trong bảng
     PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -200,12 +198,8 @@ public abstract class Person {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
 
-    String dbURL = "jdbc:mysql://localhost:3306/library";
-    String user = "root";
-    String password = "encoding1105";
-
     try {
-      conn = DriverManager.getConnection(dbURL, user, password);
+      conn = JDBC.getConnection();
 
       String sql = "SELECT id_address FROM address WHERE name_address = ?";
       pstmt = conn.prepareStatement(sql);
@@ -216,7 +210,7 @@ public abstract class Person {
         return rs.getInt("id_address");
       }
 
-    } catch (SQLException se) {
+    } catch (SQLException | IOException se) {
       se.printStackTrace();
     } finally {
       try {
@@ -239,12 +233,8 @@ public abstract class Person {
     PreparedStatement preparedStatement = null;
     ResultSet resultSet = null;
 
-    String dbURL = "jdbc:mysql://localhost:3306/library";
-    String user = "root";
-    String password = "encoding1105";
-
     try {
-      connection = DriverManager.getConnection(dbURL, user, password);
+      connection = JDBC.getConnection();
       System.out.println("Connection successful!");
 
       String query = "SELECT phone_number_user FROM user";
