@@ -11,12 +11,12 @@ import org.example.demo.Models.BookShelf.Book;
 public class GoogleBook {
 
   /**
-   * api create list book from a word
-   * get a json from google book api
-   * traverse that json to create books
+   * api create list book from a word.
+   * get a json from google book api.
+   * traverse json to create books.
    *
-   * @param prefix the word typed in text field
-   * @return a list of book
+   * @param prefix the word typed in text field.
+   * @return a list of book.
    */
   public static ArrayList<Book> getBooks(String prefix) {
     ArrayList<Book> listBooks = new ArrayList<>();
@@ -44,10 +44,9 @@ public class GoogleBook {
   }
 
   /**
-   * a function create a book from a JsonNode
-   *
-   * @param jsonNode a JsonNode contains all information of a book
-   * @return a book has information got from jsonNode
+   * a function create a book from a JsonNode.
+   * @param jsonNode a JsonNode contains all information of a book.
+   * @return a book has information got from jsonNode.
    */
   private static Book createBookFromJson(JsonNode jsonNode) {
     int id = -1;

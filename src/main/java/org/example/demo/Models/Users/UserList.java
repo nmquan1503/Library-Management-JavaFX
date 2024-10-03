@@ -15,6 +15,11 @@ public class UserList {
     users=new Trie();
   }
 
+  /**
+   *
+   * @param id id of user.
+   * @return user have this id.
+   */
   public User getUser(int id){
     User user=null;
     try{
@@ -40,22 +45,41 @@ public class UserList {
     return user;
   }
 
+  /**
+   * create a Image from blob.
+   * @param inputStream blob created from a image.
+   * @return Image.
+   */
   private Image createImageFromBlob(InputStream inputStream){
     if(inputStream==null)return null;
     return new Image(inputStream);
   }
 
+  /**
+   * insert user into trie and database.
+   * @param user user need to save info.
+   * @return id of user.
+   */
   public int insertUser(User user){
     int id=user.saveInfo();
     users.insertNode(user.getName(),id);
     return id;
   }
 
+  /**
+   * delete user from trie and database.
+   * @param user user need to delete.
+   */
   public void deleteUser(User user){
     user.removeInfo();
     users.deleteNode(user.getName(),user.getId());
   }
 
+  /**
+   * get all user have name start with prefixName.
+   * @param prefixName word given to search all user have name start with.
+   * @return list user.
+   */
   public ArrayList<User> getListUser(String prefixName){
     ArrayList<User> listUser=null;
     ArrayList<Integer>listId=users.getListIdStartWith(prefixName);
