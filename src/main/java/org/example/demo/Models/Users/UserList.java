@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import javafx.scene.image.Image;
+import org.example.demo.Database.JDBC;
 import org.example.demo.Models.Trie.Trie;
 
 public class UserList {
@@ -23,7 +24,7 @@ public class UserList {
   public User getUser(int id){
     User user=null;
     try{
-      Connection connection=JDBC.getConnection();
+      Connection connection= JDBC.getConnection();
       String query="select user.name_user as name_user, user.birthday as birthday, user.phone_number_user as phone_number, user.email_user as email, address.name_address as address, user.ban_date as ban_date, user.avatar as avatar from user join address in user.id_address=address.id_address where user.id_user = (?)";
       PreparedStatement preparedStatement=connection.prepareStatement(query);
       preparedStatement.setInt(1,id);

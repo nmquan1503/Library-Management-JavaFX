@@ -77,8 +77,9 @@ public class BookShelf {
           categories.add(resultSet.getString("name_category"));
         }
       }
+      connection.close();
       book = new Book(id, title, authors, publisher, publishedDate, description, pageCount,
-          categories, averageRating, ratingsCount, imageLink);
+          categories, ratingsCount, averageRating, imageLink);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -91,8 +92,8 @@ public class BookShelf {
    * @return id of book.
    */
   public int insertBook(Book book) {
-    int id = book.saveInfo();
-    books.insertNode(book.getName(), id);
+    int id = book.SaveInfo();
+    books.insertNode(book.getTitle(), id);
     return id;
   }
 
@@ -101,7 +102,7 @@ public class BookShelf {
    * @param book book need to delete.
    */
   public void deleteBook(Book book) {
-    books.deleteNode(book.getName(), book.getId());
+    books.deleteNode(book.getTitle(), book.getId());
     book.removeInfo();
   }
 

@@ -28,10 +28,11 @@ public class Book {
     private String imageLink;
 
 
-    public Book(String title, ArrayList<String> authors, String publisher,
+    public Book(int idBook, String title, ArrayList<String> authors, String publisher,
             int publishedDate,
             String description, int pageCount, ArrayList<String> categories, int ratingsCount,
             double averageRating, String imageLink) {
+        this.idBook=idBook;
         this.title = title;
         this.authors = authors;
         this.publisher = publisher;
