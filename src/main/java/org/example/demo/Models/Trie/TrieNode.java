@@ -1,5 +1,7 @@
 package org.example.demo.Models.Trie;
 
-public class TrieNode {
+import java.util.HashMap;
 
+public class TrieNode {
+    HashMap
 }

@@ -1,5 +1,21 @@
 package org.example.demo.Database;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Properties;
 
 public class JDBC {
 
+    public static Connection getConnection() throws SQLException, IOException {
+        Properties properties = new Properties();
+        FileInputStream fis = new FileInputStream("src/main/resources/database.properties");
+        properties.load(fis);
+        String JDBC_URL = properties.getProperty("jdbc.url");
+        String JDBC_USERNAME = properties.getProperty("jdbc.username");
+        String JDBC_PASSWORD = properties.getProperty("jdbc.password");
+        return DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD);
+    }
 }
