@@ -135,11 +135,4 @@ public class Notification {
     }
     return this.getId_user();
   }
-
-  public static void main(String[] args) {
-    Notification noti = new Notification("jjk", "fighting",
-        new org.example.demo.Models.Users.Date(1990, 4, 25), 1, false);
-
-    System.out.println(noti.SaveInfo());
-  }
 }

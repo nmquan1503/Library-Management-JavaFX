@@ -152,19 +152,4 @@ public class User extends Person {
     }
     return this.getId();
   }
-
-  public static void main(String[] args) throws SQLException, FileNotFoundException {
-    String named = "Johnny Clear";
-    Date birthday = new Date(1990, 4, 25);
-    String address = "A St, Springfield";
-    Date banEndTime = new Date(2025, 11, 31);
-    String email = "john.doe@example.com";
-    String phoneNumber = "+1262303620";
-    Image image = new Image(new FileInputStream("C:\\Users\\HP\\Pictures\\my photo\\uet.png"));
-    User sample = new User(named, birthday, address, email, phoneNumber, image, banEndTime);
-    System.out.println(sample.SaveInfo());
-    System.out.println(sample.getId());
-    User.deleteFromDb(3);
-
-  }
 }

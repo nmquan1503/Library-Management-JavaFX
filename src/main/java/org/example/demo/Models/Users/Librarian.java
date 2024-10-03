@@ -197,17 +197,4 @@ public class Librarian extends Person {
     }
     return this.getId();
   }
-
-  public static void main(String[] args) throws FileNotFoundException {
-    String named = "Sheldon";
-    Date birthday = new org.example.demo.Models.Users.Date(1990, 4, 25);
-    String address = "NYC";
-    String email = "leo.doe@example.com";
-    String phoneNumber = "+1262324620";
-    Image image = new Image(new FileInputStream("C:\\Users\\HP\\Pictures\\my photo\\uet.png"));
-    Librarian sample = new Librarian(named, birthday, address, email, phoneNumber, image, "hello",
-        "say_hi");
-    System.out.println(sample.SaveInfo());
-    System.out.println(sample.getId());
-  }
 }
