@@ -16,6 +16,14 @@ public class Notification {
   private int id_user;
   private boolean isSeen;
 
+  public Notification(String title, String content, Date time, int id_user) {
+    this.title = title;
+    this.content = content;
+    this.time = time;
+    this.id_user = id_user;
+    this.isSeen = false;
+  }
+
   public Notification(String title, String content, Date time, int id_user,
       boolean isSeen) {
     this.title = title;
@@ -71,6 +79,10 @@ public class Notification {
 
   public void setSeen(boolean seen) {
     isSeen = seen;
+  }
+
+  public void setSeen() {
+    isSeen = true;
   }
 
   public int SaveInfo() {

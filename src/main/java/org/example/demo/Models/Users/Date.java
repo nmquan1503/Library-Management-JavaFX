@@ -18,7 +18,7 @@ public class Date extends java.sql.Date {
 
   public static void main(String[] args) {
     Date myDate = new Date(2024, 10, 3); // Create a date
-    Date newDate = myDate.add(31); // Add 5 days
+    Date newDate = myDate.add(31); // Add 31 days
     System.out.println("New Date: " + newDate);
   }
 }
