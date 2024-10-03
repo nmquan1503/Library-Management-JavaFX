@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Properties;
 import org.example.demo.Database.JDBC;
@@ -14,7 +16,6 @@ public class Book {
 
 
     private int idBook;
-    private int idAuthor;
     private String title;
     private ArrayList<String> authors;
     private String publisher;
@@ -136,29 +137,41 @@ public class Book {
     public int SaveInfo() {
         try (Connection connection = JDBC.getConnection()){
             // Tạo câu lệnh SQL với placeholders
-            String sql = "INSERT INTO books (id_book, title, desciption, publisher, published_date, page_count, count_rating, average_rating, link_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO books (title, desciption, publisher, published_date, page_count, count_rating, average_rating, link_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             // Sử dụng PreparedStatement để chèn dữ liệu
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setInt(1, idBook);
-            statement.setString(2, title);
-            statement.setString(3, description);
-            statement.setString(4, publisher);
-            statement.setInt(5,publishedDate);
-            statement.setInt(6,pageCount);
-            statement.setInt(7,ratingsCount);
-            statement.setDouble(8,averageRating);
-            statement.setString(9,imageLink);
-
-            String sql1 = "INSERT INTO authors (id_author, name_author) VALUES (?,?)";
-            PreparedStatement statement1 = connection.prepareStatement(sql1);
-            for (String s: authors) {
-                statement1.setInt(1,idAuthor);
-                statement1.setString(2,s);
-                statement1.addBatch();
-            }
-
-            statement1.executeBatch();
+            PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, title);
+            statement.setString(2, description);
+            statement.setString(3, publisher);
+            statement.setInt(4,publishedDate);
+            statement.setInt(5,pageCount);
+            statement.setInt(6,ratingsCount);
+            statement.setDouble(7,averageRating);
+            statement.setString(8,imageLink);
             statement.executeUpdate();
+            ResultSet generatedKeys1 = statement.getGeneratedKeys();
+            if (generatedKeys1.next()) {
+                idBook = generatedKeys1.getInt(1);
+            }
+            String sql1 = "INSERT INTO authors (name_author) VALUES (?)";
+            ArrayList<Integer> idAuthor = new ArrayList<>();
+            PreparedStatement statement1 = connection.prepareStatement(sql1, Statement.RETURN_GENERATED_KEYS);
+            for (String s: authors) {
+                statement1.setString(1,s);
+                statement1.executeUpdate();
+                ResultSet generatedKeys = statement1.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    idAuthor.add( (Integer) generatedKeys.getInt(1));
+                }
+            }
+            String sql2 = "INSERT INTO book_author (id_book, id_author) VALUES (?,?)";
+            PreparedStatement statement2 = connection.prepareStatement(sql2);
+            for ( Integer x: idAuthor){
+                statement2.setInt(1,idBook);
+                statement2.setInt(2,x.intValue());
+                statement2.addBatch();
+            }
+            statement2.executeBatch();
         }
         catch (IOException | SQLException e) {
             e.printStackTrace();
