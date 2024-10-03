@@ -70,7 +70,9 @@ public class BookShelf {
     return book;
   }
   public int insertBook(Book book){
-    return book.saveInfo();
+    int id=book.saveInfo();
+    books.insertNode(book.getName(),id);
+    return id;
   }
   public void deleteBook(Book book){
     books.deleteNode(book.getName(),book.getId());
@@ -80,8 +82,9 @@ public class BookShelf {
     ArrayList<Book> listBook=new ArrayList<>();
     ArrayList<Integer> listId=books.getListIdStartWith(prefix);
     for(int i:listId){
-      listBook.add()
+      listBook.add(getBook(i));
     }
+    return listBook;
   }
 
 }
