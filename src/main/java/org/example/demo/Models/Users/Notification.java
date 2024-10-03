@@ -111,25 +111,11 @@ public class Notification {
       if (rs.next()) {
         this.setId(rs.getInt(1));
       }
-
+      JDBC.closeConnection(conn);
     } catch (SQLException se) {
       se.printStackTrace();
     } catch (Exception e) {
       e.printStackTrace();
-    } finally {
-      try {
-        if (pstmt != null) {
-          conn.close();
-        }
-      } catch (SQLException se) {
-      }
-      try {
-        if (conn != null) {
-          conn.close();
-        }
-      } catch (SQLException se) {
-        se.printStackTrace();
-      }
     }
     return this.getId_user();
   }

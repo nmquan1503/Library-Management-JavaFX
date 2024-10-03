@@ -190,7 +190,7 @@ public abstract class Person {
       System.out.println("No image found in the table.");
     }
 
-    connection.close();
+    JDBC.closeConnection(connection);
   }
 
   protected static int getAddressId(String address) {

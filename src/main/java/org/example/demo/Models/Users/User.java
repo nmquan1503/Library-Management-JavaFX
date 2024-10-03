@@ -56,24 +56,11 @@ public class User extends Person {
       } else {
         System.out.println("No record found with the specified ID.");
       }
+      JDBC.closeConnection(conn);
     } catch (SQLException se) {
       se.printStackTrace();
     } catch (Exception e) {
       e.printStackTrace();
-    } finally {
-      try {
-        if (pstmt != null) {
-          conn.close();
-        }
-      } catch (SQLException se) {
-      }
-      try {
-        if (conn != null) {
-          conn.close();
-        }
-      } catch (SQLException se) {
-        se.printStackTrace();
-      }
     }
   }
 
@@ -126,22 +113,11 @@ public class User extends Person {
       if (rs.next()) {
         this.setId(rs.getInt(1));
       }
-
+      JDBC.closeConnection(connection);
     } catch (SQLException e) {
       e.printStackTrace();
     } catch (Exception e) {
       throw new RuntimeException(e);
-    } finally {
-      try {
-        if (preparedStatement != null) {
-          preparedStatement.close();
-        }
-        if (connection != null) {
-          connection.close();
-        }
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
     }
     return this.getId();
   }
