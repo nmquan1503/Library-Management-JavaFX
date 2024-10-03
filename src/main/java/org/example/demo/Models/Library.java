@@ -30,8 +30,8 @@ public class Library {
    * @return id_borrowing after add information in database.
    */
   public int borrowBook(Book book, User user, Date borrowedDate) {
+    Connection connection=JDBC.getConnection();
     try {
-      Connection connection = JDBC.getConnection();
       String query = "insert into borrowing(id_book,id_user,borrowed_date,due_date,returned_date) values (?,?,?,?,?)";
       PreparedStatement preparedStatement = connection.prepareStatement(query);
       preparedStatement.setInt(1, book.getId());
@@ -44,9 +44,11 @@ public class Library {
       if (key.next()) {
         return key.getInt(1);
       }
-      JDBC.closeConnection(connection);
     } catch (Exception e) {
       e.printStackTrace();
+    }
+    finally {
+      JDBC.closeConnection(connection);
     }
     return -1;
   }
@@ -57,16 +59,18 @@ public class Library {
    * @param returnDate day that user return book to library.
    */
   public void returnBook(int id_borrowing, Date returnDate) {
+    Connection connection=JDBC.getConnection();
     try {
-      Connection connection = JDBC.getConnection();
       String query = "update borrowing set returned_date = (?) where id_borrowing = (?)";
       PreparedStatement preparedStatement = connection.prepareStatement(query);
       preparedStatement.setDate(1, returnDate);
       preparedStatement.setInt(2, id_borrowing);
       preparedStatement.executeUpdate();
-      JDBC.closeConnection(connection);
     } catch (Exception e) {
       e.printStackTrace();
+    }
+    finally {
+      JDBC.closeConnection(connection);
     }
   }
 

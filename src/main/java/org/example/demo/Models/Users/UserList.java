@@ -23,8 +23,8 @@ public class UserList {
    */
   public User getUser(int id){
     User user=null;
+    Connection connection=JDBC.getConnection();
     try{
-      Connection connection= JDBC.getConnection();
       String query="select user.name_user as name_user, user.birthday as birthday, user.phone_number_user as phone_number, user.email_user as email, address.name_address as address, user.ban_date as ban_date, user.avatar as avatar from user join address in user.id_address=address.id_address where user.id_user = (?)";
       PreparedStatement preparedStatement=connection.prepareStatement(query);
       preparedStatement.setInt(1,id);
@@ -42,6 +42,9 @@ public class UserList {
     }
     catch (Exception e){
       e.printStackTrace();
+    }
+    finally {
+      JDBC.closeConnection(connection);
     }
     return user;
   }
@@ -62,7 +65,7 @@ public class UserList {
    * @return id of user.
    */
   public int insertUser(User user){
-    int id=user.saveInfo();
+    int id=user.SaveInfo();
     users.insertNode(user.getName(),id);
     return id;
   }
@@ -82,7 +85,7 @@ public class UserList {
    * @return list user.
    */
   public ArrayList<User> getListUser(String prefixName){
-    ArrayList<User> listUser=null;
+    ArrayList<User> listUser=new ArrayList<>();
     ArrayList<Integer>listId=users.getListIdStartWith(prefixName);
     for(int i:listId){
       listUser.add(getUser(i));

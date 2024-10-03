@@ -22,8 +22,8 @@ public class BookShelf {
    */
   public Book getBook(int id) {
     Book book = null;
+    Connection connection=JDBC.getConnection();
     try {
-      Connection connection = JDBC.getConnection();
       String query = "select title, description, publisher, published_date,page_count,count_rating,average_rating,link_image from books where id_book=(?)";
       PreparedStatement preparedStatement = connection.prepareStatement(query);
       preparedStatement.setInt(1, id);
@@ -77,11 +77,13 @@ public class BookShelf {
           categories.add(resultSet.getString("name_category"));
         }
       }
-      connection.close();
       book = new Book(id, title, authors, publisher, publishedDate, description, pageCount,
           categories, ratingsCount, averageRating, imageLink);
     } catch (Exception e) {
       e.printStackTrace();
+    }
+    finally {
+      JDBC.closeConnection(connection);
     }
     return book;
   }
