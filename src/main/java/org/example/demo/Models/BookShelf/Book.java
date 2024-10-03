@@ -41,7 +41,7 @@ public class Book {
         this.categories = categories;
         this.ratingsCount = ratingsCount;
         this.averageRating = averageRating;
-        this.imageLink=imageLink;
+        this.imageLink = imageLink;
     }
 
     public Book() {
@@ -134,8 +134,9 @@ public class Book {
     public void setImageLink(String imageLink) {
         this.imageLink = imageLink;
     }
+
     public int SaveInfo() {
-        try (Connection connection = JDBC.getConnection()){
+        try (Connection connection = JDBC.getConnection()) {
             // Tạo câu lệnh SQL với placeholders
             String sql = "INSERT INTO books (title, desciption, publisher, published_date, page_count, count_rating, average_rating, link_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             // Sử dụng PreparedStatement để chèn dữ liệu
@@ -143,37 +144,79 @@ public class Book {
             statement.setString(1, title);
             statement.setString(2, description);
             statement.setString(3, publisher);
-            statement.setInt(4,publishedDate);
-            statement.setInt(5,pageCount);
-            statement.setInt(6,ratingsCount);
-            statement.setDouble(7,averageRating);
-            statement.setString(8,imageLink);
+            statement.setInt(4, publishedDate);
+            statement.setInt(5, pageCount);
+            statement.setInt(6, ratingsCount);
+            statement.setDouble(7, averageRating);
+            statement.setString(8, imageLink);
             statement.executeUpdate();
             ResultSet generatedKeys1 = statement.getGeneratedKeys();
             if (generatedKeys1.next()) {
                 idBook = generatedKeys1.getInt(1);
             }
             String sql1 = "INSERT INTO authors (name_author) VALUES (?)";
+            String selectQuery = "SELECT id_author FROM authors WHERE name_author = ?";
             ArrayList<Integer> idAuthor = new ArrayList<>();
             PreparedStatement statement1 = connection.prepareStatement(sql1, Statement.RETURN_GENERATED_KEYS);
-            for (String s: authors) {
-                statement1.setString(1,s);
-                statement1.executeUpdate();
-                ResultSet generatedKeys = statement1.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    idAuthor.add( (Integer) generatedKeys.getInt(1));
+            for (String s : authors) {
+                try (PreparedStatement pstmt = connection.prepareStatement(selectQuery)) {
+                    pstmt.setString(1, s);
+                    ResultSet rs = pstmt.executeQuery();
+                    if (rs.next()) {
+                        idAuthor.add((Integer) rs.getInt("id_author"));
+                    }
+                    else {
+                        statement1.setString(1, s);
+                        statement1.executeUpdate();
+                        ResultSet generatedKeys = statement1.getGeneratedKeys();
+                        if (generatedKeys.next()) {
+                            idAuthor.add((Integer) generatedKeys.getInt(1));
+                        }
+                    }
                 }
+
             }
             String sql2 = "INSERT INTO book_author (id_book, id_author) VALUES (?,?)";
             PreparedStatement statement2 = connection.prepareStatement(sql2);
-            for ( Integer x: idAuthor){
-                statement2.setInt(1,idBook);
-                statement2.setInt(2,x.intValue());
+
+            for (Integer x : idAuthor) {
+                statement2.setInt(1, idBook);
+                statement2.setInt(2, x.intValue());
                 statement2.addBatch();
             }
             statement2.executeBatch();
-        }
-        catch (IOException | SQLException e) {
+            ArrayList<Integer> idCate = new ArrayList<>();
+            String sql3 = "INSERT INTO categories (name_category) VALUES (?)";
+            selectQuery = "SELECT id_category FROM categories WHERE name_category = ?";
+            PreparedStatement statement3 = connection.prepareStatement(sql3,Statement.RETURN_GENERATED_KEYS);
+            for ( String s: categories) {
+
+                try (PreparedStatement pstmt = connection.prepareStatement(selectQuery)) {
+                    pstmt.setString(1, s);
+                    ResultSet rs = pstmt.executeQuery();
+                    if (rs.next()) {
+                        idCate.add((Integer) rs.getInt("id_category"));
+                    }
+                    else {
+                        statement3.setString(1, s);
+                        statement3.executeUpdate();
+                        ResultSet generatedKeys = statement3.getGeneratedKeys();
+                        if (generatedKeys.next()) {
+                            idCate.add((Integer) generatedKeys.getInt(1));
+                        }
+                    }
+                }
+            }
+
+            String sql4 = "INSERT INTO book_category (id_book,id_category) VALUES (?,?)";
+            PreparedStatement statement4 = connection.prepareStatement(sql4);
+            for ( Integer x : idCate) {
+                statement4.setInt(1,idBook);
+                statement4.setInt(2,x.intValue());
+                statement4.addBatch();
+            }
+            statement4.executeBatch();
+        } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
         return idBook;
