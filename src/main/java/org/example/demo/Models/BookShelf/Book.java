@@ -45,6 +45,8 @@ public class Book {
     }
 
     public Book() {
+        authors = new ArrayList<>();
+        categories= new ArrayList<>();
     }
 
     public int getId() {
@@ -138,7 +140,7 @@ public class Book {
     public int SaveInfo() {
         try (Connection connection = JDBC.getConnection()) {
             // Tạo câu lệnh SQL với placeholders
-            String sql = "INSERT INTO books (title, desciption, publisher, published_date, page_count, count_rating, average_rating, link_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO books (title, description, publisher, published_date, page_count, count_rating, average_rating, link_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             // Sử dụng PreparedStatement để chèn dữ liệu
             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, title);
@@ -149,10 +151,23 @@ public class Book {
             statement.setInt(6, ratingsCount);
             statement.setDouble(7, averageRating);
             statement.setString(8, imageLink);
-            statement.executeUpdate();
-            ResultSet generatedKeys1 = statement.getGeneratedKeys();
-            if (generatedKeys1.next()) {
-                idBook = generatedKeys1.getInt(1);
+            try {
+                statement.executeUpdate();
+                ResultSet generatedKeys1 = statement.getGeneratedKeys();
+                if (generatedKeys1.next()) {
+                    idBook = generatedKeys1.getInt(1);
+                }
+            }
+            catch (SQLException e) {
+                String selectQuery = "SELECT id_book FROM books WHERE title = ? AND link_image = ? ";
+                PreparedStatement pstmt = connection.prepareStatement(selectQuery);
+                pstmt.setString(1,title);
+                pstmt.setString(2,imageLink);
+                ResultSet resultSet = pstmt.executeQuery();
+                if (resultSet.next()) {
+                    idBook = resultSet.getInt("id_book");
+                }
+                return idBook;
             }
             String sql1 = "INSERT INTO authors (name_author) VALUES (?)";
             String selectQuery = "SELECT id_author FROM authors WHERE name_author = ?";
@@ -220,6 +235,7 @@ public class Book {
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
+
         return idBook;
     }
 }
