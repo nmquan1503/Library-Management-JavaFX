@@ -77,15 +77,4 @@ public class TextToSpeech {
       System.out.println("Sound stopped.");
     }
   }
-
-  public static void main(String[] args) {
-    try {
-      TextToSpeech tts = new TextToSpeech();
-      tts.speak("Vậy tại sao em gieo vào tim này xót xa", null);
-      Thread.sleep(1000);
-      tts.speak("Chỉ vì thứ tha ngỡ sao anh cứ như người thứ 3", null);
-    } catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    }
-  }
 }
