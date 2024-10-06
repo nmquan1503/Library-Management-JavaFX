@@ -21,8 +21,7 @@ public class TextToSpeech {
       }
       String encodeText = URLEncoder.encode(text, "UTF-8");
 
-//      String languageCode = (lang != null && lang.getCode() != null) ? lang.getCode() : "vi";
-      String languageCode = "vi";
+      String languageCode = lang.getCode();
       String link =
           "https://clients5.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=" + languageCode
               + "&q=" + encodeText;

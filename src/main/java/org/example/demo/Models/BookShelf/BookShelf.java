@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.example.demo.Database.JDBC;
 import org.example.demo.Models.Trie.Trie;
 
@@ -11,18 +13,37 @@ public class BookShelf {
 
   private Trie books;
 
+  /**
+   * create trie of books table.
+   */
   public BookShelf() {
     books = new Trie();
+    Connection connection = JDBC.getConnection();
+    try {
+      String query = "select id_book, title " +
+          "from books";
+      PreparedStatement preparedStatement = connection.prepareStatement(query);
+      ResultSet resultSet = preparedStatement.executeQuery();
+      while (resultSet.next()) {
+        int id = resultSet.getInt("id_book");
+        String title = resultSet.getString("title");
+        books.insertNode(title, id);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    JDBC.closeConnection(connection);
   }
 
   /**
    * create a book that have a given id.
+   *
    * @param id id of book.
    * @return book have this id.
    */
   public Book getBook(int id) {
     Book book = null;
-    Connection connection=JDBC.getConnection();
+    Connection connection = JDBC.getConnection();
     try {
       String query = "select title, description, publisher, published_date,page_count,count_rating,average_rating,link_image from books where id_book=(?)";
       PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -51,10 +72,10 @@ public class BookShelf {
         averageRating = resultSet.getDouble("average_rating");
         imageLink = resultSet.getString("link_image");
       }
-      query = "select authors.name_author as name_author "+
-              "from authors "+
-              "join book_author in authors.id_author=book_author.id "+
-              "where book_author.id_book=(?)";
+      query = "select authors.name_author as name_author " +
+          "from authors " +
+          "join book_author on authors.id_author=book_author.id_author " +
+          "where book_author.id_book=(?)";
       preparedStatement = connection.prepareStatement(query);
       preparedStatement.setInt(1, id);
       resultSet = preparedStatement.executeQuery();
@@ -64,10 +85,10 @@ public class BookShelf {
           authors.add(resultSet.getString("name_author"));
         }
       }
-      query = "select categories.name_category as name_category "+
-              "from categories "+
-              "join book_category in categories.id_category=book_category.id_category "+
-              "where book_category.id_book = (?)";
+      query = "select categories.name_category as name_category " +
+          "from categories " +
+          "join book_category on categories.id_category=book_category.id_category " +
+          "where book_category.id_book = (?)";
       preparedStatement = connection.prepareStatement(query);
       preparedStatement.setInt(1, id);
       resultSet = preparedStatement.executeQuery();
@@ -81,8 +102,7 @@ public class BookShelf {
           categories, ratingsCount, averageRating, imageLink);
     } catch (Exception e) {
       e.printStackTrace();
-    }
-    finally {
+    } finally {
       JDBC.closeConnection(connection);
     }
     return book;
@@ -90,6 +110,7 @@ public class BookShelf {
 
   /**
    * insert book to trie and database.
+   *
    * @param book book need to insert.
    * @return id of book.
    */
@@ -101,6 +122,7 @@ public class BookShelf {
 
   /**
    * delete book from trie and database.
+   *
    * @param book book need to delete.
    */
   public void deleteBook(Book book) {
@@ -110,6 +132,7 @@ public class BookShelf {
 
   /**
    * create all book have name start with prefix.
+   *
    * @param prefix word that books start with.
    * @return list book.
    */

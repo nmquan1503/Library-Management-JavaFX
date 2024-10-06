@@ -27,6 +27,13 @@ public class User extends Person {
     this.banEndTime = banEndTime;
   }
 
+  public User(int id, String name, java.sql.Date birthday, String address, String email,
+      Image avatar,
+      String phoneNumber, Date banEndTime) {
+    super(id, name, birthday, address, email, avatar, phoneNumber);
+    this.banEndTime = banEndTime;
+  }
+
   public Date getBanEndTime() {
     return banEndTime;
   }
@@ -120,5 +127,21 @@ public class User extends Person {
       throw new RuntimeException(e);
     }
     return this.getId();
+  }
+
+  public void removeInfo() {
+    Connection connection = JDBC.getConnection();
+
+    try {
+      String query = "delete from user " +
+          "where id_user=(?)";
+      PreparedStatement preparedStatement = connection.prepareStatement(query);
+      preparedStatement.setInt(1, id);
+      preparedStatement.executeUpdate();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    JDBC.closeConnection(connection);
   }
 }

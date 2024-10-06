@@ -51,6 +51,17 @@ public abstract class Person {
     this.avatar = avatar;
   }
 
+  public Person(int id, String name, Date birthday, String address, String email, Image avatar,
+      String phoneNumber) {
+    this.id = id;
+    this.name = name;
+    this.birthday = birthday;
+    this.address = address;
+    this.email = email;
+    this.avatar = avatar;
+    this.phoneNumber = phoneNumber;
+  }
+
   public int getId() {
     return id;
   }
@@ -210,7 +221,7 @@ public abstract class Person {
         return rs.getInt("id_address");
       }
 
-    } catch (SQLException | IOException se) {
+    } catch (Exception se) {
       se.printStackTrace();
     } finally {
       try {

@@ -6,14 +6,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Iterator;
 import org.example.demo.Models.BookShelf.Book;
+import org.example.demo.Models.BookShelf.BookShelf;
 
 public class GoogleBook {
 
   /**
-   * api create list book from a word.
-   * get a json from google book api.
-   * traverse json to create books.
+   * api create list book from a word. get a json from google book api. traverse json to create
+   * books.
    *
    * @param prefix the word typed in text field.
    * @return a list of book.
@@ -27,6 +28,7 @@ public class GoogleBook {
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
       connection.setRequestMethod("GET");
       int responseCode = connection.getResponseCode();
+      System.out.println("response code:"+responseCode);
       if (responseCode == HttpURLConnection.HTTP_OK) {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jsonNode = mapper.readTree(connection.getInputStream());
@@ -45,6 +47,7 @@ public class GoogleBook {
 
   /**
    * a function create a book from a JsonNode.
+   *
    * @param jsonNode a JsonNode contains all information of a book.
    * @return a book has information got from jsonNode.
    */
@@ -104,6 +107,15 @@ public class GoogleBook {
     }
 
     return new Book(id, title, authors, publisher, publishedDate, description, pageCount,
-        categories, averageRating, ratingsCount, imageLink);
+        categories, ratingsCount, averageRating, imageLink);
+  }
+
+  public static void main(String[] args) {
+    ArrayList<Book> books = getBooks("Harry Potter");
+    System.out.println("books size="+books.size());
+    BookShelf bookShelf = new BookShelf();
+    for (Book book : books) {
+      bookShelf.insertBook(book);
+    }
   }
 }
