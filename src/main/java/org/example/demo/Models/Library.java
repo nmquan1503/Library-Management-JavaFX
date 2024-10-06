@@ -1,6 +1,5 @@
 package org.example.demo.Models;
 
-import java.sql.Date;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,6 +8,7 @@ import org.example.demo.Database.JDBC;
 import org.example.demo.Models.BookShelf.Book;
 import org.example.demo.Models.BookShelf.BookShelf;
 import org.example.demo.Models.Suggestion.Suggestion;
+import org.example.demo.Models.Users.Date;
 import org.example.demo.Models.Users.User;
 import org.example.demo.Models.Users.UserList;
 

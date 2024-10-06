@@ -218,7 +218,7 @@ public class Book {
             }
             statement4.executeBatch();
             JDBC.closeConnection(connection);
-        } catch (IOException | SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return idBook;

@@ -2,7 +2,6 @@ package org.example.demo.Models.Users;
 
 import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -32,13 +31,13 @@ public class UserList {
       if(!resultSet.isBeforeFirst())return null;
       resultSet.next();
       String name_user=resultSet.getString("name_user");
-      Date birthday=resultSet.getDate("birthday");
+      Date birthday= (Date) resultSet.getDate("birthday");
       String phone_number=resultSet.getString("phone_number");
       String email_user=resultSet.getString("email");
       String address=resultSet.getString("address");
-      Date ban_date=resultSet.getDate("ban_date");
+      Date ban_date= (Date) resultSet.getDate("ban_date");
       Image avatar=createImageFromBlob(resultSet.getBinaryStream("avatar"));
-      user=new User(name_user,birthday,phone_number,email_user,address,ban_date,avatar);
+      user=new User(name_user,birthday,phone_number,email_user,address,avatar,ban_date);
     }
     catch (Exception e){
       e.printStackTrace();

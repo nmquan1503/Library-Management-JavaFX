@@ -18,7 +18,7 @@ public class Suggestion {
 
   public Suggestion(User user) {
     id = user.getId();
-    icon = user.getImage();
+    icon = user.getAvatar();
     content = user.getName();
   }
 
