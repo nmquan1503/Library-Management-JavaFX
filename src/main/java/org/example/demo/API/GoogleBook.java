@@ -35,7 +35,9 @@ public class GoogleBook {
         JsonNode items = jsonNode.get("items");
         if (items.isArray()) {
           for (JsonNode item : items) {
-            listBooks.add(createBookFromJson(item));
+            if(item.has("volumeInfo")) {
+              listBooks.add(createBookFromJson(item.get("volumeInfo")));
+            }
           }
         }
       }

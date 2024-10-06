@@ -170,68 +170,71 @@ public class Book {
         }
         return idBook;
       }
-      String sql1 = "INSERT INTO authors (name_author) VALUES (?)";
-      String selectQuery = "SELECT id_author FROM authors WHERE name_author = ?";
-      ArrayList<Integer> idAuthor = new ArrayList<>();
-      PreparedStatement statement1 = connection.prepareStatement(sql1,
-          Statement.RETURN_GENERATED_KEYS);
-      for (String s : authors) {
-        try (PreparedStatement pstmt = connection.prepareStatement(selectQuery)) {
-          pstmt.setString(1, s);
-          ResultSet rs = pstmt.executeQuery();
-          if (rs.next()) {
-            idAuthor.add((Integer) rs.getInt("id_author"));
-          } else {
-            statement1.setString(1, s);
-            statement1.executeUpdate();
-            ResultSet generatedKeys = statement1.getGeneratedKeys();
-            if (generatedKeys.next()) {
-              idAuthor.add((Integer) generatedKeys.getInt(1));
+      if(authors!=null) {
+        String sql1 = "INSERT INTO authors (name_author) VALUES (?)";
+        String selectQuery = "SELECT id_author FROM authors WHERE name_author = ?";
+        ArrayList<Integer> idAuthor = new ArrayList<>();
+        PreparedStatement statement1 = connection.prepareStatement(sql1,
+            Statement.RETURN_GENERATED_KEYS);
+        for (String s : authors) {
+          try (PreparedStatement pstmt = connection.prepareStatement(selectQuery)) {
+            pstmt.setString(1, s);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+              idAuthor.add((Integer) rs.getInt("id_author"));
+            } else {
+              statement1.setString(1, s);
+              statement1.executeUpdate();
+              ResultSet generatedKeys = statement1.getGeneratedKeys();
+              if (generatedKeys.next()) {
+                idAuthor.add((Integer) generatedKeys.getInt(1));
+              }
+            }
+          }
+        }
+        String sql2 = "INSERT INTO book_author (id_book, id_author) VALUES (?,?)";
+        PreparedStatement statement2 = connection.prepareStatement(sql2);
+
+        for (Integer x : idAuthor) {
+          statement2.setInt(1, idBook);
+          statement2.setInt(2, x.intValue());
+          statement2.addBatch();
+        }
+        statement2.executeBatch();
+      }
+      if(categories!=null) {
+        ArrayList<Integer> idCate = new ArrayList<>();
+        String sql3 = "INSERT INTO categories (name_category) VALUES (?)";
+        String selectQuery = "SELECT id_category FROM categories WHERE name_category = ?";
+        PreparedStatement statement3 = connection.prepareStatement(sql3,
+            Statement.RETURN_GENERATED_KEYS);
+        for (String s : categories) {
+
+          try (PreparedStatement pstmt = connection.prepareStatement(selectQuery)) {
+            pstmt.setString(1, s);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+              idCate.add((Integer) rs.getInt("id_category"));
+            } else {
+              statement3.setString(1, s);
+              statement3.executeUpdate();
+              ResultSet generatedKeys = statement3.getGeneratedKeys();
+              if (generatedKeys.next()) {
+                idCate.add((Integer) generatedKeys.getInt(1));
+              }
             }
           }
         }
 
-      }
-      String sql2 = "INSERT INTO book_author (id_book, id_author) VALUES (?,?)";
-      PreparedStatement statement2 = connection.prepareStatement(sql2);
-
-      for (Integer x : idAuthor) {
-        statement2.setInt(1, idBook);
-        statement2.setInt(2, x.intValue());
-        statement2.addBatch();
-      }
-      statement2.executeBatch();
-      ArrayList<Integer> idCate = new ArrayList<>();
-      String sql3 = "INSERT INTO categories (name_category) VALUES (?)";
-      selectQuery = "SELECT id_category FROM categories WHERE name_category = ?";
-      PreparedStatement statement3 = connection.prepareStatement(sql3,
-          Statement.RETURN_GENERATED_KEYS);
-      for (String s : categories) {
-
-        try (PreparedStatement pstmt = connection.prepareStatement(selectQuery)) {
-          pstmt.setString(1, s);
-          ResultSet rs = pstmt.executeQuery();
-          if (rs.next()) {
-            idCate.add((Integer) rs.getInt("id_category"));
-          } else {
-            statement3.setString(1, s);
-            statement3.executeUpdate();
-            ResultSet generatedKeys = statement3.getGeneratedKeys();
-            if (generatedKeys.next()) {
-              idCate.add((Integer) generatedKeys.getInt(1));
-            }
-          }
+        String sql4 = "INSERT INTO book_category (id_book,id_category) VALUES (?,?)";
+        PreparedStatement statement4 = connection.prepareStatement(sql4);
+        for (Integer x : idCate) {
+          statement4.setInt(1, idBook);
+          statement4.setInt(2, x.intValue());
+          statement4.addBatch();
         }
+        statement4.executeBatch();
       }
-
-      String sql4 = "INSERT INTO book_category (id_book,id_category) VALUES (?,?)";
-      PreparedStatement statement4 = connection.prepareStatement(sql4);
-      for (Integer x : idCate) {
-        statement4.setInt(1, idBook);
-        statement4.setInt(2, x.intValue());
-        statement4.addBatch();
-      }
-      statement4.executeBatch();
       JDBC.closeConnection(connection);
     } catch (Exception e) {
       e.printStackTrace();
