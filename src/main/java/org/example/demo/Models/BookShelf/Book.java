@@ -26,12 +26,13 @@ public class Book {
   private double averageRating;
   private int ratingsCount;
   private String imageLink;
+  private int quantity;
 
 
   public Book(int idBook, String title, ArrayList<String> authors, String publisher,
       int publishedDate,
       String description, int pageCount, ArrayList<String> categories, int ratingsCount,
-      double averageRating, String imageLink) {
+      double averageRating, String imageLink,int quantity) {
     this.idBook = idBook;
     this.title = title;
     this.authors = authors;
@@ -43,6 +44,7 @@ public class Book {
     this.ratingsCount = ratingsCount;
     this.averageRating = averageRating;
     this.imageLink = imageLink;
+    this.quantity=quantity;
   }
 
   public Book() {
@@ -138,10 +140,14 @@ public class Book {
     this.imageLink = imageLink;
   }
 
+  public int getQuantity(){return quantity;}
+
+  public void setQuantity(int quantity){this.quantity=quantity;}
+
   public int SaveInfo() {
     try (Connection connection = JDBC.getConnection()) {
       // Tạo câu lệnh SQL với placeholders
-      String sql = "INSERT INTO books (title, description, publisher, published_date, page_count, count_rating, average_rating, link_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+      String sql = "INSERT INTO books (title, description, publisher, published_date, page_count, count_rating, average_rating, link_image, quantity) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
       // Sử dụng PreparedStatement để chèn dữ liệu
       PreparedStatement statement = connection.prepareStatement(sql,
           Statement.RETURN_GENERATED_KEYS);
@@ -153,6 +159,7 @@ public class Book {
       statement.setInt(6, ratingsCount);
       statement.setDouble(7, averageRating);
       statement.setString(8, imageLink);
+      statement.setInt(9,quantity);
       try {
         statement.executeUpdate();
         ResultSet generatedKeys1 = statement.getGeneratedKeys();

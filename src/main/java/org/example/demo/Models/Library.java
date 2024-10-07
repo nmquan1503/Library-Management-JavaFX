@@ -32,8 +32,16 @@ public class Library {
   public int borrowBook(Book book, User user, Date borrowedDate) {
     Connection connection=JDBC.getConnection();
     try {
-      String query = "insert into borrowing(id_book,id_user,borrowed_date,due_date,returned_date) values (?,?,?,?,?)";
-      PreparedStatement preparedStatement = connection.prepareStatement(query);
+      String query= "update books "+
+                    "set quantity = (?) "+
+                    "where id_book = (?)";
+      PreparedStatement preparedStatement=connection.prepareStatement(query);
+      preparedStatement.setInt(1,book.getQuantity()-1);
+      preparedStatement.setInt(2,book.getId());
+      preparedStatement.executeUpdate();
+
+      query = "insert into borrowing(id_book,id_user,borrowed_date,due_date,returned_date) values (?,?,?,?,?)";
+      preparedStatement = connection.prepareStatement(query);
       preparedStatement.setInt(1, book.getId());
       preparedStatement.setInt(2, user.getId());
       preparedStatement.setDate(3, borrowedDate);
@@ -66,6 +74,26 @@ public class Library {
       preparedStatement.setDate(1, returnDate);
       preparedStatement.setInt(2, id_borrowing);
       preparedStatement.executeUpdate();
+
+      query=  "select borrowing.id_book as id_book"+
+                      "books.quantity as quantity"+
+              "from borrowing "+
+              "join books on borrowing.id_book=books.id_book "+
+              "where borrowing.id_borrowing = (?)";
+      preparedStatement=connection.prepareStatement(query);
+      ResultSet resultSet=preparedStatement.executeQuery();
+      if(resultSet.next()){
+        int id_book=resultSet.getInt("id_book");
+        int quantity=resultSet.getInt("quantity");
+        query="update books "+
+              "set quantity = (?) "+
+              "where id_book = (?)";
+        preparedStatement=connection.prepareStatement(query);
+        preparedStatement.setInt(1,quantity+1);
+        preparedStatement.setInt(2,id_book);
+        preparedStatement.executeUpdate();
+      }
+
     } catch (Exception e) {
       e.printStackTrace();
     }
