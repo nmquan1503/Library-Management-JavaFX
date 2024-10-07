@@ -45,7 +45,7 @@ public class BookShelf {
     Book book = null;
     Connection connection = JDBC.getConnection();
     try {
-      String query = "select title, description, publisher, published_date,page_count,count_rating,average_rating,link_image from books where id_book=(?)";
+      String query = "select title, description, publisher, published_date,page_count,count_rating,average_rating,link_image, quantity from books where id_book=(?)";
       PreparedStatement preparedStatement = connection.prepareStatement(query);
       preparedStatement.setInt(1, id);
       ResultSet resultSet = preparedStatement.executeQuery();
@@ -62,6 +62,7 @@ public class BookShelf {
       double averageRating = 0;
       int ratingsCount = 0;
       String imageLink = null;
+      int quantity=0;
       while (resultSet.next()) {
         title = resultSet.getString("title");
         description = resultSet.getString("description");
@@ -71,6 +72,7 @@ public class BookShelf {
         ratingsCount = resultSet.getInt("count_rating");
         averageRating = resultSet.getDouble("average_rating");
         imageLink = resultSet.getString("link_image");
+        quantity=resultSet.getInt("quantity");
       }
       query = "select authors.name_author as name_author " +
           "from authors " +
@@ -99,7 +101,7 @@ public class BookShelf {
         }
       }
       book = new Book(id, title, authors, publisher, publishedDate, description, pageCount,
-          categories, ratingsCount, averageRating, imageLink);
+          categories, ratingsCount, averageRating, imageLink,quantity);
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
