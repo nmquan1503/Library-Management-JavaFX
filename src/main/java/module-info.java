@@ -8,6 +8,7 @@ module org.example.demo {
   requires jlayer;
   requires com.fasterxml.jackson.databind;
   requires jdk.compiler;
+  requires de.jensd.fx.glyphs.fontawesome;
 
   opens org.example.demo.Controllers;
   exports org.example.demo;

@@ -65,6 +65,7 @@ public class GoogleBook {
     double averageRating = 0;
     int ratingsCount = 0;
     String imageLink = null;
+    int quantity=0;
 
     if (jsonNode.has("title")) {
       title = jsonNode.get("title").asText();
@@ -109,7 +110,7 @@ public class GoogleBook {
     }
 
     return new Book(id, title, authors, publisher, publishedDate, description, pageCount,
-        categories, ratingsCount, averageRating, imageLink);
+        categories, ratingsCount, averageRating, imageLink,quantity);
   }
 
   public static void main(String[] args) {
