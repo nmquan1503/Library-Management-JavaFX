@@ -1,0 +1,8 @@
+#mainPane{
+  -fx-background-color: rgba(220,220,220,1);
+  -fx-border-radius:8;
+  -fx-background-radius:8;
+}
+#BackgroundPane{
+  -fx-background-color:rgba(250,110,150);
+}

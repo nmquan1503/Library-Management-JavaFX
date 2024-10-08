@@ -1,4 +1,5 @@
 package org.example.demo.Controllers;
 
-public class BaseController {
+public class HomeController {
+
 }

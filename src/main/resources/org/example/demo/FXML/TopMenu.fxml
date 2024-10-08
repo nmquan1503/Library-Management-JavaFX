@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox alignment="TOP_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo.Controllers.BaseController">
+   <children>
+      <AnchorPane prefHeight="60.0" prefWidth="475.0">
+         <children>
+            <TextField layoutY="15.0" prefHeight="25.0" prefWidth="346.0" />
+         </children>
+      </AnchorPane>
+      <JFXButton contentDisplay="CENTER" ellipsisString="" prefHeight="60.0" prefWidth="60.0">
+         <graphic>
+            <FontAwesomeIconView glyphName="BELL" size="30" />
+         </graphic>
+      </JFXButton>
+      <JFXButton contentDisplay="CENTER" ellipsisString="" prefHeight="60.0" prefWidth="60.0">
+         <graphic>
+            <FontAwesomeIconView glyphName="USER" size="30" />
+         </graphic>
+      </JFXButton>
+      <JFXButton contentDisplay="CENTER" ellipsisString="" prefHeight="60.0" prefWidth="60.0" textAlignment="CENTER">
+         <graphic>
+            <FontAwesomeIconView glyphName="GEAR" size="30" wrappingWidth="29.285714149475098" />
+         </graphic>
+      </JFXButton>
+   </children>
+</HBox>

@@ -1,150 +1,150 @@
 package org.example.demo.Models.BookShelf;
-import java.io.IOException;
+
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
+import java.util.List;
 import org.example.demo.Database.JDBC;
-import org.example.demo.Models.BookShelf.Book;
 import org.example.demo.Models.Trie.Trie;
 
 public class BookShelf {
-    private Trie books;
-    public BookShelf() {
-        books = new Trie();
-        String selectQuery = "SELECT title, id_book FROM books";
-        try (Connection connection = JDBC.getConnection()) {
-            try (PreparedStatement pstmt = connection.prepareStatement(selectQuery)) {
-                ResultSet rs = pstmt.executeQuery();
-                while(rs.next()) {
-                    String s = rs.getString("title");
-                    int t = rs.getInt("id_book");
-                    books.insertNode(s,t);
-                }
-            }
-            JDBC.closeConnection(connection);
-        } catch (IOException | SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    public BookShelf(Trie books) {
-        this.books=books;
-    }
-    public Trie getBooks() {
-        return books;
-    }
-    public Book getBook( int id ) {
-        Book res = new Book();
-        try (Connection connection = JDBC.getConnection()) {
-            String selectQuery = "SELECT title,description,publisher,published_date,page_count, count_rating, average_rating, link_image FROM books WHERE id_book = ?";
-            try (PreparedStatement pstmt = connection.prepareStatement(selectQuery)) {
-                pstmt.setInt(1, id);
-                ResultSet rs = pstmt.executeQuery();
-                if (rs.next()) {
-                    res.setTitle(rs.getString("title"));
-                    res.setDescription(rs.getString("description"));
-                    res.setPublisher(rs.getString("publisher"));
-                    res.setPublishedDate(rs.getInt("published_date"));
-                    res.setPageCount(rs.getInt("page_count"));
-                    res.setRatingsCount(rs.getInt("count_rating"));
-                    res.setAverageRating(rs.getDouble("average_rating"));
-                    res.setImageLink(rs.getString("link_image"));
-                }
-                else {
-                    return res;
-                }
-            }
-            selectQuery = "SELECT id_author FROM book_author WHERE id_book = ?";
-            ArrayList<Integer> idAuthor = new ArrayList<>();
-            try (PreparedStatement pstmt = connection.prepareStatement(selectQuery)) {
-                pstmt.setInt(1, id);
-                ResultSet rs = pstmt.executeQuery();
-                while (rs.next()) {
-                    idAuthor.add(rs.getInt("id_author"));
-                }
-            }
 
-            selectQuery = "SELECT name_author FROM authors WHERE id_author = ?";
-            ArrayList<String> nameAuthor = new ArrayList<>();
-            try (PreparedStatement pstmt = connection.prepareStatement(selectQuery)) {
-                for (Integer x : idAuthor) {
-                    pstmt.setInt(1,x);
-                    ResultSet rs = pstmt.executeQuery();
-                    if (rs.next()) {
-                        nameAuthor.add(rs.getString("name_author"));
-                    }
-                }
-            }
-            res.setAuthors(nameAuthor);
+  private Trie books;
 
-            selectQuery = "SELECT id_category FROM book_category WHERE id_book = ?";
-            ArrayList<Integer> idCate = new ArrayList<>();
-            try (PreparedStatement pstmt = connection.prepareStatement(selectQuery)) {
-                pstmt.setInt(1, id);
-                ResultSet rs = pstmt.executeQuery();
-                while (rs.next()) {
-                    idCate.add(rs.getInt("id_category"));
-                }
-            }
+  /**
+   * create trie of books table.
+   */
+  public BookShelf() {
+    books = new Trie();
+    Connection connection = JDBC.getConnection();
+    try {
+      String query = "select id_book, title " +
+          "from books";
+      PreparedStatement preparedStatement = connection.prepareStatement(query);
+      ResultSet resultSet = preparedStatement.executeQuery();
+      while (resultSet.next()) {
+        int id = resultSet.getInt("id_book");
+        String title = resultSet.getString("title");
+        books.insertNode(title, id);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    JDBC.closeConnection(connection);
+  }
 
-            selectQuery = "SELECT name_category FROM categories WHERE id_category = ?";
-            ArrayList<String> nameCate = new ArrayList<>();
-            try (PreparedStatement pstmt = connection.prepareStatement(selectQuery)) {
-                for (Integer x : idCate) {
-                    pstmt.setInt(1,x);
-                    ResultSet rs = pstmt.executeQuery();
-                    if (rs.next()) {
-                        nameCate.add(rs.getString("name_category"));
-                    }
-                }
-            }
-            res.setCategories(nameCate);
-            res.setId(id);
-            JDBC.closeConnection(connection);
-        } catch (IOException | SQLException e) {
-            e.printStackTrace();
+  /**
+   * create a book that have a given id.
+   *
+   * @param id id of book.
+   * @return book have this id.
+   */
+  public Book getBook(int id) {
+    Book book = null;
+    Connection connection = JDBC.getConnection();
+    try {
+      String query = "select title, description, publisher, published_date,page_count,count_rating,average_rating,link_image, quantity from books where id_book=(?)";
+      PreparedStatement preparedStatement = connection.prepareStatement(query);
+      preparedStatement.setInt(1, id);
+      ResultSet resultSet = preparedStatement.executeQuery();
+      if (!resultSet.isBeforeFirst()) {
+        return null;
+      }
+      String title = null;
+      ArrayList<String> authors = null;
+      String publisher = null;
+      int publishedDate = -1;
+      String description = null;
+      int pageCount = -1;
+      ArrayList<String> categories = null;
+      double averageRating = 0;
+      int ratingsCount = 0;
+      String imageLink = null;
+      int quantity=0;
+      while (resultSet.next()) {
+        title = resultSet.getString("title");
+        description = resultSet.getString("description");
+        publisher = resultSet.getString("publisher");
+        publishedDate = resultSet.getInt("published_date");
+        pageCount = resultSet.getInt("page_count");
+        ratingsCount = resultSet.getInt("count_rating");
+        averageRating = resultSet.getDouble("average_rating");
+        imageLink = resultSet.getString("link_image");
+        quantity=resultSet.getInt("quantity");
+      }
+      query = "select authors.name_author as name_author " +
+          "from authors " +
+          "join book_author on authors.id_author=book_author.id_author " +
+          "where book_author.id_book=(?)";
+      preparedStatement = connection.prepareStatement(query);
+      preparedStatement.setInt(1, id);
+      resultSet = preparedStatement.executeQuery();
+      if (resultSet.isBeforeFirst()) {
+        authors = new ArrayList<>();
+        while (resultSet.next()) {
+          authors.add(resultSet.getString("name_author"));
         }
-        return res;
+      }
+      query = "select categories.name_category as name_category " +
+          "from categories " +
+          "join book_category on categories.id_category=book_category.id_category " +
+          "where book_category.id_book = (?)";
+      preparedStatement = connection.prepareStatement(query);
+      preparedStatement.setInt(1, id);
+      resultSet = preparedStatement.executeQuery();
+      if (resultSet.isBeforeFirst()) {
+        categories = new ArrayList<>();
+        while (resultSet.next()) {
+          categories.add(resultSet.getString("name_category"));
+        }
+      }
+      book = new Book(id, title, authors, publisher, publishedDate, description, pageCount,
+          categories, ratingsCount, averageRating, imageLink,quantity);
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      JDBC.closeConnection(connection);
     }
-    public int insertBook( Book book) {
-        int id;
-        id=book.SaveInfo();
-        books.insertNode(book.getTitle(),id);
-        return id;
-    }
-    public void deleteBook(Book book) {
-        String selectQuery = "DELETE FROM books WHERE id_book = ?";
-        String deleteOrphanAuthorsQuery = "DELETE FROM authors WHERE NOT EXISTS (SELECT 1 FROM book_author WHERE authors.id_author = book_author.id_author)";
-        String deleteOrphanCategoriesQuery = "DELETE FROM categories WHERE NOT EXISTS (SELECT 1 FROM book_category WHERE categories.id_category = book_category.id_category)";
-        try (Connection connection = JDBC.getConnection()) {
-            try (PreparedStatement pstmt = connection.prepareStatement(selectQuery)) {
-                pstmt.setInt(1,book.getId());
-                pstmt.executeUpdate();
-            }
-            try (PreparedStatement pstmtDeleteAuthors = connection.prepareStatement(deleteOrphanAuthorsQuery)) {
-                pstmtDeleteAuthors.executeUpdate();
-            }
-            try (PreparedStatement pstmtDeleteCategory = connection.prepareStatement(deleteOrphanCategoriesQuery)) {
-                pstmtDeleteCategory.executeUpdate();
-            }
-            JDBC.closeConnection(connection);
-        }
-        catch (IOException | SQLException e) {
-            e.printStackTrace();
-        }
-        books.deleteNode(book.getTitle(),book.getId());
+    return book;
+  }
 
+  /**
+   * insert book to trie and database.
+   *
+   * @param book book need to insert.
+   * @return id of book.
+   */
+  public int insertBook(Book book) {
+    int id = book.SaveInfo();
+    books.insertNode(book.getTitle(), id);
+    return id;
+  }
 
+  /**
+   * delete book from trie and database.
+   *
+   * @param book book need to delete.
+   */
+  public void deleteBook(Book book) {
+    books.deleteNode(book.getTitle(), book.getId());
+    book.removeInfo();
+  }
+
+  /**
+   * create all book have name start with prefix.
+   *
+   * @param prefix word that books start with.
+   * @return list book.
+   */
+  public ArrayList<Book> getListBook(String prefix) {
+    ArrayList<Book> listBook = new ArrayList<>();
+    ArrayList<Integer> listId = books.getListIdStartWith(prefix);
+    for (int i : listId) {
+      listBook.add(getBook(i));
     }
-    ArrayList<Book> getListBook(String prefix) {
-        ArrayList<Book> res = new ArrayList<>();
-        ArrayList<Integer> list = books.getListIdStartWith(prefix);
-        for ( Integer x : list) {
-            res.add(getBook(x));
-        }
-        return res;
-    }
+    return listBook;
+  }
+
 }
