@@ -1,5 +1,6 @@
 package org.example.demo.Models;
 
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,6 +8,8 @@ import java.util.ArrayList;
 import org.example.demo.Database.JDBC;
 import org.example.demo.Models.BookShelf.Book;
 import org.example.demo.Models.BookShelf.BookShelf;
+import org.example.demo.Models.Borrowing.BorrowHistory;
+import org.example.demo.Models.Borrowing.Borrowing;
 import org.example.demo.Models.Suggestion.Suggestion;
 import org.example.demo.Models.Users.Date;
 import org.example.demo.Models.Users.User;
@@ -16,10 +19,12 @@ public class Library {
 
   private BookShelf bookShelf;
   private UserList userList;
+  private BorrowHistory borrowHistory;
 
   public Library() {
     this.bookShelf = new BookShelf();
     this.userList = new UserList();
+    borrowHistory=new BorrowHistory();
   }
 
   /**
@@ -30,35 +35,7 @@ public class Library {
    * @return id_borrowing after add information in database.
    */
   public int borrowBook(Book book, User user, Date borrowedDate) {
-    Connection connection=JDBC.getConnection();
-    try {
-      String query= "update books "+
-                    "set quantity = (?) "+
-                    "where id_book = (?)";
-      PreparedStatement preparedStatement=connection.prepareStatement(query);
-      preparedStatement.setInt(1,book.getQuantity()-1);
-      preparedStatement.setInt(2,book.getId());
-      preparedStatement.executeUpdate();
-
-      query = "insert into borrowing(id_book,id_user,borrowed_date,due_date,returned_date) values (?,?,?,?,?)";
-      preparedStatement = connection.prepareStatement(query);
-      preparedStatement.setInt(1, book.getId());
-      preparedStatement.setInt(2, user.getId());
-      preparedStatement.setDate(3, borrowedDate);
-      preparedStatement.setDate(4, borrowedDate.add(10));
-      preparedStatement.setDate(5, null);
-      preparedStatement.executeUpdate();
-      ResultSet key = preparedStatement.getGeneratedKeys();
-      if (key.next()) {
-        return key.getInt(1);
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    finally {
-      JDBC.closeConnection(connection);
-    }
-    return -1;
+    return borrowHistory.addBorrowing(new Borrowing(-1,book.getId(),user.getId(),borrowedDate,borrowedDate.add(10),null));
   }
 
   /**
@@ -67,46 +44,14 @@ public class Library {
    * @param returnDate day that user return book to library.
    */
   public void returnBook(int id_borrowing, Date returnDate) {
-    Connection connection=JDBC.getConnection();
-    try {
-      String query = "update borrowing set returned_date = (?) where id_borrowing = (?)";
-      PreparedStatement preparedStatement = connection.prepareStatement(query);
-      preparedStatement.setDate(1, returnDate);
-      preparedStatement.setInt(2, id_borrowing);
-      preparedStatement.executeUpdate();
-
-      query=  "select borrowing.id_book as id_book"+
-                      "books.quantity as quantity"+
-              "from borrowing "+
-              "join books on borrowing.id_book=books.id_book "+
-              "where borrowing.id_borrowing = (?)";
-      preparedStatement=connection.prepareStatement(query);
-      ResultSet resultSet=preparedStatement.executeQuery();
-      if(resultSet.next()){
-        int id_book=resultSet.getInt("id_book");
-        int quantity=resultSet.getInt("quantity");
-        query="update books "+
-              "set quantity = (?) "+
-              "where id_book = (?)";
-        preparedStatement=connection.prepareStatement(query);
-        preparedStatement.setInt(1,quantity+1);
-        preparedStatement.setInt(2,id_book);
-        preparedStatement.executeUpdate();
-      }
-
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    finally {
-      JDBC.closeConnection(connection);
-    }
+    borrowHistory.updateReturnedDateOfBorrowing(id_borrowing,returnDate);
   }
 
   /**
    * @param prefix a word given to create suggestions of all book have prefix of title like that word.
    * @return list of suggestions.
    */
-  public ArrayList<Suggestion> getUserSuggestions(String prefix) {
+  public ArrayList<Suggestion> getBookSuggestions(String prefix) {
     ArrayList<Book> listBook = bookShelf.getListBook(prefix);
     ArrayList<Suggestion> listSuggestions = new ArrayList<>();
     for (Book book : listBook) {
@@ -120,7 +65,7 @@ public class Library {
    * @param prefix a word given to create suggestions of all user have prefix of name like that word.
    * @return list of suggestions.
    */
-  public ArrayList<Suggestion> getBookSuggestions(String prefix) {
+  public ArrayList<Suggestion> getUserSuggestions(String prefix) {
     ArrayList<User> listUser = userList.getListUser(prefix);
     ArrayList<Suggestion> listSuggestions = new ArrayList<>();
     for (User user : listUser) {
@@ -128,5 +73,30 @@ public class Library {
     }
     return listSuggestions;
   }
+
+  public Book getBook(int idBook){
+    return bookShelf.getBook(idBook);
+  }
+
+  public User getUser(int idUser){
+    return userList.getUser(idUser);
+  }
+
+  public ArrayList<Borrowing> getAllBorrowing(){
+    return borrowHistory.getAllBorrowing();
+  }
+  
+  public ArrayList<Borrowing> getListBorrowingFromBook(int idBook){
+    return borrowHistory.getListBorrowingFromBook(idBook);
+  }
+
+  public ArrayList<Borrowing> getListBorrowingFromUser(int idUser){
+    return borrowHistory.getListBorrowingFromUser(idUser);
+  }
+
+  public Borrowing getBorrowing(int idBorrowing){
+    return borrowHistory.getBorrowing(idBorrowing);
+  }
+
 
 }
