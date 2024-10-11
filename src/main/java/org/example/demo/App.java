@@ -10,13 +10,12 @@ import java.util.Objects;
 
 import static javafx.application.Application.launch;
 
-
 public class App extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
     Parent root = FXMLLoader.load(
-        Objects.requireNonNull(getClass().getResource("/org/example/demo/FXML/Base.fxml")));
+        Objects.requireNonNull(getClass().getResource("/org/example/demo/FXML/Home.fxml")));
     primaryStage.setTitle("Library Management");
     primaryStage.setResizable(false);
     primaryStage.setScene(new Scene(root));

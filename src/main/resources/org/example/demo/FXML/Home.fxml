@@ -2,9 +2,12 @@
 
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="BackgroundPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="960.0" stylesheets="@../CSS/Base.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
-  <fx:include layoutX="60" source="TopMenu.fxml" />
-  <fx:include source="LeftMenu.fxml" />
-   <AnchorPane id="mainPane" layoutX="60.0" layoutY="60.0" prefHeight="540.0" prefWidth="900.0" />
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+  prefHeight="600.0" prefWidth="960.0" stylesheets="@../CSS/Base.css"
+  xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+  <fx:include layoutX="60" source="TopMenu.fxml"/>
+  <fx:include source="LeftMenu.fxml"/>
+  <AnchorPane id="mainPane" layoutX="60.0" layoutY="60.0" prefHeight="540.0" prefWidth="900.0"
+    stylesheets="@../CSS/Base.css"/>
 
 </AnchorPane>

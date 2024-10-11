@@ -1,5 +1,5 @@
 package org.example.demo.Controllers;
 
-public class HomeController {
-
+public class HomeController extends BaseController {
+  
 }

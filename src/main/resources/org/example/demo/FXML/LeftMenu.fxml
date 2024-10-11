@@ -5,37 +5,37 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="60.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo.Controllers.BaseController">
+<VBox id="left-menu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="60.0" stylesheets="@../CSS/Base.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo.Controllers.BaseController">
    <children>
       <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-      <JFXButton contentDisplay="CENTER" ellipsisString="" prefHeight="60.0" prefWidth="60.0">
+      <JFXButton contentDisplay="CENTER" ellipsisString="" prefHeight="60.0" prefWidth="60.0" styleClass="btn-left">
          <graphic>
-            <FontAwesomeIconView glyphName="BAR_CHART" size="20" />
+            <FontAwesomeIconView fill="#a8a7a7" glyphName="BAR_CHART" size="20" styleClass="icon_left" />
          </graphic>
       </JFXButton>
-      <JFXButton contentDisplay="CENTER" ellipsisString="" prefHeight="60.0" prefWidth="60.0">
+      <JFXButton contentDisplay="CENTER" ellipsisString="" prefHeight="60.0" prefWidth="60.0" styleClass="btn-left">
          <graphic>
-            <FontAwesomeIconView glyphName="BOOK" size="20" />
+            <FontAwesomeIconView glyphName="BOOK" size="20" styleClass="icon_left" />
          </graphic>
       </JFXButton>
-      <JFXButton contentDisplay="CENTER" ellipsisString="" prefHeight="60.0" prefWidth="60.0">
+      <JFXButton contentDisplay="CENTER" ellipsisString="" prefHeight="60.0" prefWidth="60.0" styleClass="btn-left">
          <graphic>
-            <FontAwesomeIconView glyphName="USERS" size="20" />
+            <FontAwesomeIconView glyphName="USERS" size="20" styleClass="icon_left" />
          </graphic>
       </JFXButton>
-      <JFXButton contentDisplay="CENTER" ellipsisString="" prefHeight="60.0" prefWidth="60.0">
+      <JFXButton contentDisplay="CENTER" ellipsisString="" prefHeight="60.0" prefWidth="60.0" styleClass="btn-left">
          <graphic>
-            <FontAwesomeIconView glyphName="HANDSHAKE_ALT" size="20" />
+            <FontAwesomeIconView glyphName="HANDSHAKE_ALT" size="20" styleClass="icon_left" />
          </graphic>
       </JFXButton>
-      <JFXButton contentDisplay="CENTER" ellipsisString="" prefHeight="60.0" prefWidth="60.0">
+      <JFXButton contentDisplay="CENTER" ellipsisString="" prefHeight="60.0" prefWidth="60.0" styleClass="btn-left">
          <graphic>
-            <FontAwesomeIconView glyphName="MAIL_REPLY_ALL" size="20" />
+            <FontAwesomeIconView glyphName="MAIL_REPLY_ALL" size="20" styleClass="icon_left" />
          </graphic>
       </JFXButton>
-      <JFXButton contentDisplay="CENTER" ellipsisString="" prefHeight="60.0" prefWidth="60.0">
+      <JFXButton contentDisplay="CENTER" ellipsisString="" prefHeight="60.0" prefWidth="60.0" styleClass="btn-left">
          <graphic>
-            <FontAwesomeIconView glyphName="EDIT" size="20" />
+            <FontAwesomeIconView glyphName="EDIT" size="20" styleClass="icon_left" />
          </graphic>
       </JFXButton>
    </children>
