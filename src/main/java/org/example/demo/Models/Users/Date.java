@@ -22,41 +22,38 @@ public class Date extends java.sql.Date {
   }
 
   @Override
-  public void setYear(int year) {
-    super.setYear(year - 1900);
-  }
-
-  @Override
   public int getMonth() {
     return super.getMonth() + 1;
   }
 
   @Override
-  public void setMonth(int month) {
-    super.setMonth(month - 1);
+  public int getDay() {
+    return super.getDay();
   }
 
-  @Override
-  public int getDate() {
-    return super.getDate();
-  }
-
-  @Override
-  public void setDate(int date) {
-    super.setDate(date);
-  }
-
-  /**
-   * @param other
-   * @return 1 if this > other, 0 if this = other and -1 otherwise
-   */
-  int compare(Date other) {
-    if (this.before(other)) {
-      return -1;
-    } else if (this.after(other)) {
-      return 1;
-    } else {
-      return 0;
+  public boolean isAfter(Date date) {
+    if (this.getYear() > date.getYear()) {
+      return true;
     }
+    if (this.getMonth() > date.getMonth()) {
+      return true;
+    }
+    return this.getDay() > date.getDay();
+  }
+
+  public boolean isEqual(Date date) {
+    return this.getYear() == date.getYear() &&
+        this.getMonth() == date.getMonth() &&
+        this.getDay() == date.getDay();
+  }
+
+  public boolean isBefore(Date date) {
+    if (this.getYear() < date.getYear()) {
+      return true;
+    }
+    if (this.getMonth() < date.getMonth()) {
+      return true;
+    }
+    return this.getDay() < date.getDay();
   }
 }
