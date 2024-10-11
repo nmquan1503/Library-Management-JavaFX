@@ -16,6 +16,39 @@ public class Date extends java.sql.Date {
         calendar.get(Calendar.DAY_OF_MONTH));
   }
 
+  @Override
+  public int getYear(){
+    return super.getYear()+1900;
+  }
+
+  @Override
+  public int getMonth(){
+    return super.getMonth()+1;
+  }
+
+  @Override
+  public int getDay(){
+    return super.getDay();
+  }
+
+  public boolean isAfter(Date date){
+    if(this.getYear()>date.getYear())return true;
+    if(this.getMonth()>date.getMonth())return true;
+    return this.getDay() > date.getDay();
+  }
+
+  public boolean isEqual(Date date){
+    return this.getYear()==date.getYear() &&
+        this.getMonth()==date.getMonth() &&
+        this.getDay()==date.getDay();
+  }
+
+  public boolean isBefore(Date date){
+    if(this.getYear()<date.getYear())return true;
+    if(this.getMonth()<date.getMonth())return true;
+    return this.getDay()<date.getDay();
+  }
+
   public static void main(String[] args) {
     Date myDate = new Date(2024, 10, 3); // Create a date
     Date newDate = myDate.add(31); // Add 31 days
