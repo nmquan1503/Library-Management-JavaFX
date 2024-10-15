@@ -11,8 +11,6 @@ import org.example.demo.Models.Language;
 
 public class TextToSpeech {
 
-<<<<<<< HEAD
-=======
   private AdvancedPlayer player;
   private Thread playThread; // Thread to control playback
 
@@ -78,5 +76,4 @@ public class TextToSpeech {
       System.out.println("Sound stopped.");
     }
   }
->>>>>>> 8fb21401abf863368ac0c8304533cc4cb9aaba72
 }

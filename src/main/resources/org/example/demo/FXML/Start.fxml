@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="BackgroundPane" fx:id="BackgroundPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#BackgroundRequest" prefHeight="600.0" prefWidth="960.0" stylesheets="@../CSS/BaseStart.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo.Controllers.StartController">
+   <children>
+      <AnchorPane id="mainPane" fx:id="mainPane" layoutX="262.0" layoutY="50.0" onMouseClicked="#mainRequest" prefHeight="499.0" prefWidth="436.0" stylesheets="@../CSS/Base.css">
+         <children>
+            <HBox alignment="CENTER" layoutX="23.0" layoutY="203.0" prefHeight="42.0" prefWidth="390.0" spacing="5.0">
+               <children>
+                  <FontAwesomeIconView glyphName="USER_ALT" size="20">
+                     <font>
+                        <Font size="20.0" />
+                     </font></FontAwesomeIconView>
+                  <TextField id="Starttext-field" fx:id="accountField" prefHeight="26.0" prefWidth="329.0" promptText="Tên đăng nhập" stylesheets="@../CSS/Base.css">
+                     <font>
+                        <Font name="Arial" size="15.0" />
+                     </font>
+                  </TextField>
+                  <JFXButton fx:id="deleteAccount" ellipsisString="" onAction="#removeAccount" text=" ">
+                     <graphic>
+                        <FontAwesomeIconView glyphName="TIMES" size="20" styleClass="x-icon">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </FontAwesomeIconView>
+                     </graphic>
+                  </JFXButton>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" layoutX="23.0" layoutY="279.0" prefHeight="42.0" prefWidth="390.0" spacing="10.0">
+               <children>
+                  <FontAwesomeIconView glyphName="LOCK" size="20" styleClass="lock-icon">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </FontAwesomeIconView>
+                  <StackPane prefHeight="42.0" prefWidth="406.0">
+                     <children>
+                        <TextField fx:id="passwordText" prefHeight="214.0" prefWidth="406.0" promptText="Mật khẩu">
+                           <font>
+                              <Font name="Arial" size="15.0" />
+                           </font>
+                        </TextField>
+                        <PasswordField fx:id="passwordField" prefHeight="102.0" prefWidth="306.0" promptText="Mật khẩu">
+                           <font>
+                              <Font name="Arial" size="15.0" />
+                           </font>
+                        </PasswordField>
+                     </children>
+                  </StackPane>
+                  <JFXButton fx:id="deletePassword" ellipsisString="" onAction="#removePassword" text=" ">
+                     <graphic>
+                        <FontAwesomeIconView glyphName="TIMES" size="20" styleClass="x-icon">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </FontAwesomeIconView>
+                     </graphic>
+                  </JFXButton>
+                  <JFXButton fx:id="hidePassword" ellipsisString="" onAction="#togglePasswordVisibility">
+                     <graphic>
+                        <FontAwesomeIconView fx:id="eyeIcon" glyphName="EYE_SLASH" size="20">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </FontAwesomeIconView>
+                     </graphic>
+                  </JFXButton>
+               </children>
+            </HBox>
+            <JFXCheckBox checkedColor="#fa6e96" layoutX="23.0" layoutY="348.0" stylesheets="@../CSS/BaseStart.css" text="Ghi nhớ đăng nhập">
+               <font>
+                  <Font name="Arial" size="13.0" />
+               </font>
+            </JFXCheckBox>
+            <JFXButton fx:id="LogIn" layoutX="23.0" layoutY="417.0" onAction="#LogInController" prefHeight="42.0" prefWidth="390.0" styleClass="jfx-buttonLogIn" stylesheets="@../CSS/BaseStart.css" text="Đăng nhập" textFill="#9e9696">
+               <font>
+                  <Font name="Arial" size="16.0" />
+               </font>
+            </JFXButton>
+            <ImageView fx:id="imageViewAnimation" fitHeight="178.0" fitWidth="160.0" layoutX="138.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../images/openeye.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="wrongNotification" layoutX="95.0" layoutY="379.0" prefHeight="18.0" prefWidth="245.0" text="Sai tên đăng nhập hoặc mật khẩu !!!" textFill="#f44b02">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

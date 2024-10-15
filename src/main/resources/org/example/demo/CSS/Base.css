@@ -1,8 +1,62 @@
 #mainPane{
   -fx-background-color: rgba(220,220,220,1);
-  -fx-border-radius:8;
-  -fx-background-radius:8;
+  -fx-border-radius:12px 0px 0px 0px;
+  -fx-background-radius:12px 0px 0px 0px;
 }
-#BackgroundPane{
-  -fx-background-color:rgba(250,110,150);
+
+.icon_left {
+  -fx-fill: #737373;
+}
+
+.btn-left:hover .icon_left {
+  -fx-fill: #ff66ff;
+}
+
+.btn-left:hover {
+  -fx-cursor: hand;
+}
+
+.left-menu {
+    -fx-fill: #ffffff;
+}
+
+#searchBar {
+  -fx-border-color: transparent;
+  -fx-background-color: transparent;
+}
+
+#removeSearch {
+  -fx-background-color: transparent;
+}
+
+#removeSearch:hover {
+  -fx-cursor: hand;
+}
+
+#autoCompleteTxtField {
+  -fx-border-radius: 30px;
+  -fx-background-radius: 30px;
+  -fx-background-color: #d9d9d9;
+}
+
+#autoCompleteTxtField:hover {
+  -fx-border-radius: 30px;
+  -fx-background-radius: 30px;
+  -fx-background-color: #e6e6e6;
+}
+
+.icon_top {
+  -fx-fill: #737373;
+}
+
+.btn-top:hover .icon_top {
+  -fx-fill: #ff66ff;
+}
+
+.btn-top:hover {
+  -fx-cursor: hand;
+}
+
+.tooltip {
+    -fx-show-delay: 400ms;
 }

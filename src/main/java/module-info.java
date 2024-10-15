@@ -9,7 +9,8 @@ module org.example.demo {
   requires com.fasterxml.jackson.databind;
   requires jdk.compiler;
   requires de.jensd.fx.glyphs.fontawesome;
+    requires mysql.connector.j;
 
-  opens org.example.demo.Controllers;
+    opens org.example.demo.Controllers;
   exports org.example.demo;
 }
