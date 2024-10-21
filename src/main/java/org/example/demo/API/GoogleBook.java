@@ -104,8 +104,8 @@ public class GoogleBook {
     }
     if (jsonNode.has("imageLinks")) {
       JsonNode imageLinks = jsonNode.get("imageLinks");
-      if (imageLinks.has("smallThumbnail")) {
-        imageLink = imageLinks.get("smallThumbnail").asText();
+      if (imageLinks.has("thumbnail")) {
+        imageLink = imageLinks.get("thumbnail").asText();
       }
     }
 
