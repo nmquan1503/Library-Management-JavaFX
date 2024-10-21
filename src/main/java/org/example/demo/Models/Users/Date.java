@@ -17,41 +17,43 @@ public class Date extends java.sql.Date {
   }
 
   @Override
-  public int getYear(){
-    return super.getYear()+1900;
+  public int getYear() {
+    return super.getYear() + 1900;
   }
 
   @Override
-  public int getMonth(){
-    return super.getMonth()+1;
+  public int getMonth() {
+    return super.getMonth() + 1;
   }
 
   @Override
-  public int getDay(){
+  public int getDay() {
     return super.getDay();
   }
 
-  public boolean isAfter(Date date){
-    if(this.getYear()>date.getYear())return true;
-    if(this.getMonth()>date.getMonth())return true;
+  public boolean isAfter(Date date) {
+    if (this.getYear() > date.getYear()) {
+      return true;
+    }
+    if (this.getMonth() > date.getMonth()) {
+      return true;
+    }
     return this.getDay() > date.getDay();
   }
 
-  public boolean isEqual(Date date){
-    return this.getYear()==date.getYear() &&
-        this.getMonth()==date.getMonth() &&
-        this.getDay()==date.getDay();
+  public boolean isEqual(Date date) {
+    return this.getYear() == date.getYear() &&
+        this.getMonth() == date.getMonth() &&
+        this.getDay() == date.getDay();
   }
 
-  public boolean isBefore(Date date){
-    if(this.getYear()<date.getYear())return true;
-    if(this.getMonth()<date.getMonth())return true;
-    return this.getDay()<date.getDay();
-  }
-
-  public static void main(String[] args) {
-    Date myDate = new Date(2024, 10, 3); // Create a date
-    Date newDate = myDate.add(31); // Add 31 days
-    System.out.println("New Date: " + newDate);
+  public boolean isBefore(Date date) {
+    if (this.getYear() < date.getYear()) {
+      return true;
+    }
+    if (this.getMonth() < date.getMonth()) {
+      return true;
+    }
+    return this.getDay() < date.getDay();
   }
 }

@@ -15,11 +15,11 @@
 
 <HBox alignment="TOP_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="900.0" stylesheets="@../CSS/Base.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo.Controllers.BaseController">
    <children>
-      <AnchorPane prefHeight="60.0" prefWidth="453.0">
+      <AnchorPane prefHeight="60.0" prefWidth="524.0">
          <children>
             <VBox id="autoCompleteTxtField" layoutX="28.0" layoutY="12.0" prefHeight="29.0" prefWidth="340.0" AnchorPane.leftAnchor="28.0">
                <children>
-                  <HBox id="searchHbox" prefHeight="17.0" prefWidth="358.0">
+                  <HBox id="searchHbox" prefHeight="32.0" prefWidth="419.0">
                      <children>
                         <FontAwesomeIconView fill="#7c7a7a" glyphName="SEARCH" size="15" wrappingWidth="18.0">
                            <HBox.margin>
@@ -44,7 +44,7 @@
       </AnchorPane>
       <JFXButton contentDisplay="CENTER" ellipsisString="" prefHeight="60.0" prefWidth="60.0" styleClass="btn-top" textAlignment="CENTER">
          <graphic>
-            <FontAwesomeIconView glyphName="COG" size="28" styleClass="icon_top" wrappingWidth="29.285714149475098" />
+            <FontAwesomeIconView glyphName="COG" size="28" styleClass="icon_top" wrappingWidth="24.285714149475098" />
          </graphic>
          <tooltip>
             <Tooltip text="Cài đặt" textAlignment="CENTER">
@@ -56,7 +56,7 @@
       </JFXButton>
       <JFXButton contentDisplay="CENTER" ellipsisString="" prefHeight="63.0" prefWidth="59.0" styleClass="btn-top">
          <graphic>
-            <FontAwesomeIconView glyphName="BELL" size="25" styleClass="icon_top" wrappingWidth="31.0" />
+            <FontAwesomeIconView glyphName="BELL" size="25" styleClass="icon_top" wrappingWidth="25.0" />
          </graphic>
          <tooltip>
             <Tooltip text="Thông báo" textAlignment="CENTER">

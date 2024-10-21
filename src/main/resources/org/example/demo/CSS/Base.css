@@ -1,7 +1,8 @@
 #mainPane{
-  -fx-background-color: rgba(220,220,220,1);
+  -fx-background-color: #e6e6e6;
   -fx-border-radius:12px 0px 0px 0px;
   -fx-background-radius:12px 0px 0px 0px;
+  -fx-border-color: #E464C0;
 }
 
 .icon_left {
@@ -14,10 +15,6 @@
 
 .btn-left:hover {
   -fx-cursor: hand;
-}
-
-.left-menu {
-    -fx-fill: #ffffff;
 }
 
 #searchBar {
@@ -36,13 +33,14 @@
 #autoCompleteTxtField {
   -fx-border-radius: 30px;
   -fx-background-radius: 30px;
-  -fx-background-color: #d9d9d9;
+  -fx-background-color: #e6e6e6;
+  -fx-border-color: #E464C0;
 }
 
 #autoCompleteTxtField:hover {
   -fx-border-radius: 30px;
   -fx-background-radius: 30px;
-  -fx-background-color: #e6e6e6;
+  -fx-background-color: #d9d9d9;
 }
 
 .icon_top {
@@ -58,5 +56,5 @@
 }
 
 .tooltip {
-    -fx-show-delay: 400ms;
+  -fx-show-delay: 400ms;
 }
