@@ -1,0 +1,52 @@
+#FadedScrollPane {
+    -fx-background-color:rgba(0,0,0,0.4);
+    -fx-border-color:rgba(0,0,0,0.4);
+    -fx-border-radius:8;
+    -fx-background-radius:8;
+}
+#FadedScrollPane .viewport{
+  -fx-background-color:transparent;
+  -fx-border-color:transparent;
+}
+#FadedScrollPane .scroll-bar {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+}
+#FadedScrollPane .scroll-bar .thumb{
+    -fx-background-color: rgba(255,255,255,1);
+    -fx-background-radius: 8;
+}
+#FadedScrollPane .scroll-bar .thumb:hover{
+    -fx-background-color: rgba(220,220,220,1);
+}
+#FadedScrollPane .scroll-bar .thumb:pressed {
+    -fx-background-color: rgba(200,200,200,1);
+}
+#FadedScrollPane .scroll-bar .increment-button {
+    -fx-background-color: rgba(255,255,255,1);
+    -fx-shape: "M 0 0 L 4 4 L 8 0 Z";
+}
+#FadedScrollPane .scroll-bar .decrement-button {
+    -fx-background-color: rgba(255,255,255,1);
+    -fx-shape: "M 0 4 L 8 4 L 4 0 Z";
+}
+#FadedScrollPane .scroll-bar .increment-button:hover,
+#FadedScrollPane .scroll-bar .decrement-button:hover{
+    -fx-background-color: rgba(220,220,220,1);
+}
+#FadedScrollPane .scroll-bar .increment-button:pressed,
+#FadedScrollPane .scroll-bar .decrement-button:pressed{
+    -fx-background-color: rgba(200,200,200,1);
+}
+
+#basic {
+  -fx-background-color:transparent;
+  -fx-border-color:transparent;
+}
+
+#viewPane{
+  -fx-background-color:rgba(255,255,255,1);
+  -fx-border-color:rgba(255,255,255,1);
+  -fx-border-radius:8;
+  -fx-background-radius:8;
+}
