@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Objects;
+import javafx.scene.image.Image;
 import org.example.demo.Database.JDBC;
 import org.example.demo.Models.BookShelf.Book;
 import org.example.demo.Models.BookShelf.BookShelf;
@@ -74,6 +76,17 @@ public class Library {
     return listSuggestions;
   }
 
+  public ArrayList<Suggestion> getBannedUserSuggestions(String prefix){
+    ArrayList<User> listUser = userList.getListUser(prefix);
+    ArrayList<Suggestion> listSuggestions = new ArrayList<>();
+    for (User user : listUser) {
+      if(user.isBan()){
+        listSuggestions.add(new Suggestion(user));
+      }
+    }
+    return listSuggestions;
+  }
+
   public Book getBook(int idBook){
     return bookShelf.getBook(idBook);
   }
@@ -96,6 +109,45 @@ public class Library {
 
   public Borrowing getBorrowing(int idBorrowing){
     return borrowHistory.getBorrowing(idBorrowing);
+  }
+
+  public int insertUser(User user){
+    return userList.insertUser(user);
+  }
+
+  public int insertBook(Book book){
+    return bookShelf.insertBook(book);
+  }
+
+  public void deleteBook(Book book){
+    bookShelf.deleteBook(book);
+  }
+
+  public void deleteUser(User user){
+    userList.deleteUser(user);
+  }
+
+  public int insertBookWithID(Book book,int idBook){
+    return bookShelf.insertBookWithID(book,idBook);
+  }
+
+  public int insertUserWithID(User user,int idUser){
+    return userList.insertUserWithID(user,idUser);
+  }
+
+  public static void main(String[] args) {
+    Library library=new Library();
+    Image image=new Image(Objects.requireNonNull(
+        Library.class.getResourceAsStream("/org/example/demo/Assets/basic.jpg")));
+    User user=new User("Nguyễn Minh Quân",
+        new Date(2005,3,15),
+        "Thái Bình",
+        "minhquan15032005@gmail.com",
+        "0346399421",
+        image,
+        new Date(2000,0,0));
+    library.insertUser(user);
+
   }
 
 

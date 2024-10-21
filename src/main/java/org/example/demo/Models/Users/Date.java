@@ -1,11 +1,16 @@
 package org.example.demo.Models.Users;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 
 public class Date extends java.sql.Date {
 
   public Date(int year, int month, int day) {
     super(year - 1900, month - 1, day);
+  }
+
+  public Date(java.sql.Date date){
+    super(date.getTime());
   }
 
   public Date add(int days) {
@@ -18,22 +23,35 @@ public class Date extends java.sql.Date {
 
   @Override
   public int getYear(){
-    return super.getYear()+1900;
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(this);  // Set thời gian cho Calendar dựa trên đối tượng java.sql.Date
+    return calendar.get(Calendar.YEAR);
   }
 
   @Override
   public int getMonth(){
-    return super.getMonth()+1;
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(this);
+    return calendar.get(Calendar.MONTH) + 1;
   }
 
   @Override
   public int getDay(){
-    return super.getDay();
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(this);
+    return calendar.get(Calendar.DAY_OF_MONTH);
+  }
+  
+  @Override
+  public String toString(){
+    return this.getDay()+"/ "+this.getMonth()+"/ "+this.getYear();
   }
 
   public boolean isAfter(Date date){
     if(this.getYear()>date.getYear())return true;
+    else if(this.getYear()<date.getYear())return false;
     if(this.getMonth()>date.getMonth())return true;
+    else if(this.getMonth()<date.getMonth())return false;
     return this.getDay() > date.getDay();
   }
 
@@ -45,13 +63,19 @@ public class Date extends java.sql.Date {
 
   public boolean isBefore(Date date){
     if(this.getYear()<date.getYear())return true;
+    else if(this.getYear()>date.getYear())return false;
     if(this.getMonth()<date.getMonth())return true;
+    else if(this.getMonth()>date.getMonth())return false;
     return this.getDay()<date.getDay();
   }
 
+  @Override
+  public LocalDate toLocalDate(){
+    return super.toLocalDate();
+  }
+
   public static void main(String[] args) {
-    Date myDate = new Date(2024, 10, 3); // Create a date
-    Date newDate = myDate.add(31); // Add 31 days
-    System.out.println("New Date: " + newDate);
+    Date myDate = new Date(2024, 10, 1); // Create a date
+
   }
 }
