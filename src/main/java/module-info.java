@@ -11,5 +11,6 @@ module org.example.demo {
   requires de.jensd.fx.glyphs.fontawesome;
 
   opens org.example.demo.Controllers;
+  opens org.example.demo.CustomUI to javafx.fxml;
   exports org.example.demo;
 }
