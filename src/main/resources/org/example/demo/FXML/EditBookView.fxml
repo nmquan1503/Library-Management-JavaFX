@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="basic" prefHeight="520.0" prefWidth="880.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+  <children>
+    <AnchorPane id="viewPane" layoutX="200.0" layoutY="40.0" prefWidth="500.0" AnchorPane.bottomAnchor="40.0" AnchorPane.topAnchor="40.0">
+      <children>
+            <VBox layoutX="40.0" layoutY="30.0" spacing="10.0" AnchorPane.bottomAnchor="90.0" AnchorPane.topAnchor="30.0">
+               <children>
+                  <HBox spacing="30.0">
+                     <children>
+                    <ImageView fx:id="imageBook" fitHeight="225.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                    <VBox prefWidth="240.0" spacing="10.0">
+                      <children>
+                              <TextField fx:id="titleTextField" promptText="Tên sách">
+                                 <font>
+                                    <Font name="System Bold Italic" size="18.0" />
+                                 </font>
+                              </TextField>
+                              <Label fx:id="idLabel" disable="true" wrapText="true">
+                                 <font>
+                                    <Font name="System Bold Italic" size="18.0" />
+                                 </font>
+                              </Label>
+                        <VBox fx:id="authorList" prefWidth="240.0" spacing="5.0" />
+                      </children>
+                    </VBox>
+                     </children>
+                  </HBox>
+              <VBox fx:id="infoBox" minHeight="-Infinity" prefWidth="420.0" spacing="5.0">
+                <children>
+                  <HBox fx:id="publisherBox" alignment="CENTER_LEFT">
+                    <children>
+                      <Label minWidth="-Infinity" text="Nhà xuất bản: " wrapText="true">
+                        <font>
+                          <Font name="System Bold Italic" size="18.0" />
+                        </font>
+                      </Label>
+                              <TextField fx:id="publisherTextField" prefHeight="30.0" prefWidth="294.0" promptText="Nhà xuất bản">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                    </children>
+                  </HBox>
+                  <HBox fx:id="publishedDateBox">
+                    <children>
+                      <Label minWidth="-Infinity" text="Năm xuất bản: " wrapText="true">
+                        <font>
+                          <Font name="System Bold Italic" size="18.0" />
+                        </font>
+                      </Label>
+                              <TextField fx:id="publishedDateTextField" prefHeight="30.0" prefWidth="306.0" promptText="Năm xuất bản">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                    </children>
+                  </HBox>
+                  <HBox fx:id="descriptionBox">
+                    <children>
+                      <Label minWidth="-Infinity" text="Mô tả: " wrapText="true">
+                        <font>
+                          <Font name="System Bold Italic" size="18.0" />
+                        </font>
+                      </Label>
+                      <Label fx:id="descriptionLabel" wrapText="true">
+                        <font>
+                          <Font size="18.0" />
+                        </font>
+                      </Label>
+                              <TextArea fx:id="descriptionTextArea" prefHeight="100.0" promptText="Mô tả" wrapText="true">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextArea>
+                    </children>
+                  </HBox>
+                  <HBox fx:id="categoryBox">
+                    <children>
+                      <Label minWidth="-Infinity" text="Thể loại: " wrapText="true">
+                        <font>
+                          <Font name="System Bold Italic" size="18.0" />
+                        </font>
+                      </Label>
+                      <VBox fx:id="categoryList" spacing="5.0" />
+                    </children>
+                  </HBox>
+                  <HBox fx:id="pageCountBox" alignment="CENTER_LEFT">
+                    <children>
+                      <Label minWidth="-Infinity" text="Độ dài: " wrapText="true">
+                        <font>
+                          <Font name="System Bold Italic" size="18.0" />
+                        </font>
+                      </Label>
+                              <TextField fx:id="countPageTextField" prefHeight="25.0" prefWidth="400.0" promptText="Độ dài">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                    </children>
+                  </HBox>
+                  <HBox fx:id="quantityBox" alignment="CENTER_LEFT">
+                    <children>
+                      <Label minWidth="-Infinity" text="Số lượng: " wrapText="true">
+                        <font>
+                          <Font name="System Bold Italic" size="18.0" />
+                        </font>
+                      </Label>
+                              <TextField fx:id="quantityTextField" prefHeight="30.0" prefWidth="353.0" promptText="Số lượng">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                    </children>
+                  </HBox>
+                </children>
+              </VBox>
+               </children>
+            </VBox>
+        <JFXButton contentDisplay="CENTER" ellipsisString="" layoutX="465.0" onAction="#ExitView" prefHeight="35.0" prefWidth="35.0">
+          <graphic>
+            <FontAwesomeIconView glyphName="REMOVE" size="20" />
+          </graphic>
+        </JFXButton>
+            <JFXButton layoutX="424.0" layoutY="563.0" onAction="#SaveBook" text="Lưu" textFill="RED" AnchorPane.bottomAnchor="30.0">
+               <font>
+                  <Font name="System Bold Italic" size="18.0" />
+               </font>
+            </JFXButton>
+      </children>
+    </AnchorPane>
+  </children>
+</AnchorPane>

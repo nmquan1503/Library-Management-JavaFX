@@ -108,12 +108,6 @@ public class HomeController extends BaseController {
   @FXML
   private Label secM;
 
-  @FXML
-  private JFXButton checkMode;
-
-  @FXML
-  private AnchorPane bigPane;
-
   public void initialize() {
     displayTime();
     displayMiniPaneTotal();
@@ -121,17 +115,6 @@ public class HomeController extends BaseController {
     displayCirclePro();
     displayScatter();
     displayArea();
-  }
-
-  public void darkMode() {
-    if (!isDark) {
-      bigPane.setBlendMode(BlendMode.DIFFERENCE);
-      checkMode.setText("🌙");
-    } else {
-      bigPane.setBlendMode(BlendMode.SRC_OVER);
-      checkMode.setText("☀");
-    }
-    isDark = !isDark;
   }
 
   public void displayTime() {

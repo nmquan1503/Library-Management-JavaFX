@@ -1,11 +1,136 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXRadioButton?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import org.example.demo.FXML.Books ?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Arc?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo.Controllers.BooksController">
-  <fx:include source="LeftMenu.fxml" />
-  <fx:include layoutX="60.0" source="TopMenu.fxml" />
-   <AnchorPane layoutX="60.0" layoutY="60.0" prefHeight="540.0" prefWidth="900.0" />
-
+<AnchorPane fx:id="mainPane" layoutX="60.0" layoutY="60.0" prefHeight="540.0" prefWidth="900.0"
+  xmlns:fx="http://javafx.com/fxml/1"
+  fx:controller="org.example.demo.Controllers.BooksController">
+  <AnchorPane fx:id="advertisementPane" layoutX="575.0" layoutY="180.0" prefHeight="300.0"
+    prefWidth="280.0" stylesheets="@../CSS/AdvertisementPane.css">
+    <children>
+      <ImageView id="Content" fx:id="content1" fitHeight="240.0" fitWidth="160.0" layoutY="30.0"
+        pickOnBounds="true"/>
+      <ImageView id="Content" fx:id="content3" fitHeight="240.0" fitWidth="160.0" layoutX="120.0"
+        layoutY="30.0" pickOnBounds="true"/>
+      <Pane id="FadedPane" layoutY="30.0" prefHeight="240.0" prefWidth="280.0"/>
+      <ImageView id="Content" fx:id="content2" fitHeight="300.0" fitWidth="200.0" layoutX="40.0"
+        pickOnBounds="true"/>
+      <HBox alignment="CENTER" layoutX="87.0" layoutY="270.0" prefHeight="21.0" prefWidth="50.0"
+        spacing="10.0">
+        <children>
+          <JFXRadioButton fx:id="radioButton1" mnemonicParsing="false"
+            onMousePressed="#switchToContent1">
+            <toggleGroup>
+              <ToggleGroup fx:id="optionsOfContent"/>
+            </toggleGroup>
+          </JFXRadioButton>
+          <JFXRadioButton fx:id="radioButton2" mnemonicParsing="false"
+            onMousePressed="#switchToContent2" selected="true" toggleGroup="$optionsOfContent"/>
+          <JFXRadioButton fx:id="radioButton3" mnemonicParsing="false"
+            onMousePressed="#switchToContent3" toggleGroup="$optionsOfContent"/>
+        </children>
+      </HBox>
+    </children>
+  </AnchorPane>
+  <JFXListView id="ListView" fx:id="ListBooks" layoutX="20.0" layoutY="100.0"
+    onMouseClicked="#SelectBookFromListBook" prefHeight="390.0" prefWidth="450.0"
+    stylesheets="@../CSS/Pagination.css"/>
+  <TextField fx:id="pageNumberTextField" alignment="CENTER" layoutX="225.0" layoutY="500.0"
+    onAction="#changePage" prefHeight="30.0" prefWidth="40.0" text="1">
+    <font>
+      <Font size="14.0"/>
+    </font>
+  </TextField>
+  <JFXButton fx:id="nextPageButton" contentDisplay="CENTER" ellipsisString="" layoutX="265.0"
+    layoutY="501.0" onAction="#switchToNextPage" prefHeight="25.0" prefWidth="30.0">
+    <graphic>
+      <FontAwesomeIconView glyphName="ANGLE_DOUBLE_RIGHT" size="20"/>
+    </graphic>
+  </JFXButton>
+  <JFXButton fx:id="prevPageButton" contentDisplay="CENTER" ellipsisString="" layoutX="195.0"
+    layoutY="501.0" minWidth="30.0" onAction="#switchToPrevPage" prefHeight="25.0"
+    prefWidth="30.0">
+    <graphic>
+      <FontAwesomeIconView glyphName="ANGLE_DOUBLE_LEFT" size="20"/>
+    </graphic>
+  </JFXButton>
+  <Label layoutX="650.0" layoutY="115.0" text="Top choices" wrapText="true">
+    <font>
+      <Font name="System Bold Italic" size="24.0"/>
+    </font>
+  </Label>
+  <Pane id="SearchBar" layoutX="20.0" layoutY="20.0" maxHeight="40.0" prefHeight="40.0"
+    prefWidth="455.0" stylesheets="@../CSS/SearchTextField.css">
+    <children>
+      <VBox id="Basic" layoutY="3.0" prefWidth="170.0">
+        <children>
+          <HBox id="Basic">
+            <children>
+              <TextField id="TextField" fx:id="categoryTextField"
+                onKeyTyped="#CreateCategorySuggestions" prefHeight="35.0" prefWidth="136.0"
+                promptText="Thể loại"/>
+              <JFXComboBox id="ComboBox" fx:id="categoryComboBox" focusColor="#ffffff00"
+                onAction="#SelectCategoryFromComboBox" prefHeight="35.0" prefWidth="28.0"
+                unFocusColor="#4d4d4d00"/>
+            </children>
+          </HBox>
+          <JFXListView id="ListView" fx:id="categoriesListView" prefHeight="0.0" prefWidth="170.0"
+            visible="false"/>
+        </children>
+      </VBox>
+      <VBox id="Basic" layoutX="173.0" layoutY="3.0" prefHeight="35.0" prefWidth="280.0">
+        <children>
+          <HBox id="Basic" prefHeight="100.0" prefWidth="200.0">
+            <children>
+              <TextField id="TextField" fx:id="titleTextField" prefHeight="35.0" prefWidth="191.0"
+                promptText="Tiêu đề"/>
+              <JFXButton id="Basic" fx:id="removeTextFieldButton" contentDisplay="CENTER"
+                ellipsisString="" onAction="#RemoveTitleTextField" prefHeight="33.0"
+                prefWidth="22.0" visible="false">
+                <graphic>
+                  <FontAwesomeIconView glyphName="REMOVE" size="20"/>
+                </graphic>
+              </JFXButton>
+              <JFXButton id="Basic" contentDisplay="CENTER" ellipsisString="" onAction="#Search"
+                prefHeight="33.0" prefWidth="29.0">
+                <graphic>
+                  <FontAwesomeIconView glyphName="SEARCH" size="20"/>
+                </graphic>
+              </JFXButton>
+            </children>
+          </HBox>
+          <JFXListView id="ListView" fx:id="titleListView" prefHeight="0.0" prefWidth="280.0"
+            visible="false"/>
+        </children>
+      </VBox>
+    </children>
+  </Pane>
+  <Pane id="Basic" fx:id="loadingPane" layoutX="20.0" layoutY="100.0" prefHeight="390.0"
+    prefWidth="450.0" stylesheets="@../CSS/Pagination.css" visible="false">
+    <children>
+      <Arc fill="#ffffff00" layoutX="225.0" layoutY="195.0" length="270.0" radiusX="20.0"
+        radiusY="20.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND"
+        strokeType="INSIDE" strokeWidth="5.0"/>
+      <Arc fill="#ffffff00" layoutX="225.0" layoutY="195.0" length="270.0" radiusX="26.0"
+        radiusY="26.0" startAngle="90.0" stroke="BLACK" strokeLineCap="ROUND"
+        strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="5.0"/>
+      <Arc fill="#ffffff00" layoutX="225.0" layoutY="195.0" length="270.0" radiusX="32.0"
+        radiusY="32.0" startAngle="180.0" stroke="BLACK" strokeLineCap="ROUND"
+        strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="5.0"/>
+    </children>
+  </Pane>
 </AnchorPane>

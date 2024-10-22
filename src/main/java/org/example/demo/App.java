@@ -15,7 +15,7 @@ public class App extends Application {
   @Override
   public void start(Stage primaryStage) throws Exception {
     Parent root = FXMLLoader.load(
-        Objects.requireNonNull(getClass().getResource("/org/example/demo/FXML/Home.fxml")));
+        Objects.requireNonNull(getClass().getResource("/org/example/demo/FXML/Base.fxml")));
     primaryStage.setTitle("Library Management");
     primaryStage.setResizable(false);
     primaryStage.setScene(new Scene(root));

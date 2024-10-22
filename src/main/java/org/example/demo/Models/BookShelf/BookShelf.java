@@ -122,6 +122,24 @@ public class BookShelf {
     return id;
   }
 
+  public int insertBookWithID(Book book, int idBook){
+    int id=book.SaveInfo();
+      Connection connection=JDBC.getConnection();
+      try{
+        String query="update books set id_book=(?) where id_book=(?)";
+        PreparedStatement statement=connection.prepareStatement(query);
+        statement.setInt(1,idBook);
+        statement.setInt(2,id);
+        statement.executeUpdate();
+        book.setId(idBook);
+      }catch (Exception e){
+        e.printStackTrace();
+      }
+      JDBC.closeConnection(connection);
+    books.insertNode(book.getTitle(),book.getId());
+    return idBook;
+  }
+
   /**
    * delete book from trie and database.
    *
