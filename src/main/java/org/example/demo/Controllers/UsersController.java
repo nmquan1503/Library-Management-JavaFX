@@ -25,7 +25,7 @@ import org.example.demo.CustomUI.UserView;
 import org.example.demo.Models.Library;
 import org.example.demo.Models.Suggestion.Suggestion;
 
-public class UsersController {
+public class UsersController implements DarkModeController {
 
   @FXML
   private AnchorPane mainPane;
@@ -314,5 +314,10 @@ public class UsersController {
     thread.start();
   }
 
+  // set BlendMode của các ImageView là DIFFERENCE nếu isDark = true và SRC_OVER trong th còn lại
+  @Override
+  public void applyDarkMode(boolean isDark) {
+
+  }
 
 }

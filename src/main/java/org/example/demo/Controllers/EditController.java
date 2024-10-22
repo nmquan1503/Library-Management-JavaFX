@@ -26,7 +26,7 @@ import org.example.demo.Models.Suggestion.Suggestion;
 import org.example.demo.Models.Users.Date;
 import org.example.demo.Models.Users.User;
 
-public class EditController {
+public class EditController implements DarkModeController {
 
   @FXML
   private AnchorPane mainPane;
@@ -343,5 +343,9 @@ public class EditController {
 
   }
 
+  // set BlendMode của các ImageView là DIFFERENCE nếu isDark = true và SRC_OVER trong th còn lại
+  @Override
+  public void applyDarkMode(boolean isDark) {
 
+  }
 }

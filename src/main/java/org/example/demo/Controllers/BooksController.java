@@ -49,7 +49,7 @@ import org.example.demo.Models.Library;
 import org.example.demo.Models.Suggestion.Suggestion;
 import org.example.demo.Models.Trie.Trie;
 
-public class BooksController {
+public class BooksController implements DarkModeController {
 
   @FXML
   private AnchorPane advertisementPane;
@@ -736,5 +736,9 @@ public class BooksController {
     titleTextField.clear();
   }
 
+  // set BlendMode của các ImageView là DIFFERENCE nếu isDark = true và SRC_OVER trong th còn lại
+  @Override
+  public void applyDarkMode(boolean isDark) {
 
+  }
 }

@@ -8,13 +8,15 @@ import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.effect.BlendMode;
 
 public class BaseController {
 
-  boolean isDark = false;
+  public static boolean isDark = false;
 
   @FXML
   private AnchorPane mainPane;
@@ -27,6 +29,8 @@ public class BaseController {
 
   @FXML
   private JFXButton checkMode;
+
+  private DarkModeController currentController;
 
   @FXML
   public void initialize() {
@@ -51,84 +55,59 @@ public class BaseController {
   public void darkMode() {
     if (!isDark) {
       bigPane.setBlendMode(BlendMode.DIFFERENCE);
-
-      applyImageViewBlendMode(bigPane, BlendMode.DIFFERENCE);
-
       avatar.setBlendMode(BlendMode.DIFFERENCE);
       checkMode.setText("🌙");
     } else {
       bigPane.setBlendMode(BlendMode.SRC_OVER);
-
-      applyImageViewBlendMode(bigPane, BlendMode.SRC_OVER);
-
       avatar.setBlendMode(BlendMode.SRC_OVER);
       checkMode.setText("☀");
     }
+
+    if (currentController != null) {
+      currentController.applyDarkMode(!isDark);
+    }
+    
     isDark = !isDark;
   }
 
-  private void applyImageViewBlendMode(Parent parent, BlendMode blendMode) {
-    for (Node node : parent.getChildrenUnmodifiable()) {
-      if (node instanceof ImageView) {
-        node.setBlendMode(blendMode);
-      }
-      if (node instanceof Parent) {
-        applyImageViewBlendMode((Parent) node, blendMode);
-      }
-    }
-  }
-
-
-  @FXML
-  public void moveDashboard() {
+  private void switchPane(String fxmlPath) {
     try {
-      FXMLLoader fxmlLoader = new FXMLLoader(
-          getClass().getResource("/org/example/demo/FXML/Home.fxml"));
+      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
       AnchorPane anchorPane = fxmlLoader.load();
+
+      currentController = fxmlLoader.getController();
+
       bigPane.getChildren().remove(mainPane);
       bigPane.getChildren().add(anchorPane);
+      mainPane = anchorPane;
+
+      if (isDark && currentController != null) {
+        currentController.applyDarkMode(isDark);
+      }
+
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  @FXML
+  public void moveDashboard() {
+    switchPane("/org/example/demo/FXML/Home.fxml");
   }
 
   @FXML
   public void moveBooks() {
-    try {
-      FXMLLoader fxmlLoader = new FXMLLoader(
-          getClass().getResource("/org/example/demo/FXML/Books.fxml"));
-      AnchorPane anchorPane = fxmlLoader.load();
-      bigPane.getChildren().remove(mainPane);
-      bigPane.getChildren().add(anchorPane);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    switchPane("/org/example/demo/FXML/Books.fxml");
   }
 
   @FXML
   public void moveUser() {
-    try {
-      FXMLLoader fxmlLoader = new FXMLLoader(
-          getClass().getResource("/org/example/demo/FXML/Users.fxml"));
-      AnchorPane anchorPane = fxmlLoader.load();
-      bigPane.getChildren().remove(mainPane);
-      bigPane.getChildren().add(anchorPane);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    switchPane("/org/example/demo/FXML/Users.fxml");
   }
 
   @FXML
   public void moveEdit() {
-    try {
-      FXMLLoader fxmlLoader = new FXMLLoader(
-          getClass().getResource("/org/example/demo/FXML/Edit.fxml"));
-      AnchorPane anchorPane = fxmlLoader.load();
-      bigPane.getChildren().remove(mainPane);
-      bigPane.getChildren().add(anchorPane);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    switchPane("/org/example/demo/FXML/Edit.fxml");
   }
 
 }
