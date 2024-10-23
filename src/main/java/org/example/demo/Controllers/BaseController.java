@@ -66,7 +66,7 @@ public class BaseController {
     if (currentController != null) {
       currentController.applyDarkMode(!isDark);
     }
-    
+
     isDark = !isDark;
   }
 

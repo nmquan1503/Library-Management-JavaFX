@@ -56,9 +56,7 @@ import org.example.demo.Database.JDBC;
 import org.example.demo.circularProgressUI.RingProgressIndicator;
 import javafx.scene.text.Font;
 
-public class HomeController extends BaseController {
-
-  boolean isDark = false;
+public class HomeController implements DarkModeController {
 
   @FXML
   private Label librarianName;
@@ -320,6 +318,11 @@ public class HomeController extends BaseController {
       }
     }
 
+  }
+
+  @Override
+  public void applyDarkMode(boolean isDark) {
+    // no image here
   }
 
   class LibrarianTable extends RecursiveTreeObject<LibrarianTable> {
