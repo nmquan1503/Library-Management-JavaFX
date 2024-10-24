@@ -1,7 +1,16 @@
-#mainPane{
-  -fx-background-color: rgba(220,220,220,1);
-  -fx-border-radius:8;
-  -fx-background-radius:8;
+@font-face {
+    font-family: 'HYWenHei-85W';
+}
+
+* {
+    -fx-font-family: 'HYWenHei-85W';
+    -fx-font-size: 13px; /* Bạn có thể thay đổi kích thước font nếu muốn */
+}
+
+#mainPane {
+    -fx-background-color: rgba(220,220,220,1);
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
 }
 #BackgroundPane{
   -fx-background-color:rgba(250,110,150);
@@ -16,7 +25,7 @@
 
 /* Tạo prompt text đậm như text bình thường và có màu hồng */
 .text-field .text {
-    -fx-fill: rgba(250, 110, 150, 1);  /* Màu hồng rõ cho prompt text */
+    -fx-fill: #584f58;  /* Màu hồng rõ cho prompt text */
 }
 
 
@@ -46,4 +55,13 @@ HBox {
 
 .jfx-button:disabled:hover {
     -fx-background-color: rgba(200, 200, 200, 1); /* Loại bỏ hiệu ứng hover khi bị vô hiệu hóa */
+}
+
+#loadingPane {
+    -fx-background-color: rgba(0, 0, 0, 0.5); /* Màu đen với độ trong suốt 50% */
+}
+
+.label-error{
+    -fx-background-color: rgba(0, 0, 0, 0.5); /* Màu nền */
+    -fx-font-size: 15px; /* Thay đổi kích thước chữ cho ComboBox */
 }

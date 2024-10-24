@@ -5,7 +5,9 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -15,15 +17,15 @@
 
 <AnchorPane id="BackgroundPane" fx:id="BackgroundPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#BackgroundRequest" prefHeight="600.0" prefWidth="960.0" stylesheets="@../CSS/BaseStart.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo.Controllers.StartController">
    <children>
-      <AnchorPane id="mainPane" fx:id="mainPane" layoutX="262.0" layoutY="50.0" onMouseClicked="#mainRequest" prefHeight="499.0" prefWidth="436.0" stylesheets="@../CSS/Base.css">
+      <AnchorPane id="mainPane" fx:id="mainPane" layoutX="262.0" layoutY="50.0" onMouseClicked="#mainRequest" prefHeight="499.0" prefWidth="436.0" stylesheets="@../CSS/BaseStart.css">
          <children>
-            <HBox alignment="CENTER" layoutX="23.0" layoutY="203.0" prefHeight="42.0" prefWidth="390.0" spacing="5.0">
+            <HBox alignment="CENTER" layoutX="23.0" layoutY="228.0" prefHeight="42.0" prefWidth="390.0" spacing="5.0">
                <children>
                   <FontAwesomeIconView glyphName="USER_ALT" size="20">
                      <font>
                         <Font size="20.0" />
                      </font></FontAwesomeIconView>
-                  <TextField id="Starttext-field" fx:id="accountField" prefHeight="26.0" prefWidth="329.0" promptText="Tên đăng nhập" stylesheets="@../CSS/Base.css">
+                  <TextField id="Starttext-field" fx:id="accountField" prefHeight="58.0" prefWidth="326.0" promptText="Tên đăng nhập" stylesheets="@../CSS/Base.css">
                      <font>
                         <Font name="Arial" size="15.0" />
                      </font>
@@ -39,7 +41,7 @@
                   </JFXButton>
                </children>
             </HBox>
-            <HBox alignment="CENTER" layoutX="23.0" layoutY="279.0" prefHeight="42.0" prefWidth="390.0" spacing="10.0">
+            <HBox alignment="CENTER" layoutX="23.0" layoutY="305.0" prefHeight="42.0" prefWidth="390.0" spacing="10.0">
                <children>
                   <FontAwesomeIconView glyphName="LOCK" size="20" styleClass="lock-icon">
                      <font>
@@ -80,26 +82,34 @@
                   </JFXButton>
                </children>
             </HBox>
-            <JFXCheckBox checkedColor="#fa6e96" layoutX="23.0" layoutY="348.0" stylesheets="@../CSS/BaseStart.css" text="Ghi nhớ đăng nhập">
+            <JFXCheckBox fx:id="remember" checkedColor="#fa6e96" layoutX="23.0" layoutY="371.0" stylesheets="@../CSS/BaseStart.css" text="Ghi nhớ đăng nhập" textFill="#584f58">
                <font>
                   <Font name="Arial" size="13.0" />
                </font>
             </JFXCheckBox>
-            <JFXButton fx:id="LogIn" layoutX="23.0" layoutY="417.0" onAction="#LogInController" prefHeight="42.0" prefWidth="390.0" styleClass="jfx-buttonLogIn" stylesheets="@../CSS/BaseStart.css" text="Đăng nhập" textFill="#9e9696">
+            <JFXButton fx:id="LogIn" layoutX="23.0" layoutY="418.0" onAction="#LogInController" prefHeight="42.0" prefWidth="390.0" styleClass="jfx-buttonLogIn" stylesheets="@../CSS/BaseStart.css" text="Đăng nhập" textFill="#9e9696">
                <font>
                   <Font name="Arial" size="16.0" />
                </font>
             </JFXButton>
-            <ImageView fx:id="imageViewAnimation" fitHeight="178.0" fitWidth="160.0" layoutX="138.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="imageViewAnimation" fitHeight="178.0" fitWidth="160.0" layoutX="138.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../../images/openeye.png" />
                </image>
             </ImageView>
-            <Label fx:id="wrongNotification" layoutX="95.0" layoutY="379.0" prefHeight="18.0" prefWidth="245.0" text="Sai tên đăng nhập hoặc mật khẩu !!!" textFill="#f44b02">
+            <Label fx:id="wrongNotification" alignment="CENTER" layoutX="94.0" layoutY="266.0" prefHeight="22.0" prefWidth="248.0" styleClass="label-error" text="Sai tên đăng nhập hoặc mật khẩu" textAlignment="CENTER" textFill="#f7f5f3">
                <font>
                   <Font name="Arial" size="15.0" />
                </font>
             </Label>
+            <StackPane fx:id="loadingPane" layoutX="173.0" layoutY="234.0" prefHeight="63.0" prefWidth="90.0">
+               <children>
+                  <ProgressIndicator fx:id="loadingIndicator" centerShape="false" prefHeight="53.0" prefWidth="71.0">
+                     <effect>
+                        <ColorAdjust brightness="1.0" />
+                     </effect>
+                  </ProgressIndicator>
+               </children></StackPane>
          </children>
       </AnchorPane>
    </children>
