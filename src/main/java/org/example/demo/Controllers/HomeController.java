@@ -1,7 +1,5 @@
 package org.example.demo.Controllers;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.RecursiveTreeItem;
@@ -24,7 +22,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
-import javafx.animation.TranslateTransition;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -43,7 +40,6 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.TreeItem;
-import javafx.scene.effect.BlendMode;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
@@ -53,10 +49,11 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import org.example.demo.Database.JDBC;
+import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.circularProgressUI.RingProgressIndicator;
 import javafx.scene.text.Font;
 
-public class HomeController implements DarkModeController {
+public class HomeController implements MainInfo {
 
   @FXML
   private Label librarianName;
@@ -1112,6 +1109,17 @@ public class HomeController implements DarkModeController {
     copiedAreaChart.setPadding(new Insets(20, 0, 0, 0));
 
     return copiedAreaChart;
+  }
+
+  // Không gọi setUpLanguage ở đây
+  @Override
+  public void applyTranslate(boolean isTranslate) {
+
+  }
+
+  // viLang lưu nội dung tiếng Việt gắn với Object, enLang lưu tiếng Anh
+  public static void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
+
   }
 
 }

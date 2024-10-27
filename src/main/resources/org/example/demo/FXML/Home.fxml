@@ -45,7 +45,7 @@
                 <Font name="System Bold" size="20.0"/>
               </font>
             </Label>
-            <Label fx:id="dayTime" alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="238.0"
+            <Label fx:id="dayTime" alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="280.0"
               text="dd-MMM, yyyy" textFill="#e464c0">
               <font>
                 <Font name="Lucida Console" size="17.0"/>
@@ -62,8 +62,7 @@
         <AnchorPane prefHeight="110.0" prefWidth="900.0">
           <children>
             <HBox layoutY="10.0" prefHeight="92.0" prefWidth="900.0" AnchorPane.bottomAnchor="7.0"
-              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-              AnchorPane.topAnchor="10.0">
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
               <children>
                 <VBox prefHeight="91.0" prefWidth="204.0" styleClass="mini-pane">
                   <children>
@@ -234,8 +233,7 @@
         <AnchorPane prefHeight="247.0" prefWidth="900.0">
           <children>
             <HBox layoutY="7.0" prefHeight="206.0" prefWidth="902.0" AnchorPane.bottomAnchor="0.0"
-              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-2.0"
-              AnchorPane.topAnchor="7.0">
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-2.0" AnchorPane.topAnchor="7.0">
               <children>
                 <AnchorPane prefHeight="206.0" prefWidth="428.0" styleClass="small-pane">
                   <children>
@@ -249,8 +247,7 @@
                       AnchorPane.bottomAnchor="23.0" AnchorPane.leftAnchor="2.0"
                       AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0"/>
                     <Button layoutX="343.0" layoutY="178.0" mnemonicParsing="false"
-                      onAction="#allOnClick" styleClass="btn-home" text="Tất cả"
-                      textFill="#e464c0">
+                      onAction="#allOnClick" styleClass="btn-home" text="Tất cả" textFill="#e464c0">
                       <font>
                         <Font name="SansSerif Bold" size="13.0"/>
                       </font>
@@ -302,16 +299,15 @@
         <AnchorPane prefHeight="175.0" prefWidth="900.0">
           <children>
             <HBox prefHeight="152.0" prefWidth="888.0" AnchorPane.bottomAnchor="14.0"
-              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="12.0"
-              AnchorPane.topAnchor="14.0">
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="14.0">
               <children>
                 <AnchorPane prefHeight="152.0" prefWidth="487.0" styleClass="small-pane">
                   <HBox.margin>
                     <Insets left="10.0" right="20.0"/>
                   </HBox.margin>
                   <children>
-                    <Label fx:id="firstH" alignment="CENTER" contentDisplay="CENTER"
-                      layoutX="36.0" layoutY="18.0" prefHeight="116.0" prefWidth="70.0" text="H"
+                    <Label fx:id="firstH" alignment="CENTER" contentDisplay="CENTER" layoutX="36.0"
+                      layoutY="18.0" prefHeight="116.0" prefWidth="70.0" text="H"
                       textAlignment="CENTER">
                       <font>
                         <Font size="80.0"/>
@@ -324,15 +320,15 @@
                         <Font size="80.0"/>
                       </font>
                     </Label>
-                    <Label fx:id="firstM" alignment="CENTER" contentDisplay="CENTER"
-                      layoutX="235.0" layoutY="18.0" prefHeight="118.0" prefWidth="78.0" text="M"
+                    <Label fx:id="firstM" alignment="CENTER" contentDisplay="CENTER" layoutX="235.0"
+                      layoutY="18.0" prefHeight="118.0" prefWidth="78.0" text="M"
                       textAlignment="CENTER">
                       <font>
                         <Font size="80.0"/>
                       </font>
                     </Label>
-                    <Label fx:id="colon" alignment="CENTER" contentDisplay="CENTER"
-                      layoutX="176.0" layoutY="18.0" prefHeight="118.0" prefWidth="59.0" text=":"
+                    <Label fx:id="colon" alignment="CENTER" contentDisplay="CENTER" layoutX="176.0"
+                      layoutY="18.0" prefHeight="118.0" prefWidth="59.0" text=":"
                       textAlignment="CENTER">
                       <font>
                         <Font size="80.0"/>

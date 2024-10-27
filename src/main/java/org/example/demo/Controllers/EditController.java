@@ -3,8 +3,8 @@ package org.example.demo.Controllers;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javafx.animation.ScaleTransition;
-import javafx.animation.Transition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -19,14 +19,13 @@ import org.example.demo.CustomUI.ConfirmBox;
 import org.example.demo.CustomUI.EditBookView;
 import org.example.demo.CustomUI.EditBox;
 import org.example.demo.CustomUI.EditUserView;
-import org.example.demo.CustomUI.SuggestionView;
+import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.BookShelf.Book;
 import org.example.demo.Models.Library;
 import org.example.demo.Models.Suggestion.Suggestion;
-import org.example.demo.Models.Users.Date;
 import org.example.demo.Models.Users.User;
 
-public class EditController implements DarkModeController {
+public class EditController implements MainInfo {
 
   @FXML
   private AnchorPane mainPane;
@@ -346,6 +345,17 @@ public class EditController implements DarkModeController {
   // set BlendMode của các ImageView là DIFFERENCE nếu isDark = true và SRC_OVER trong th còn lại
   @Override
   public void applyDarkMode(boolean isDark) {
+
+  }
+
+  // Không gọi setUpLanguage ở đây
+  @Override
+  public void applyTranslate(boolean isTranslate) {
+
+  }
+
+  // viLang lưu nội dung tiếng Việt gắn với Object, enLang lưu tiếng Anh
+  public static void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
 
   }
 }

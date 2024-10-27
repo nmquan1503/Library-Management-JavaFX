@@ -3,6 +3,7 @@ package org.example.demo.Controllers;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 import javafx.animation.ParallelTransition;
@@ -22,10 +23,11 @@ import javafx.scene.shape.Arc;
 import javafx.util.Duration;
 import org.example.demo.CustomUI.SuggestionView;
 import org.example.demo.CustomUI.UserView;
+import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.Library;
 import org.example.demo.Models.Suggestion.Suggestion;
 
-public class UsersController implements DarkModeController {
+public class UsersController implements MainInfo {
 
   @FXML
   private AnchorPane mainPane;
@@ -320,4 +322,14 @@ public class UsersController implements DarkModeController {
 
   }
 
+  // Không gọi setUpLanguage ở đây
+  @Override
+  public void applyTranslate(boolean isTranslate) {
+
+  }
+
+  // viLang lưu nội dung tiếng Việt gắn với Object, enLang lưu tiếng Anh
+  public static void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
+
+  }
 }

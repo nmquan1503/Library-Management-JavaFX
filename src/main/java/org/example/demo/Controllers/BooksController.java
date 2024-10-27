@@ -7,9 +7,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Stack;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.ParallelTransition;
@@ -24,32 +24,24 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
-import javafx.scene.shape.ArcType;
 import javafx.util.Duration;
-import javafx.util.Pair;
 import org.example.demo.CustomUI.BookView;
 import org.example.demo.CustomUI.SuggestionView;
 import org.example.demo.Database.JDBC;
+import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.BookShelf.Book;
 import org.example.demo.Models.Library;
 import org.example.demo.Models.Suggestion.Suggestion;
 import org.example.demo.Models.Trie.Trie;
 
-public class BooksController implements DarkModeController {
+public class BooksController implements MainInfo {
 
   @FXML
   private AnchorPane advertisementPane;
@@ -739,6 +731,17 @@ public class BooksController implements DarkModeController {
   // set BlendMode của các ImageView là DIFFERENCE nếu isDark = true và SRC_OVER trong th còn lại
   @Override
   public void applyDarkMode(boolean isDark) {
+
+  }
+
+  // Không gọi setUpLanguage ở đây
+  @Override
+  public void applyTranslate(boolean isTranslate) {
+
+  }
+
+  // viLang lưu nội dung tiếng Việt gắn với Object, enLang lưu tiếng Anh
+  public static void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
 
   }
 }
