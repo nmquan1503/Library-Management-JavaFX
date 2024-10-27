@@ -61,6 +61,19 @@ public class BaseController {
 
   @FXML
   public void initialize() {
+    try {
+      FXMLLoader fxmlLoader = new FXMLLoader(
+          getClass().getResource("/org/example/demo/FXML/Home.fxml"));
+      AnchorPane anchorPane = fxmlLoader.load();
+
+      currentController = fxmlLoader.getController();
+
+      bigPane.getChildren().remove(mainPane);
+      bigPane.getChildren().add(anchorPane);
+      mainPane = anchorPane;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
     if (!isDark) {
       checkMode.setText("☀");
     } else {
@@ -191,7 +204,7 @@ public class BaseController {
 
     // translate for main pane
     if (currentController != null) {
-      currentController.applyTranslate(!isTranslate);
+      currentController.applyTranslate(viLang, enLang, !isTranslate);
     }
     isTranslate = !isTranslate;
   }

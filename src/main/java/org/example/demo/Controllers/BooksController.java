@@ -736,7 +736,8 @@ public class BooksController implements MainInfo {
 
   // Không gọi setUpLanguage ở đây
   @Override
-  public void applyTranslate(boolean isTranslate) {
+  public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
+      boolean isTranslate) {
 
   }
 

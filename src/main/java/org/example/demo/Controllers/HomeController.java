@@ -37,6 +37,7 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.TreeItem;
@@ -48,8 +49,10 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import org.example.demo.API.Translate;
 import org.example.demo.Database.JDBC;
 import org.example.demo.Interfaces.MainInfo;
+import org.example.demo.Models.Language;
 import org.example.demo.circularProgressUI.RingProgressIndicator;
 import javafx.scene.text.Font;
 
@@ -102,7 +105,7 @@ public class HomeController implements MainInfo {
 
   @FXML
   private Label secM;
-
+  
   public void initialize() {
     displayTime();
     displayMiniPaneTotal();
@@ -115,7 +118,7 @@ public class HomeController implements MainInfo {
   public void displayTime() {
     Label[] digitLabels = {firstH, secH, colon, firstM, secM};
     DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-    DateTimeFormatter timeFormatter2 = DateTimeFormatter.ofPattern("dd-MMM, yyyy");
+    DateTimeFormatter timeFormatter2 = DateTimeFormatter.ofPattern("dd-MM, yyyy");
     String currentTime = LocalDateTime.now().format(timeFormatter);
     dayTime.setText(LocalDateTime.now().format(timeFormatter2));
 
@@ -1113,7 +1116,8 @@ public class HomeController implements MainInfo {
 
   // Không gọi setUpLanguage ở đây
   @Override
-  public void applyTranslate(boolean isTranslate) {
+  public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
+      boolean isTranslate) {
 
   }
 
@@ -1121,5 +1125,6 @@ public class HomeController implements MainInfo {
   public static void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
 
   }
+
 
 }

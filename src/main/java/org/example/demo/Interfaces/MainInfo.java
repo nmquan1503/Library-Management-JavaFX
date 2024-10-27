@@ -7,5 +7,6 @@ public interface MainInfo {
 
   public void applyDarkMode(boolean isDark);
 
-  public void applyTranslate(boolean isTranslate);
+  public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
+      boolean isTranslate);
 }
