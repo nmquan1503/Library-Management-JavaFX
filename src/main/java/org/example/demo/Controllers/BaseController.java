@@ -4,14 +4,10 @@ import com.jfoenix.controls.JFXButton;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.util.HashMap;
-import java.util.List;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -248,13 +244,22 @@ public class BaseController {
 
   private void switchPane(String fxmlPath) {
     try {
+      if (currentController != null) {
+        currentController.removeLang(viLang, enLang);
+      }
+
+      if (mainPane != null) {
+        mainPane.getChildren().clear();
+        bigPane.getChildren().remove(mainPane);
+        mainPane = null;
+      }
+
       FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
       AnchorPane anchorPane = fxmlLoader.load();
 
       currentController = fxmlLoader.getController();
       currentController.setUpLanguage(viLang, enLang);
 
-      bigPane.getChildren().remove(mainPane);
       bigPane.getChildren().add(anchorPane);
       mainPane = anchorPane;
 

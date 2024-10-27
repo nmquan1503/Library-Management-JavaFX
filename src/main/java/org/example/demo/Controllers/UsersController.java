@@ -334,4 +334,9 @@ public class UsersController implements MainInfo {
   public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
 
   }
+
+  // giải phóng các node vừa thêm vào hashMap
+  @Override
+  public void removeLang(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
+  }
 }

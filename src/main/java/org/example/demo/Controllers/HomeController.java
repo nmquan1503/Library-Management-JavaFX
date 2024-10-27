@@ -29,6 +29,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Side;
@@ -257,15 +258,16 @@ public class HomeController implements MainInfo {
   private void displayHomeTable() {
 
     Connection conn = null;
-    PreparedStatement pstmt = null;
+    PreparedStatement preparedStatement = null;
     ResultSet rs = null;
     try {
       conn = JDBC.getConnection();
 
       String sql = "SELECT id_librarian, name_librarian, email_librarian FROM librarian LIMIT 3";
-      pstmt = conn.prepareStatement(sql);
+      assert conn != null;
+      preparedStatement = conn.prepareStatement(sql);
 
-      rs = pstmt.executeQuery();
+      rs = preparedStatement.executeQuery();
 
       // display librarian table
       librarianView.setPrefWidth(415);
@@ -315,8 +317,8 @@ public class HomeController implements MainInfo {
         if (rs != null) {
           rs.close();
         }
-        if (pstmt != null) {
-          pstmt.close();
+        if (preparedStatement != null) {
+          preparedStatement.close();
         }
       } catch (SQLException se) {
         se.printStackTrace();
@@ -330,11 +332,11 @@ public class HomeController implements MainInfo {
     // no image here
   }
 
-  class LibrarianTable extends RecursiveTreeObject<LibrarianTable> {
+  static class LibrarianTable extends RecursiveTreeObject<LibrarianTable> {
 
-    private IntegerProperty id;
-    private StringProperty name;
-    private StringProperty email;
+    private final IntegerProperty id;
+    private final StringProperty name;
+    private final StringProperty email;
 
     public LibrarianTable(int id, String name, String email) {
       this.id = new SimpleIntegerProperty(id);
@@ -358,7 +360,7 @@ public class HomeController implements MainInfo {
   // Display borrowed books / total books
   private void displayCirclePro() {
     Connection conn = null;
-    PreparedStatement pstmt = null;
+    PreparedStatement preparedStatement = null;
     ResultSet rs = null;
 
     try {
@@ -367,8 +369,9 @@ public class HomeController implements MainInfo {
 
       // Query to get total number of books
       String totalBooksSql = "SELECT SUM(quantity) AS total FROM books";
-      pstmt = conn.prepareStatement(totalBooksSql);
-      rs = pstmt.executeQuery();
+      assert conn != null;
+      preparedStatement = conn.prepareStatement(totalBooksSql);
+      rs = preparedStatement.executeQuery();
       int totalBooks = 0;
       if (rs.next()) {
         totalBooks = rs.getInt("total");
@@ -376,8 +379,8 @@ public class HomeController implements MainInfo {
 
       // Query to get the number of borrowed books
       String borrowedBooksSql = "SELECT COUNT(*) AS total FROM borrowing WHERE (returned_date IS NULL) OR (returned_date > NOW())";
-      pstmt = conn.prepareStatement(borrowedBooksSql);
-      rs = pstmt.executeQuery();
+      preparedStatement = conn.prepareStatement(borrowedBooksSql);
+      rs = preparedStatement.executeQuery();
       int borrowedBooks = 0;
       if (rs.next()) {
         borrowedBooks = rs.getInt("total");
@@ -467,8 +470,8 @@ public class HomeController implements MainInfo {
         if (rs != null) {
           rs.close();
         }
-        if (pstmt != null) {
-          pstmt.close();
+        if (preparedStatement != null) {
+          preparedStatement.close();
         }
         if (conn != null) {
           JDBC.closeConnection(conn);
@@ -603,7 +606,7 @@ public class HomeController implements MainInfo {
 
   private void displayArea() {
     Connection conn = null;
-    PreparedStatement pstmt = null;
+    PreparedStatement preparedStatement = null;
     ResultSet rs = null;
     try {
       conn = JDBC.getConnection();
@@ -627,8 +630,9 @@ public class HomeController implements MainInfo {
           "GROUP BY month " +
           "ORDER BY month;";
 
-      pstmt = conn.prepareStatement(sql);
-      rs = pstmt.executeQuery();
+      assert conn != null;
+      preparedStatement = conn.prepareStatement(sql);
+      rs = preparedStatement.executeQuery();
 
       Map<String, Integer> currentYearData = new HashMap<>();
       Map<String, Integer> previousYearData = new HashMap<>();
@@ -666,8 +670,8 @@ public class HomeController implements MainInfo {
         if (rs != null) {
           rs.close();
         }
-        if (pstmt != null) {
-          pstmt.close();
+        if (preparedStatement != null) {
+          preparedStatement.close();
         }
         if (conn != null) {
           conn.close();
@@ -703,9 +707,7 @@ public class HomeController implements MainInfo {
       scaleDown(fullyScatter, blur);
     });
 
-    fullyScatterChart.setOnMouseClicked(event -> {
-      event.consume();
-    });
+    fullyScatterChart.setOnMouseClicked(Event::consume);
 
     centerInParentDynamic(blur, fullyScatter, 0.6, 0.75);
   }
@@ -959,15 +961,16 @@ public class HomeController implements MainInfo {
     fullyList.getStyleClass().add("sub-pane");
 
     Connection conn = null;
-    PreparedStatement pstmt = null;
+    PreparedStatement preparedStatement = null;
     ResultSet rs = null;
     try {
       conn = JDBC.getConnection();
 
       String sql = "SELECT id_librarian, name_librarian, email_librarian FROM librarian";
-      pstmt = conn.prepareStatement(sql);
+      assert conn != null;
+      preparedStatement = conn.prepareStatement(sql);
 
-      rs = pstmt.executeQuery();
+      rs = preparedStatement.executeQuery();
 
       JFXTreeTableView<LibrarianTable> tempTable = new JFXTreeTableView<>();
 
@@ -1040,8 +1043,8 @@ public class HomeController implements MainInfo {
         if (rs != null) {
           rs.close();
         }
-        if (pstmt != null) {
-          pstmt.close();
+        if (preparedStatement != null) {
+          preparedStatement.close();
         }
       } catch (SQLException se) {
         se.printStackTrace();
@@ -1143,9 +1146,6 @@ public class HomeController implements MainInfo {
 //        }
 //      }
 //    }
-    for (String t : viLang.values()) {
-      System.out.println(t);
-    }
     if (isTranslate) {
       helloTxt.setText(enLang.get(helloTxt));
     } else {
@@ -1154,10 +1154,18 @@ public class HomeController implements MainInfo {
   }
 
   // viLang lưu nội dung tiếng Việt gắn với Object, enLang lưu tiếng Anh
+  @Override
   public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
     viLang.put(helloTxt, helloTxt.getText());
     enLang.put(helloTxt,
         Translate.translate(helloTxt.getText(), Language.VIETNAMESE, Language.ENGLISH));
+  }
+
+  // giải phóng các node vừa thêm vào hashMap
+  @Override
+  public void removeLang(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
+    viLang.remove(helloTxt);
+    enLang.remove(helloTxt);
   }
 
   public List<Label> getAllTextLabels() {
