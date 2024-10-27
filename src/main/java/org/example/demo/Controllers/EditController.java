@@ -356,7 +356,8 @@ public class EditController implements MainInfo {
   }
 
   // viLang lưu nội dung tiếng Việt gắn với Object, enLang lưu tiếng Anh
-  public static void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
+  @Override
+  public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
 
   }
 }

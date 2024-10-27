@@ -4,10 +4,14 @@ import com.jfoenix.controls.JFXButton;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.util.HashMap;
+import java.util.List;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -150,10 +154,8 @@ public class BaseController {
   }
 
   private void setUpLang() {
-    HomeController.setUpLanguage(viLang, enLang);
-    BooksController.setUpLanguage(viLang, enLang);
-    EditController.setUpLanguage(viLang, enLang);
-    UsersController.setUpLanguage(viLang, enLang);
+    currentController.setUpLanguage(viLang, enLang);
+
     for (MenuItem item : avatarMenu.getItems()) {
       viLang.put(item, item.getText());
       if (item.getText().equals(" Dịch")) {
@@ -250,6 +252,7 @@ public class BaseController {
       AnchorPane anchorPane = fxmlLoader.load();
 
       currentController = fxmlLoader.getController();
+      currentController.setUpLanguage(viLang, enLang);
 
       bigPane.getChildren().remove(mainPane);
       bigPane.getChildren().add(anchorPane);

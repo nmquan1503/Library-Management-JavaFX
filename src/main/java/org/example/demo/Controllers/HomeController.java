@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Side;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
@@ -105,7 +107,10 @@ public class HomeController implements MainInfo {
 
   @FXML
   private Label secM;
-  
+
+  @FXML
+  private Label helloTxt;
+
   public void initialize() {
     displayTime();
     displayMiniPaneTotal();
@@ -1118,13 +1123,76 @@ public class HomeController implements MainInfo {
   @Override
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
       boolean isTranslate) {
-
+//    List<Label> labels = getAllTextLabels();
+//    List<Button> buttons = getAllTextButtons();
+//    for (Label label : labels) {
+//      if (label != null) {
+//        if (isTranslate) {
+//          label.setText(enLang.get(label));
+//        } else {
+//          label.setText(viLang.get(label));
+//        }
+//      }
+//    }
+//    for (Button button : buttons) {
+//      if (button != null) {
+//        if (isTranslate) {
+//          button.setText(enLang.get(button));
+//        } else {
+//          button.setText(viLang.get(button));
+//        }
+//      }
+//    }
+    for (String t : viLang.values()) {
+      System.out.println(t);
+    }
+    if (isTranslate) {
+      helloTxt.setText(enLang.get(helloTxt));
+    } else {
+      helloTxt.setText(viLang.get(helloTxt));
+    }
   }
 
   // viLang lưu nội dung tiếng Việt gắn với Object, enLang lưu tiếng Anh
-  public static void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
-
+  public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
+    viLang.put(helloTxt, helloTxt.getText());
+    enLang.put(helloTxt,
+        Translate.translate(helloTxt.getText(), Language.VIETNAMESE, Language.ENGLISH));
   }
 
+  public List<Label> getAllTextLabels() {
+    List<Label> labels = new ArrayList<>();
+    findLabelsAndButtonsWithText(homePane, labels, null);
+    return labels;
+  }
+
+  public List<Button> getAllTextButtons() {
+    List<Button> buttons = new ArrayList<>();
+    findLabelsAndButtonsWithText(homePane, null, buttons);
+    return buttons;
+  }
+
+  private void findLabelsAndButtonsWithText(Node node, List<Label> labels, List<Button> buttons) {
+    if (node instanceof Label && labels != null) {
+      Label label = (Label) node;
+      if (isTextOnly(label.getText())) {
+        labels.add(label);
+      }
+    } else if (node instanceof Button && buttons != null) {
+      Button button = (Button) node;
+      if (isTextOnly(button.getText())) {
+        buttons.add(button);
+      }
+    }
+    if (node instanceof Parent) {
+      for (Node child : ((Parent) node).getChildrenUnmodifiable()) {
+        findLabelsAndButtonsWithText(child, labels, buttons);
+      }
+    }
+  }
+
+  private boolean isTextOnly(String text) {
+    return text != null && !text.trim().isEmpty() && !text.matches("\\d+");
+  }
 
 }

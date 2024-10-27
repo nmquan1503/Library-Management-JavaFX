@@ -9,4 +9,6 @@ public interface MainInfo {
 
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
       boolean isTranslate);
+
+  public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang);
 }
