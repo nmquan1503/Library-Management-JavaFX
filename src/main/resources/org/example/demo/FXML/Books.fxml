@@ -19,7 +19,7 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo.Controllers.BooksController">
   <fx:include source="LeftMenu.fxml" />
   <fx:include layoutX="60.0" source="TopMenu.fxml" />
-   <AnchorPane fx:id="mainPane" layoutX="60.0" layoutY="60.0"  prefHeight="540.0" prefWidth="900.0">
+   <AnchorPane fx:id="mainPane" layoutX="60.0" layoutY="60.0" prefHeight="540.0" prefWidth="900.0">
       <AnchorPane fx:id="advertisementPane" layoutX="575.0" layoutY="180.0" prefHeight="300.0" prefWidth="280.0" stylesheets="@../CSS/AdvertisementPane.css">
          <children>
             <ImageView id="Content" fx:id="content1" fitHeight="240.0" fitWidth="160.0" layoutY="30.0" pickOnBounds="true" />

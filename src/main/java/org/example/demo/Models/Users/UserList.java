@@ -147,4 +147,12 @@ public class UserList {
     return idUser;
   }
 
+  public static void main(String[] args) {
+    UserList userList=new UserList();
+    User user=userList.getUser(1);
+    if (user == null) {
+      System.out.println(1);
+    }
+  }
+
 }
