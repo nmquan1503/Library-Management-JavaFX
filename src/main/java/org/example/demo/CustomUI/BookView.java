@@ -1,5 +1,6 @@
 package org.example.demo.CustomUI;
 
+import java.util.HashMap;
 import java.util.Objects;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
@@ -8,17 +9,23 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.BookShelf.Book;
 
-public class BookView extends ScrollPane {
+public class BookView extends ScrollPane implements MainInfo {
+
+  @FXML private AnchorPane wrapper;
   @FXML private ImageView imageBook;
+  
   @FXML private Label titleLabel;
+  
   @FXML private VBox authorList;
 
   @FXML private VBox infoBox;
@@ -54,7 +61,7 @@ public class BookView extends ScrollPane {
   @FXML private HBox quantityBox;
   @FXML private Label quantityLabel;
 
-  public BookView(Book book){
+  public BookView(Book book, BlendMode blendMode){
     try {
       FXMLLoader fxmlLoader = new FXMLLoader(
           getClass().getResource("/org/example/demo/FXML/BookView.fxml"));
@@ -71,7 +78,7 @@ public class BookView extends ScrollPane {
     this.getStylesheets().add(getClass().getResource("/org/example/demo/CSS/BookView.css").toExternalForm());
     this.setId("FadedScrollPane");
 
-    setImageBook(book);
+    setImageBook(book,blendMode);
     setTitle(book);
     setAuthorList(book);
     setPublisher(book);
@@ -85,12 +92,14 @@ public class BookView extends ScrollPane {
     setQuantity(book);
 
   }
-  private void setImageBook(Book book){
+  private void setImageBook(Book book, BlendMode blendMode){
     if(book.getImageLink()==null){
       imageBook.setImage(new Image(Objects.requireNonNull(
           getClass().getResourceAsStream("/org/example/demo/Assets/basic.jpg"))));
     }
     else imageBook.setImage(new Image(book.getImageLink()));
+    if(blendMode==null) wrapper.setBlendMode(BlendMode.SRC_OVER);
+    else wrapper.setBlendMode(blendMode);
   }
 
   private void setTitle(Book book){
@@ -224,4 +233,29 @@ public class BookView extends ScrollPane {
 
   }
 
+  @Override
+  public void applyDarkMode(boolean isDark) {
+    if(isDark){
+      this.wrapper.setBlendMode(BlendMode.DIFFERENCE);
+    }
+    else {
+      this.wrapper.setBlendMode(BlendMode.SRC_OVER);
+    }
+  }
+
+  @Override
+  public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
+      boolean isTranslate) {
+
+  }
+
+  @Override
+  public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
+
+  }
+
+  @Override
+  public void removeLang(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
+
+  }
 }

@@ -13,7 +13,7 @@ import org.example.demo.Models.BookShelf.BookShelf;
 public class GoogleBook {
 
   /**
-   * api create list book from a word. get a json from google book api. traverse json to create
+   * api create list book from a word. get a json from Google book api. traverse json to create
    * books.
    *
    * @param prefix the word typed in text field.
@@ -28,7 +28,7 @@ public class GoogleBook {
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
       connection.setRequestMethod("GET");
       int responseCode = connection.getResponseCode();
-      System.out.println("response code:"+responseCode);
+      System.out.println("response code:" + responseCode);
       if (responseCode == HttpURLConnection.HTTP_OK) {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jsonNode = mapper.readTree(connection.getInputStream());
@@ -115,7 +115,7 @@ public class GoogleBook {
 
   public static void main(String[] args) {
     ArrayList<Book> books = getBooks("Harry Potter");
-    System.out.println("books size="+books.size());
+    System.out.println("books size=" + books.size());
     BookShelf bookShelf = new BookShelf();
     for (Book book : books) {
       bookShelf.insertBook(book);

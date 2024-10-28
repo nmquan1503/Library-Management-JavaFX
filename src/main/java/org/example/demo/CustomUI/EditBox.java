@@ -3,30 +3,40 @@ package org.example.demo.CustomUI;
 import com.jfoenix.controls.JFXButton;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import java.util.HashMap;
 import java.util.Objects;
 import javafx.geometry.Pos;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
+import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.Suggestion.Suggestion;
 
-public class EditBox extends HBox {
+public class EditBox extends HBox implements MainInfo {
 
   private final int id;
 
+  private StackPane wrapper;
+  private ImageView image;
+  private VBox content;
+  private JFXButton removeButton;
 
-  public EditBox(Suggestion suggestion,Runnable removeAction, int height,int width){
+  public EditBox(Suggestion suggestion,Runnable removeAction, int height,int width, BlendMode blendMode){
     this.id=suggestion.getId();
 
+    initImage(suggestion,height,blendMode);
+    initLabel(suggestion,height,width);
+    initRemoveButton(removeAction,height);
+
     this.getChildren().addAll(
-        initImage(suggestion,height),
-        initLabel(suggestion,height,width),
-        initRemoveButton(removeAction,height)
+        wrapper,
+        content,
+        removeButton
     );
 
     this.getStylesheets().add(
@@ -38,29 +48,29 @@ public class EditBox extends HBox {
 
   }
 
-  private StackPane initImage(Suggestion suggestion,int height){
-    StackPane stackPane=new StackPane();
-    stackPane.setPrefHeight(height);
-    stackPane.setPrefWidth(height/1.5);
-    stackPane.setAlignment(Pos.CENTER);
+  private void initImage(Suggestion suggestion,int height, BlendMode blendMode){
+    wrapper=new StackPane();
+    wrapper.setPrefHeight(height);
+    wrapper.setPrefWidth(height/1.5);
+    wrapper.setAlignment(Pos.CENTER);
 
-    ImageView imageView=new ImageView(suggestion.getIcon());
-    imageView.setPreserveRatio(true);
-    imageView.setFitHeight(height-10);
-    imageView.setId("IconOfContent");
+    image=new ImageView(suggestion.getIcon());
+    image.setPreserveRatio(true);
+    image.setFitHeight(height-10);
+    image.setId("IconOfContent");
 
-    stackPane.getChildren().add(imageView);
-
-    return stackPane;
+    if(blendMode==null) wrapper.setBlendMode(BlendMode.SRC_OVER);
+    else wrapper.setBlendMode(blendMode);
+    wrapper.getChildren().add(image);
   }
 
-  private VBox initLabel(Suggestion suggestion,int height,int width){
-    Label content=new Label(suggestion.getContent());
-    content.setPrefWidth(width - 2*height/1.5-15);
-    content.setPrefHeight(2.0*height/3);
-    content.setWrapText(true);
-    content.setAlignment(Pos.TOP_LEFT);
-    content.setId("ContentOfSuggestion");
+  private void initLabel(Suggestion suggestion,int height,int width){
+    Label contentLabel =new Label(suggestion.getContent());
+    contentLabel.setPrefWidth(width - 2*height/1.5-15);
+    contentLabel.setPrefHeight(2.0*height/3);
+    contentLabel.setWrapText(true);
+    contentLabel.setAlignment(Pos.TOP_LEFT);
+    contentLabel.setId("ContentOfSuggestion");
 
     Label idLabel=new Label("#"+suggestion.getId());
     idLabel.setPrefHeight(width - 2*height/1.5-15);
@@ -69,11 +79,11 @@ public class EditBox extends HBox {
     idLabel.setAlignment(Pos.TOP_LEFT);
     idLabel.setId("ContentOfSuggestion");
 
-    return new VBox(content,idLabel);
+    content=new VBox(contentLabel,idLabel);
   }
 
-  private JFXButton initRemoveButton(Runnable removeAction, int height){
-    JFXButton removeButton=new JFXButton();
+  private void initRemoveButton(Runnable removeAction, int height){
+    removeButton=new JFXButton();
     removeButton.setPrefWidth(height/1.5);
     removeButton.setPrefHeight(height/1.5);
     removeButton.setContentDisplay(ContentDisplay.CENTER);
@@ -85,11 +95,33 @@ public class EditBox extends HBox {
     viewButton.setSize(String.valueOf(height/2));
     removeButton.setGraphic(viewButton);
 
-    return removeButton;
   }
 
   public int getID(){
     return id;
   }
 
+  @Override
+  public void applyDarkMode(boolean isDark) {
+    if(isDark){
+      wrapper.setBlendMode(BlendMode.DIFFERENCE);
+    }
+    else wrapper.setBlendMode(BlendMode.SRC_OVER);
+  }
+
+  @Override
+  public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
+      boolean isTranslate) {
+
+  }
+
+  @Override
+  public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
+
+  }
+
+  @Override
+  public void removeLang(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
+
+  }
 }

@@ -1,21 +1,25 @@
 package org.example.demo.CustomUI;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.Objects;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.Users.Date;
 import org.example.demo.Models.Users.User;
 
-public class UserView extends ScrollPane {
+public class UserView extends ScrollPane implements MainInfo {
 
+  @FXML private AnchorPane wrapper;
   @FXML private ImageView imageUser;
 
   @FXML private Label nameLabel;
@@ -38,7 +42,7 @@ public class UserView extends ScrollPane {
   @FXML private HBox endBanDateBox;
   @FXML private Label endBanDateLabel;
 
-  public UserView(User user){
+  public UserView(User user,BlendMode blendMode){
     try {
       FXMLLoader fxmlLoader = new FXMLLoader(
           getClass().getResource("/org/example/demo/FXML/UserView.fxml"));
@@ -55,7 +59,7 @@ public class UserView extends ScrollPane {
     this.getStylesheets().add(getClass().getResource("/org/example/demo/CSS/BookView.css").toExternalForm());
     this.setId("FadedScrollPane");
 
-    setImage(user);
+    setImage(user,blendMode);
     setName(user);
     setID(user);
     setBirthday(user);
@@ -65,7 +69,7 @@ public class UserView extends ScrollPane {
     setEndBanDate(user);
   }
 
-  private void setImage(User user){
+  private void setImage(User user,BlendMode blendMode){
     if(user.getAvatar()==null){
       imageUser.setImage(new Image(Objects.requireNonNull(
           getClass().getResourceAsStream("/org/example/demo/Assets/basic.jpg"))));
@@ -73,6 +77,10 @@ public class UserView extends ScrollPane {
     else {
       imageUser.setImage(user.getAvatar());
     }
+    if(blendMode==null){
+      wrapper.setBlendMode(BlendMode.SRC_OVER);
+    }
+    else wrapper.setBlendMode(blendMode);
   }
   
   private void setName(User user){
@@ -139,4 +147,29 @@ public class UserView extends ScrollPane {
 
   }
 
+  @Override
+  public void applyDarkMode(boolean isDark) {
+    if(isDark){
+      this.wrapper.setBlendMode(BlendMode.DIFFERENCE);
+    }
+    else {
+      this.wrapper.setBlendMode(BlendMode.SRC_OVER);
+    }
+  }
+
+  @Override
+  public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
+      boolean isTranslate) {
+
+  }
+
+  @Override
+  public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
+
+  }
+
+  @Override
+  public void removeLang(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
+
+  }
 }

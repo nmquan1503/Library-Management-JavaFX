@@ -11,84 +11,87 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo.Controllers.EditController">
-  <fx:include source="LeftMenu.fxml" />
-  <fx:include layoutX="60.0" source="TopMenu.fxml" />
-  <AnchorPane fx:id="mainPane" layoutX="60.0" layoutY="60.0" prefHeight="540.0" prefWidth="900.0">
-      <children>
-         <TabPane id="TabPane" prefHeight="540.0" prefWidth="900.0" side="RIGHT" stylesheets="@../CSS/TabPane.css" tabClosingPolicy="UNAVAILABLE">
-           <tabs>
-             <Tab id="Tab" text="Books">
-               <content>
-                 <AnchorPane minHeight="0.0" minWidth="0.0">
-                        <children>
-                           <JFXListView id="ListView" fx:id="listViewBooks" layoutX="180.0" layoutY="85.0" onMouseClicked="#FixBook" prefHeight="415.0" prefWidth="500.0" stylesheets="@../CSS/Pagination.css" />
-                           <TextField fx:id="pageBookNumberTextField" alignment="CENTER" layoutX="415.0" layoutY="505.0" onAction="#changePageBook" prefHeight="30.0" prefWidth="30.0" />
-                           <JFXButton fx:id="prevPageBookButton" contentDisplay="CENTER" layoutX="387.0" layoutY="505.0" onAction="#switchToPrevPageBook" prefHeight="30.0" prefWidth="25.0">
-                              <graphic>
-                                 <FontAwesomeIconView glyphName="ANGLE_DOUBLE_LEFT" size="20" />
-                              </graphic>
-                           </JFXButton>
-                           <JFXButton fx:id="nextPageBookButton" contentDisplay="CENTER" layoutX="445.0" layoutY="505.0" onAction="#switchToNextPageBook" prefHeight="30.0" prefWidth="25.0">
-                              <graphic>
-                                 <FontAwesomeIconView glyphName="ANGLE_DOUBLE_RIGHT" size="20" />
-                              </graphic>
-                           </JFXButton>
-                           <JFXButton layoutX="30.0" layoutY="30.0" onAction="#AddBook" text="Thêm sách" wrapText="true">
-                              <graphic>
-                                 <FontAwesomeIconView glyphName="PLUS_CIRCLE" size="30" />
-                              </graphic>
-                              <font>
-                                 <Font name="System Bold Italic" size="12.0" />
-                              </font>
-                           </JFXButton>
-                           <VBox id="SearchBar" layoutX="255.0" layoutY="34.0" prefHeight="30.0" prefWidth="350.0" stylesheets="@../CSS/SearchTextField.css">
-                              <children>
-                                 <HBox>
-                                    <children>
-                                       <TextField id="TextField" prefHeight="28.0" prefWidth="359.0" promptText="Thêm sách từ Google Books" />
-                                       <JFXButton contentDisplay="CENTER" prefHeight="28.0" prefWidth="0.0">
-                                          <graphic>
-                                             <FontAwesomeIconView glyphName="REMOVE" size="20" />
-                                          </graphic>
-                                       </JFXButton>
-                                    </children>
-                                 </HBox>
-                                 <JFXListView id="ListView" visible="false" />
-                              </children>
-                           </VBox>
-                        </children></AnchorPane>
-               </content>
-             </Tab>
-             <Tab id="Tab" text="Users">
-               <content>
-                 <AnchorPane minHeight="0.0" minWidth="0.0">
-                   <children>
-                     <JFXListView id="ListView" fx:id="listViewUsers" layoutX="180.0" layoutY="85.0" onMouseClicked="#FixUser" prefHeight="415.0" prefWidth="500.0" stylesheets="@../CSS/Pagination.css" />
-                     <TextField fx:id="pageUserNumberTextField" alignment="CENTER" layoutX="415.0" layoutY="505.0" onAction="#changePageUser" prefHeight="30.0" prefWidth="30.0" />
-                     <JFXButton fx:id="prevPageUserButton" contentDisplay="CENTER" layoutX="387.0" layoutY="505.0" onAction="#switchToPrevPageBook" prefHeight="30.0" prefWidth="25.0">
-                       <graphic>
-                         <FontAwesomeIconView glyphName="ANGLE_DOUBLE_LEFT" size="20" />
-                       </graphic>
-                     </JFXButton>
-                     <JFXButton fx:id="nextPageUserButton" contentDisplay="CENTER" layoutX="445.0" layoutY="505.0" onAction="#switchToNextPageBook" prefHeight="30.0" prefWidth="25.0">
-                       <graphic>
-                         <FontAwesomeIconView glyphName="ANGLE_DOUBLE_RIGHT" size="20" />
-                       </graphic>
-                     </JFXButton>
-                     <JFXButton layoutX="30.0" layoutY="30.0" onAction="#AddUser" text="Thêm user" wrapText="true">
-                       <graphic>
-                         <FontAwesomeIconView glyphName="PLUS_CIRCLE" size="30" />
-                       </graphic>
-                       <font>
-                         <Font name="System Bold Italic" size="12.0" />
-                       </font>
-                     </JFXButton>
-                   </children>
-                 </AnchorPane>
-               </content>
-             </Tab>
-           </tabs>
-         </TabPane>
-      </children></AnchorPane>
+<AnchorPane fx:id="mainPane" layoutX="60.0" layoutY="60.0" prefHeight="540.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo.Controllers.EditController">
+  <children>
+    <TabPane id="TabPane" prefHeight="540.0" prefWidth="900.0" side="RIGHT" stylesheets="@../CSS/TabPane.css" tabClosingPolicy="UNAVAILABLE">
+      <tabs>
+        <Tab id="Tab" text="Books">
+          <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0">
+              <children>
+                <JFXListView id="ListView" fx:id="listViewBooks" layoutX="180.0" layoutY="85.0" onMouseClicked="#FixBook" prefHeight="415.0" prefWidth="500.0" stylesheets="@../CSS/Pagination.css" />
+                <TextField fx:id="pageBookNumberTextField" alignment="CENTER" layoutX="415.0" layoutY="505.0" onAction="#changePageBook" prefHeight="30.0" prefWidth="30.0" />
+                <JFXButton fx:id="prevPageBookButton" contentDisplay="CENTER" layoutX="387.0" layoutY="505.0" onAction="#switchToPrevPageBook" prefHeight="30.0" prefWidth="25.0">
+                  <graphic>
+                    <FontAwesomeIconView glyphName="ANGLE_DOUBLE_LEFT" size="20" />
+                  </graphic>
+                </JFXButton>
+                <JFXButton fx:id="nextPageBookButton" contentDisplay="CENTER" layoutX="445.0" layoutY="505.0" onAction="#switchToNextPageBook" prefHeight="30.0" prefWidth="25.0">
+                  <graphic>
+                    <FontAwesomeIconView glyphName="ANGLE_DOUBLE_RIGHT" size="20" />
+                  </graphic>
+                </JFXButton>
+                <JFXButton layoutX="30.0" layoutY="30.0" onAction="#AddBook" text="Thêm sách" wrapText="true">
+                  <graphic>
+                    <FontAwesomeIconView glyphName="PLUS_CIRCLE" size="30" />
+                  </graphic>
+                  <font>
+                    <Font name="System Bold Italic" size="12.0" />
+                  </font>
+                </JFXButton>
+                <VBox id="SearchBar" layoutX="255.0" layoutY="34.0" prefHeight="30.0" prefWidth="350.0" stylesheets="@../CSS/SearchTextField.css">
+                  <children>
+                    <HBox alignment="CENTER">
+                      <children>
+                        <TextField id="TextField" fx:id="bookSuggestionsTextField" prefHeight="28.0" prefWidth="359.0" promptText="Thêm sách từ Google Books" />
+                        <JFXButton fx:id="removeButton" contentDisplay="CENTER" onAction="#removeText" prefHeight="28.0" prefWidth="0.0" visible="false">
+                          <graphic>
+                            <FontAwesomeIconView glyphName="REMOVE" size="20" />
+                          </graphic>
+                        </JFXButton>
+                                    <JFXButton ellipsisString="" onAction="#SearchBooksFromGoogle">
+                                       <graphic>
+                                          <FontAwesomeIconView glyphName="SEARCH" size="20" />
+                                       </graphic>
+                                    </JFXButton>
+                      </children>
+                    </HBox>
+                    <JFXListView id="ListView" fx:id="googleBooksListView" visible="false" />
+                  </children>
+                </VBox>
+              </children>
+            </AnchorPane>
+          </content>
+        </Tab>
+        <Tab id="Tab" text="Users">
+          <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0">
+              <children>
+                <JFXListView id="ListView" fx:id="listViewUsers" layoutX="180.0" layoutY="85.0" onMouseClicked="#FixUser" prefHeight="415.0" prefWidth="500.0" stylesheets="@../CSS/Pagination.css" />
+                <TextField fx:id="pageUserNumberTextField" alignment="CENTER" layoutX="415.0" layoutY="505.0" onAction="#changePageUser" prefHeight="30.0" prefWidth="30.0" />
+                <JFXButton fx:id="prevPageUserButton" contentDisplay="CENTER" layoutX="387.0" layoutY="505.0" onAction="#switchToPrevPageBook" prefHeight="30.0" prefWidth="25.0">
+                  <graphic>
+                    <FontAwesomeIconView glyphName="ANGLE_DOUBLE_LEFT" size="20" />
+                  </graphic>
+                </JFXButton>
+                <JFXButton fx:id="nextPageUserButton" contentDisplay="CENTER" layoutX="445.0" layoutY="505.0" onAction="#switchToNextPageBook" prefHeight="30.0" prefWidth="25.0">
+                  <graphic>
+                    <FontAwesomeIconView glyphName="ANGLE_DOUBLE_RIGHT" size="20" />
+                  </graphic>
+                </JFXButton>
+                <JFXButton layoutX="30.0" layoutY="30.0" onAction="#AddUser" text="Thêm user" wrapText="true">
+                  <graphic>
+                    <FontAwesomeIconView glyphName="PLUS_CIRCLE" size="30" />
+                  </graphic>
+                  <font>
+                    <Font name="System Bold Italic" size="12.0" />
+                  </font>
+                </JFXButton>
+              </children>
+            </AnchorPane>
+          </content>
+        </Tab>
+      </tabs>
+    </TabPane>
+  </children>
 </AnchorPane>

@@ -13,17 +13,23 @@ public class Suggestion {
 
   public Suggestion(Book book) {
     id = book.getId();
-    if(book.getImageLink()!=null) {
+    if (book.getImageLink() != null) {
       icon = new Image(book.getImageLink());
+    } else {
+      icon = new Image(Objects.requireNonNull(
+          getClass().getResourceAsStream("/org/example/demo/Assets/basic.jpg")));
     }
-    else icon=new Image(Objects.requireNonNull(
-        getClass().getResourceAsStream("/org/example/demo/Assets/basic.jpg")));
     content = book.getTitle();
   }
 
   public Suggestion(User user) {
     id = user.getId();
-    icon = user.getAvatar();
+    if (user.getAvatar() == null) {
+      icon = new Image(Objects.requireNonNull(
+          getClass().getResourceAsStream("/org/example/demo/Assets/basic.jpg")));
+    } else {
+      icon = user.getAvatar();
+    }
     content = user.getName();
   }
 

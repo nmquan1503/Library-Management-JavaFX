@@ -14,7 +14,11 @@
    <children>
       <AnchorPane id="viewPane" layoutX="200.0" layoutY="40.0" prefWidth="500.0" AnchorPane.bottomAnchor="40.0" AnchorPane.topAnchor="40.0">
          <children>
-            <ImageView fx:id="imageBook" fitHeight="225.0" fitWidth="150.0" layoutX="40.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true" />
+            <AnchorPane fx:id="wrapper" layoutX="40.0" layoutY="30.0" prefHeight="225.0" prefWidth="150.0">
+               <children>
+                  <ImageView fx:id="imageBook" fitHeight="225.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </AnchorPane>
             <VBox layoutX="220.0" layoutY="30.0" prefWidth="240.0">
                <children>
                   <Label fx:id="titleLabel" ellipsisString="" prefWidth="240.0" wrapText="true">

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -13,17 +14,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import org.example.demo.Database.JDBC;
+import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.Library;
 import org.example.demo.Models.Suggestion.Suggestion;
 import org.example.demo.Models.Users.Date;
 import org.example.demo.Models.Users.User;
 
-public class EditUserView extends ScrollPane {
+public class EditUserView extends ScrollPane implements MainInfo {
 
+  @FXML private AnchorPane wrapper;
   @FXML private ImageView imageUser;
   @FXML private TextField nameTextField;
   @FXML private Label idLabel;
@@ -38,10 +42,10 @@ public class EditUserView extends ScrollPane {
   private Runnable laterAction;
   private User oldUser;
 
-  public EditUserView(Library library, ArrayList<Suggestion> listUsers,Runnable laterAction){
+  public EditUserView(Library library, ArrayList<Suggestion> listUsers,Runnable laterAction,BlendMode blendMode){
 
     initView();
-    initImage(null);
+    initImage(null,blendMode);
     initId(null);
     initBirthday(null);
     initPhoneNumber(null);
@@ -52,10 +56,10 @@ public class EditUserView extends ScrollPane {
     this.oldUser=null;
   }
 
-  public EditUserView(Library library,ArrayList<Suggestion> listUsers, User oldUser,Runnable laterAction){
+  public EditUserView(Library library,ArrayList<Suggestion> listUsers, User oldUser,Runnable laterAction,BlendMode blendMode){
 
     initView();
-    initImage(oldUser);
+    initImage(oldUser,blendMode);
     initName(oldUser);
     initId(oldUser);
     initBirthday(oldUser);
@@ -155,7 +159,7 @@ public class EditUserView extends ScrollPane {
     }
   }
 
-  private void initImage(User user){
+  private void initImage(User user, BlendMode blendMode){
     if(user==null){
       imageUser.setImage(new Image(Objects.requireNonNull(
           getClass().getResourceAsStream("/org/example/demo/Assets/basic.jpg"))));
@@ -167,6 +171,10 @@ public class EditUserView extends ScrollPane {
     else {
       imageUser.setImage(user.getAvatar());
     }
+
+    if(blendMode==null)wrapper.setBlendMode(BlendMode.SRC_OVER);
+    else wrapper.setBlendMode(blendMode);
+
   }
 
   private void initView(){
@@ -316,6 +324,29 @@ public class EditUserView extends ScrollPane {
   }
 
 
+  @Override
+  public void applyDarkMode(boolean isDark) {
+    if(isDark){
+      this.wrapper.setBlendMode(BlendMode.DIFFERENCE);
+    }
+    else {
+      this.wrapper.setBlendMode(BlendMode.SRC_OVER);
+    }
+  }
 
+  @Override
+  public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
+      boolean isTranslate) {
 
+  }
+
+  @Override
+  public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
+
+  }
+
+  @Override
+  public void removeLang(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
+
+  }
 }

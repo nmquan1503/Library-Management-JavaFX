@@ -49,7 +49,7 @@ public class Translate {
     return text;
   }
 
-  public static void main(String[] args) {
-    System.out.println(translate("speak", Language.ENGLISH, Language.VIETNAMESE));
-  }
+//  public static void main(String[] args) {
+//    System.out.println(translate("speak", Language.ENGLISH, Language.VIETNAMESE));
+//  }
 }

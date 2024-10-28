@@ -13,4 +13,5 @@ module org.example.demo {
   opens org.example.demo.Controllers;
   opens org.example.demo.CustomUI to javafx.fxml;
   exports org.example.demo;
+  opens org.example.demo.Interfaces;
 }

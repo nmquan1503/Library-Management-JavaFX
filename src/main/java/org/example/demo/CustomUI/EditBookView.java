@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -15,18 +16,21 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import org.example.demo.Database.JDBC;
+import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.BookShelf.Book;
 import org.example.demo.Models.Library;
 import org.example.demo.Models.Suggestion.Suggestion;
 
-public class EditBookView extends ScrollPane {
+public class EditBookView extends ScrollPane implements MainInfo {
 
+  @FXML private AnchorPane wrapper;
   @FXML private ImageView imageBook;
   @FXML private TextField titleTextField;
   @FXML private Label idLabel;
@@ -39,27 +43,25 @@ public class EditBookView extends ScrollPane {
   @FXML private TextField quantityTextField;
 
   private Book oldBook;
-  private Library library;
   private ArrayList<Suggestion>listBooks;
   private Runnable laterAction;
 
-  public EditBookView(Library library,ArrayList<Suggestion> listBooks,Runnable laterAction){
+  public EditBookView(ArrayList<Suggestion> listBooks,Runnable laterAction, BlendMode blendMode){
     initView();
-    initImage(null);
+    initImage(null, blendMode);
     initId(null);
     initAuthors(null);
     initCategories(null);
 
-    this.library=library;
     this.listBooks=listBooks;
     this.oldBook=null;
     this.laterAction=laterAction;
 
   }
 
-  public EditBookView(Library library,ArrayList<Suggestion>listBooks,Book book,Runnable laterAction){
+  public EditBookView(ArrayList<Suggestion>listBooks,Book book,Runnable laterAction, BlendMode blendMode){
     initView();
-    initImage(book);
+    initImage(book, blendMode);
     initTitle(book);
     initId(book);
     initAuthors(book);
@@ -70,13 +72,12 @@ public class EditBookView extends ScrollPane {
     initPageCount(book);
     initQuantity(book);
 
-    this.library=library;
     this.listBooks=listBooks;
     this.oldBook=book;
     this.laterAction=laterAction;
   }
 
-  private void initImage(Book book){
+  private void initImage(Book book, BlendMode blendMode){
     if(book==null){
       imageBook.setImage(new Image(Objects.requireNonNull(
           getClass().getResourceAsStream("/org/example/demo/Assets/basic.jpg"))));
@@ -88,6 +89,8 @@ public class EditBookView extends ScrollPane {
     else {
       imageBook.setImage(new Image(book.getImageLink()));
     }
+    if(blendMode==null)wrapper.setBlendMode(BlendMode.SRC_OVER);
+    else wrapper.setBlendMode(blendMode);
   }
 
   private void initTitle(Book book){
@@ -98,9 +101,11 @@ public class EditBookView extends ScrollPane {
 
   private void initId(Book book){
     if(book!=null) {
-      idLabel.setText("#" + book.getId());
+      if(book.getId()!=-1) {
+        idLabel.setText("#" + book.getId());
+        return;
+      }
     }
-    else {
       int id=-1;
       Connection connection= JDBC.getConnection();
       try{
@@ -119,7 +124,6 @@ public class EditBookView extends ScrollPane {
 
       if(id!=-1)idLabel.setText("#"+id);
 
-    }
   }
 
   private void initAuthors(Book book){
@@ -141,7 +145,7 @@ public class EditBookView extends ScrollPane {
 
   private void initPublishedDate(Book book){
     if(book==null)return;
-    if(book.getPublishedDate()<0)return;
+    if(book.getPublishedDate()<=0)return;
     publishedDateTextField.setText(String.valueOf(book.getPublishedDate()));
   }
 
@@ -249,11 +253,18 @@ public class EditBookView extends ScrollPane {
         ()->{
           mainPane.getChildren().removeLast();
           Thread thread=new Thread(()->{
-            if(oldBook!=null)library.deleteBook(oldBook);
+            if(oldBook!=null){
+              if(oldBook.getId()!=-1) {
+                Library.getInstance().deleteBook(oldBook);
+              }
+            }
             Book newBook=createNewBook();
-            library.insertBookWithID(newBook,newBook.getId());
+            Library.getInstance().insertBookWithID(newBook,newBook.getId());
 
             if(oldBook==null){
+              listBooks.add(new Suggestion(newBook));
+            }
+            else if(oldBook.getId()==-1){
               listBooks.add(new Suggestion(newBook));
             }
             else {
@@ -287,11 +298,12 @@ public class EditBookView extends ScrollPane {
     book.setTitle(titleTextField.getText());
 
     book.setId(Integer.parseInt(idLabel.getText().substring(1)));
-    System.out.println(book.getId());
+
     ArrayList<String> authors=new ArrayList<>();
     for(int i=0;i<authorList.getChildren().size()-1;i++){
       authors.add(((TextField)authorList.getChildren().get(i)).getText());
     }
+    if(authors.isEmpty())authors=null;
     book.setAuthors(authors);
 
     book.setPublisher(publisherTextField.getText());
@@ -306,6 +318,7 @@ public class EditBookView extends ScrollPane {
     for(int i=0;i<categoryList.getChildren().size()-1;i++){
       categories.add(((TextField)categoryList.getChildren().get(i)).getText());
     }
+    if(categories.isEmpty())categories=null;
     book.setCategories(categories);
 
     if(!countPageTextField.getText().isEmpty()){
@@ -327,6 +340,27 @@ public class EditBookView extends ScrollPane {
   }
 
 
+  @Override
+  public void applyDarkMode(boolean isDark) {
+    if(isDark){
+      this.wrapper.setBlendMode(BlendMode.DIFFERENCE);
+    }
+    else this.wrapper.setBlendMode(BlendMode.SRC_OVER);
+  }
 
+  @Override
+  public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
+      boolean isTranslate) {
 
+  }
+
+  @Override
+  public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
+
+  }
+
+  @Override
+  public void removeLang(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
+
+  }
 }
