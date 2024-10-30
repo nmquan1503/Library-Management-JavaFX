@@ -52,11 +52,15 @@
       <FontAwesomeIconView glyphName="ANGLE_DOUBLE_LEFT" size="20" />
     </graphic>
   </JFXButton>
-  <Label layoutX="650.0" layoutY="115.0" text="Top choices" wrapText="true">
-    <font>
-      <Font name="System Bold Italic" size="24.0" />
-    </font>
-  </Label>
+   <VBox alignment="CENTER" layoutX="575.0" layoutY="115.0" prefWidth="280.0">
+      <children>
+        <Label fx:id="topChoicesLabel" text="Lựa chọn hàng đầu" wrapText="true">
+          <font>
+            <Font name="System Bold Italic" size="24.0" />
+          </font>
+        </Label>
+      </children>
+   </VBox>
   <Pane id="SearchBar" layoutX="20.0" layoutY="20.0" maxHeight="40.0" prefHeight="40.0" prefWidth="455.0" stylesheets="@../CSS/SearchTextField.css">
     <children>
       <VBox id="Basic" layoutY="3.0" prefWidth="170.0">

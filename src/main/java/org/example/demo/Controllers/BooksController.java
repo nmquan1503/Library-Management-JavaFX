@@ -25,6 +25,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.BlendMode;
@@ -44,6 +45,7 @@ import org.example.demo.Models.Trie.Trie;
 
 public class BooksController implements MainInfo {
 
+  @FXML private Label topChoicesLabel;
   @FXML
   private AnchorPane advertisementPane;
   @FXML
@@ -755,7 +757,13 @@ public class BooksController implements MainInfo {
   @Override
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
       boolean isTranslate) {
+    viLang.put(categoryTextField,"Thể loại");
+    viLang.put(titleTextField,"Tiêu đề");
+    viLang.put(topChoicesLabel,"Lựa chọn hàng đầu");
 
+    enLang.put(categoryTextField,"Category");
+    enLang.put(titleTextField,"Title");
+    enLang.put(topChoicesLabel,"Top choices");
   }
 
   // viLang lưu nội dung tiếng Việt gắn với Object, enLang lưu tiếng Anh
