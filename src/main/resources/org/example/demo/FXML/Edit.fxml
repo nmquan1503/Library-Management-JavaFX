@@ -31,7 +31,7 @@
                     <FontAwesomeIconView glyphName="ANGLE_DOUBLE_RIGHT" size="20" />
                   </graphic>
                 </JFXButton>
-                <JFXButton layoutX="30.0" layoutY="30.0" onAction="#AddBook" text="Thêm sách" wrapText="true">
+                <JFXButton fx:id="addBookButton" layoutX="30.0" layoutY="30.0" onAction="#AddBook" text="Thêm sách" wrapText="true">
                   <graphic>
                     <FontAwesomeIconView glyphName="PLUS_CIRCLE" size="30" />
                   </graphic>
@@ -79,7 +79,7 @@
                     <FontAwesomeIconView glyphName="ANGLE_DOUBLE_RIGHT" size="20" />
                   </graphic>
                 </JFXButton>
-                <JFXButton layoutX="30.0" layoutY="30.0" onAction="#AddUser" text="Thêm user" wrapText="true">
+                <JFXButton fx:id="addUserButton" layoutX="30.0" layoutY="30.0" onAction="#AddUser" text="Thêm user" wrapText="true">
                   <graphic>
                     <FontAwesomeIconView glyphName="PLUS_CIRCLE" size="30" />
                   </graphic>

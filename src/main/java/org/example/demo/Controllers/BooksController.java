@@ -35,6 +35,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Arc;
 import javafx.util.Duration;
 import org.example.demo.CustomUI.BookView;
+import org.example.demo.CustomUI.ConfirmBox;
 import org.example.demo.CustomUI.SuggestionView;
 import org.example.demo.Database.JDBC;
 import org.example.demo.Interfaces.MainInfo;
@@ -534,7 +535,7 @@ public class BooksController implements MainInfo {
 
   private void showBook(int idBook) {
     Thread thread = new Thread(() -> {
-      BookView bookView = new BookView(Library.getInstance().getBook(idBook),mainPane.getParent().getBlendMode());
+      BookView bookView=new BookView();
       Platform.runLater(() -> {
         mainPane.getChildren().add(bookView);
         bookView.setScaleX(0);
@@ -543,6 +544,15 @@ public class BooksController implements MainInfo {
         transition.setToX(1);
         transition.setToY(1);
         transition.play();
+        Thread thread1=new Thread(()->{
+          Book book=Library.getInstance().getBook(idBook);
+          Platform.runLater(()->{
+            PauseTransition pauseTransition=new PauseTransition(Duration.millis(700));
+            pauseTransition.setOnFinished(e->{bookView.setBook(book);});
+            pauseTransition.play();
+          });
+        });
+        thread1.start();
       });
     });
     thread.start();
@@ -748,8 +758,13 @@ public class BooksController implements MainInfo {
           suggestionView.applyDarkMode(isDark);
         }
 
-        if(mainPane.getChildren().getLast() instanceof BookView){
-          ((BookView) mainPane.getChildren().getLast()).applyDarkMode(isDark);
+        int id=mainPane.getChildren().size()-1;
+
+        if(mainPane.getChildren().get(id) instanceof BookView){
+          ((BookView) mainPane.getChildren().get(id)).applyDarkMode(isDark);
+        }
+        else if(mainPane.getChildren().get(id-1) instanceof BookView){
+          ((BookView) mainPane.getChildren().get(id-1)).applyDarkMode(isDark);
         }
 
   }
@@ -757,23 +772,30 @@ public class BooksController implements MainInfo {
   @Override
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
       boolean isTranslate) {
-    viLang.put(categoryTextField,"Thể loại");
-    viLang.put(titleTextField,"Tiêu đề");
-    viLang.put(topChoicesLabel,"Lựa chọn hàng đầu");
+    if(isTranslate){
+      categoryTextField.setPromptText("Category");
+      titleTextField.setPromptText("Title");
+      topChoicesLabel.setText("Top choices");
+    }
+    else {
+      categoryTextField.setPromptText("Thể loại");
+      titleTextField.setPromptText("Tiêu đề");
+      topChoicesLabel.setText("Lựa chọn hàng đầu");
+    }
 
-    enLang.put(categoryTextField,"Category");
-    enLang.put(titleTextField,"Title");
-    enLang.put(topChoicesLabel,"Top choices");
+    int id=mainPane.getChildren().size()-1;
+
+    if(mainPane.getChildren().get(id) instanceof ConfirmBox){
+      ((ConfirmBox) mainPane.getChildren().getLast()).applyTranslate(null,null,isTranslate);
+      id--;
+    }
+    if(mainPane.getChildren().get(id) instanceof BookView){
+      ((BookView) mainPane.getChildren().get(id)).applyTranslate(null,null,isTranslate);
+    }
   }
 
   // viLang lưu nội dung tiếng Việt gắn với Object, enLang lưu tiếng Anh
   @Override
   public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
-
-  }
-
-  // giải phóng các node vừa thêm vào hashMap
-  @Override
-  public void removeLang(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
   }
 }

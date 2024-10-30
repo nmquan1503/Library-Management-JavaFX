@@ -1161,13 +1161,6 @@ public class HomeController implements MainInfo {
         Translate.translate(helloTxt.getText(), Language.VIETNAMESE, Language.ENGLISH));
   }
 
-  // giải phóng các node vừa thêm vào hashMap
-  @Override
-  public void removeLang(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
-    viLang.remove(helloTxt);
-    enLang.remove(helloTxt);
-  }
-
   public List<Label> getAllTextLabels() {
     List<Label> labels = new ArrayList<>();
     findLabelsAndButtonsWithText(homePane, labels, null);

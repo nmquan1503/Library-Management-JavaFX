@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -21,6 +22,7 @@ import org.example.demo.CustomUI.EditBookView;
 import org.example.demo.CustomUI.EditBox;
 import org.example.demo.CustomUI.EditUserView;
 import org.example.demo.CustomUI.SuggestionView;
+import org.example.demo.CustomUI.UserView;
 import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.BookShelf.Book;
 import org.example.demo.Models.Library;
@@ -39,6 +41,8 @@ public class EditController implements MainInfo {
   @FXML
   private JFXButton prevPageBookButton;
 
+  @FXML private JFXButton addBookButton;
+
   @FXML
   private JFXListView<EditBox> listViewBooks;
   private ArrayList<Suggestion> listBooks;
@@ -50,6 +54,8 @@ public class EditController implements MainInfo {
   private JFXButton nextPageUserButton;
   @FXML
   private JFXButton prevPageUserButton;
+
+  @FXML private JFXButton addUserButton;
 
   @FXML
   private JFXListView<EditBox> listViewUsers;
@@ -262,18 +268,23 @@ public class EditController implements MainInfo {
   @FXML
   private void AddBook() {
     Thread thread = new Thread(() -> {
-      ScrollPane editView = new EditBookView(
+      EditBookView editBookView=new EditBookView(
           listBooks,
           () -> {
-          setPageBook(Integer.parseInt(pageBookNumberTextField.getText()));
-          },
-          mainPane.getParent().getBlendMode()
+            setPageBook(Integer.parseInt(pageBookNumberTextField.getText()));
+          }
       );
-      editView.setScaleX(0);
-      editView.setScaleY(0);
+      editBookView.setScaleX(0);
+      editBookView.setScaleY(0);
       Platform.runLater(() -> {
-        mainPane.getChildren().add(editView);
-        ScaleTransition transition = new ScaleTransition(Duration.millis(200), editView);
+        while (mainPane.getChildren().getLast() instanceof ConfirmBox ||
+            mainPane.getChildren().getLast() instanceof EditBookView ||
+            mainPane.getChildren().getLast() instanceof EditUserView)
+        {
+          mainPane.getChildren().removeLast();
+        }
+        mainPane.getChildren().add(editBookView);
+        ScaleTransition transition = new ScaleTransition(Duration.millis(200), editBookView);
         transition.setToY(1);
         transition.setToX(1);
         transition.play();
@@ -287,85 +298,114 @@ public class EditController implements MainInfo {
   @FXML
   private void FixBook() {
     Thread thread = new Thread(() -> {
-      EditBox suggestionView = listViewBooks.getSelectionModel().getSelectedItem();
-      Book book = Library.getInstance().getBook(suggestionView.getID());
-      openEditBookView(book);
+      EditBookView editBookView=new EditBookView();
+      Platform.runLater(()->{
+        while (mainPane.getChildren().getLast() instanceof ConfirmBox ||
+            mainPane.getChildren().getLast() instanceof EditBookView ||
+            mainPane.getChildren().getLast() instanceof EditUserView)
+        {
+          mainPane.getChildren().removeLast();
+        }
+        mainPane.getChildren().add(editBookView);
+        editBookView.setScaleX(0);
+        editBookView.setScaleY(0);
+        ScaleTransition transition = new ScaleTransition(Duration.millis(200), editBookView);
+        transition.setToX(1);
+        transition.setToY(1);
+        transition.play();
+        Thread thread1 = new Thread(()->{
+          EditBox suggestionView = listViewBooks.getSelectionModel().getSelectedItem();
+          Book book = Library.getInstance().getBook(suggestionView.getID());
+          Platform.runLater(()->{
+            PauseTransition pauseTransition=new PauseTransition(Duration.millis(700));
+            pauseTransition.setOnFinished(e->{
+              editBookView.setBook(book);
+              editBookView.setLaterAction(
+                  listBooks,
+                  () -> {
+                    setPageBook(Integer.parseInt(pageBookNumberTextField.getText()));
+                  });
+              editBookView.completeSetup();
+            });
+            pauseTransition.play();
+          });
+        });
+        thread1.start();
+      });
 
     });
     thread.start();
 
-  }
-  private void openEditBookView(Book book){
-    EditBookView editView = new EditBookView(
-        listBooks,
-        book,
-        () -> {
-          setPageBook(Integer.parseInt(pageBookNumberTextField.getText()));
-        },
-        mainPane.getParent().getBlendMode()
-    );
-    editView.setScaleX(0);
-    editView.setScaleY(0);
-
-    Platform.runLater(() -> {
-      mainPane.getChildren().add(editView);
-      ScaleTransition transition = new ScaleTransition(Duration.millis(200), editView);
-      transition.setToX(1);
-      transition.setToY(1);
-      transition.play();
-    });
   }
 
   @FXML
   private void AddUser() {
     Thread thread = new Thread(() -> {
-      EditUserView editView = new EditUserView(
-          Library.getInstance(),
+      EditUserView editUserView = new EditUserView(
           listUsers,
           () -> {
             setPageUser(Integer.parseInt(pageUserNumberTextField.getText()));
-          },
-          mainPane.getParent().getBlendMode()
+          }
       );
-      editView.setScaleX(0);
-      editView.setScaleY(0);
-
+      editUserView.setScaleX(0);
+      editUserView.setScaleY(0);
       Platform.runLater(() -> {
-        mainPane.getChildren().add(editView);
-        ScaleTransition transition = new ScaleTransition(Duration.millis(200), editView);
+        while (mainPane.getChildren().getLast() instanceof ConfirmBox ||
+            mainPane.getChildren().getLast() instanceof EditBookView ||
+            mainPane.getChildren().getLast() instanceof EditUserView)
+        {
+          mainPane.getChildren().removeLast();
+        }
+        mainPane.getChildren().add(editUserView);
+        ScaleTransition transition = new ScaleTransition(Duration.millis(200), editUserView);
         transition.setToX(1);
         transition.setToY(1);
         transition.play();
+
       });
     });
     thread.start();
-
   }
 
   @FXML
   private void FixUser() {
     Thread thread = new Thread(() -> {
-      EditBox suggestionView = listViewUsers.getSelectionModel().getSelectedItem();
-      User user = Library.getInstance().getUser(suggestionView.getID());
 
-      EditUserView editView = new EditUserView(
-          Library.getInstance(),
-          listUsers,
-          user,
-          () -> {
-            setPageUser(Integer.parseInt(pageUserNumberTextField.getText()));
-          },
-          mainPane.getParent().getBlendMode()
-      );
-      editView.setScaleX(0);
-      editView.setScaleY(0);
+      EditUserView editUserView=new EditUserView();
+      editUserView.setScaleX(0);
+      editUserView.setScaleY(0);
 
       Platform.runLater(() -> {
-        mainPane.getChildren().add(editView);
-        ScaleTransition transition = new ScaleTransition(Duration.millis(200), editView);
+        while (mainPane.getChildren().getLast() instanceof ConfirmBox ||
+                mainPane.getChildren().getLast() instanceof EditBookView ||
+                mainPane.getChildren().getLast() instanceof EditUserView)
+        {
+          mainPane.getChildren().removeLast();
+        }
+        mainPane.getChildren().add(editUserView);
+        ScaleTransition transition = new ScaleTransition(Duration.millis(200), editUserView);
         transition.setToX(1);
         transition.setToY(1);
         transition.play();
+        Thread thread1 = new Thread(()->{
+          EditBox suggestionView = listViewUsers.getSelectionModel().getSelectedItem();
+          User user = Library.getInstance().getUser(suggestionView.getID());
+          Platform.runLater(()->{
+            PauseTransition pauseTransition=new PauseTransition(Duration.millis(700));
+            pauseTransition.setOnFinished(e->{
+              editUserView.setUser(user);
+              editUserView.setLaterAction(
+                  listUsers,
+                  () -> {
+                    setPageUser(Integer.parseInt(pageUserNumberTextField.getText()));
+                  });
+              editUserView.completeSetup();
+            });
+            pauseTransition.play();
+          });
+        });
+        thread1.start();
+
       });
     });
     thread.start();
@@ -403,7 +443,32 @@ public class EditController implements MainInfo {
       googleBooksListView.setOnMouseClicked(e->{
         int id=googleBooksListView.getSelectionModel().getSelectedIndex();
         bookSuggestionsTextField.requestFocus();
-        openEditBookView(books.get(id));
+        Thread thread1 = new Thread(() -> {
+          EditBookView editBookView=new EditBookView();
+          Platform.runLater(()->{
+            mainPane.getChildren().add(editBookView);
+            editBookView.setScaleX(0);
+            editBookView.setScaleY(0);
+            ScaleTransition transition = new ScaleTransition(Duration.millis(200), editBookView);
+            transition.setToX(1);
+            transition.setToY(1);
+            transition.play();
+            Book book = books.get(id);
+            PauseTransition pauseTransition=new PauseTransition(Duration.millis(700));
+            pauseTransition.setOnFinished(event->{
+              editBookView.setBook(book);
+              editBookView.setLaterAction(
+                  listBooks,
+                  () -> {
+                    setPageBook(Integer.parseInt(pageBookNumberTextField.getText()));
+                  });
+              editBookView.completeSetup();
+            });
+            pauseTransition.play();
+          });
+
+        });
+        thread1.start();
       });
 
       Platform.runLater(() -> {
@@ -462,7 +527,29 @@ public class EditController implements MainInfo {
   @Override
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
       boolean isTranslate) {
+    if(isTranslate){
+      bookSuggestionsTextField.setPromptText("Add books from Google Books");
+      addBookButton.setText("Add new book");
 
+      addUserButton.setText("Add new user");
+    }
+    else {
+      bookSuggestionsTextField.setPromptText("Thêm sách từ Google Books");
+      addBookButton.setText("Thêm sách");
+
+      addUserButton.setText("Thêm user");
+    }
+    int id=mainPane.getChildren().size()-1;
+    if(mainPane.getChildren().get(id) instanceof ConfirmBox){
+      ((ConfirmBox) mainPane.getChildren().get(id)).applyTranslate(null,null,isTranslate);
+      id--;
+    }
+    if(mainPane.getChildren().get(id) instanceof EditUserView){
+      ((EditUserView) mainPane.getChildren().get(id)).applyTranslate(null,null,isTranslate);
+    }
+    else if(mainPane.getChildren().get(id) instanceof EditBookView){
+      ((EditBookView) mainPane.getChildren().get(id)).applyTranslate(null,null,isTranslate);
+    }
   }
 
   // viLang lưu nội dung tiếng Việt gắn với Object, enLang lưu tiếng Anh
@@ -471,8 +558,5 @@ public class EditController implements MainInfo {
 
   }
 
-  // giải phóng các node vừa thêm vào hashMap
-  @Override
-  public void removeLang(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
-  }
+
 }

@@ -91,8 +91,4 @@ public class SuggestionView extends HBox implements MainInfo {
 
   }
 
-  @Override
-  public void removeLang(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
-
-  }
 }

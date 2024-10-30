@@ -4,6 +4,8 @@ import com.jfoenix.controls.JFXButton;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.util.HashMap;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
@@ -17,7 +19,6 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.effect.BlendMode;
 import org.example.demo.API.Translate;
-import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.Language;
 
 public class BaseController {
@@ -29,9 +30,6 @@ public class BaseController {
 
   // isTranslate = false ứng với lang = "vi", ngược lại = "en"
   public static boolean isTranslate = false;
-
-  @FXML
-  private AnchorPane mainPane;
 
   @FXML
   private Circle avatar;
@@ -57,23 +55,38 @@ public class BaseController {
   @FXML
   private Tooltip avtText;
 
-  private MainInfo currentController;
+  @FXML
+  private AnchorPane mainPane;
+
+  @FXML
+  private AnchorPane bookPane;
+
+  @FXML
+  private AnchorPane editPane;
+
+  @FXML
+  private AnchorPane userPane;
+
+  private HomeController homeController;
+
+  private BooksController booksController;
+
+  private EditController editController;
+
+  private UsersController usersController;
 
   @FXML
   public void initialize() {
-    try {
-      FXMLLoader fxmlLoader = new FXMLLoader(
-          getClass().getResource("/org/example/demo/FXML/Home.fxml"));
-      AnchorPane anchorPane = fxmlLoader.load();
+    Thread loadMainThread = new Thread(new LoadMainTask());
+    Thread loadBookThread = new Thread(new LoadBookTask());
+    Thread loadEditThread = new Thread(new LoadEditTask());
+    Thread loadUserThread = new Thread(new LoadUserTask());
 
-      currentController = fxmlLoader.getController();
+    loadMainThread.start();
+    loadBookThread.start();
+    loadEditThread.start();
+    loadUserThread.start();
 
-      bigPane.getChildren().remove(mainPane);
-      bigPane.getChildren().add(anchorPane);
-      mainPane = anchorPane;
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
     if (!isDark) {
       checkMode.setText("☀");
     } else {
@@ -91,7 +104,118 @@ public class BaseController {
     }
     avtMenuSetup();
     setUpLang();
+    mainPane.setVisible(true);
+    bookPane.setVisible(false);
+    editPane.setVisible(false);
+    userPane.setVisible(false);
+  }
 
+  private class LoadMainTask extends Task<Void> {
+
+    @Override
+    protected Void call() {
+      loadMain();
+      return null;
+    }
+
+    @Override
+    protected void succeeded() {
+      Platform.runLater(() -> bigPane.getChildren().add(mainPane));
+    }
+  }
+
+  private class LoadBookTask extends Task<Void> {
+
+    @Override
+    protected Void call() {
+      loadBook();
+      return null;
+    }
+
+    @Override
+    protected void succeeded() {
+      Platform.runLater(() -> bigPane.getChildren().add(bookPane));
+    }
+  }
+
+  private class LoadEditTask extends Task<Void> {
+
+    @Override
+    protected Void call() {
+      loadEdit();
+      return null;
+    }
+
+    @Override
+    protected void succeeded() {
+      Platform.runLater(() -> bigPane.getChildren().add(editPane));
+    }
+  }
+
+  private class LoadUserTask extends Task<Void> {
+
+    @Override
+    protected Void call() {
+      loadUser();
+      return null;
+    }
+
+    @Override
+    protected void succeeded() {
+      Platform.runLater(() -> bigPane.getChildren().add(userPane));
+    }
+  }
+
+  private void loadMain() {
+    try {
+      FXMLLoader fxmlLoader = new FXMLLoader(
+          getClass().getResource("/org/example/demo/FXML/Home.fxml"));
+      mainPane = fxmlLoader.load();
+
+      homeController = fxmlLoader.getController();
+      homeController.setUpLanguage(viLang, enLang);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void loadBook() {
+    try {
+      FXMLLoader fxmlLoader = new FXMLLoader(
+          getClass().getResource("/org/example/demo/FXML/Books.fxml"));
+      bookPane = fxmlLoader.load();
+
+      booksController = fxmlLoader.getController();
+      booksController.setUpLanguage(viLang, enLang);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void loadEdit() {
+    try {
+      FXMLLoader fxmlLoader = new FXMLLoader(
+          getClass().getResource("/org/example/demo/FXML/Edit.fxml"));
+      editPane = fxmlLoader.load();
+
+      editController = fxmlLoader.getController();
+      editController.setUpLanguage(viLang, enLang);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void loadUser() {
+    try {
+      FXMLLoader fxmlLoader = new FXMLLoader(
+          getClass().getResource("/org/example/demo/FXML/Users.fxml"));
+      userPane = fxmlLoader.load();
+
+      usersController = fxmlLoader.getController();
+      usersController.setUpLanguage(viLang, enLang);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   @FXML
@@ -106,8 +230,20 @@ public class BaseController {
       checkMode.setText("☀");
     }
 
-    if (currentController != null) {
-      currentController.applyDarkMode(!isDark);
+    if (homeController != null) {
+      homeController.applyDarkMode(!isDark);
+    }
+
+    if (booksController != null) {
+      booksController.applyDarkMode(!isDark);
+    }
+
+    if (usersController != null) {
+      usersController.applyDarkMode(!isDark);
+    }
+
+    if (editController != null) {
+      editController.applyDarkMode(!isDark);
     }
 
     isDark = !isDark;
@@ -150,7 +286,6 @@ public class BaseController {
   }
 
   private void setUpLang() {
-    currentController.setUpLanguage(viLang, enLang);
 
     for (MenuItem item : avatarMenu.getItems()) {
       viLang.put(item, item.getText());
@@ -200,9 +335,17 @@ public class BaseController {
       }
     }
 
-    // translate for main pane
-    if (currentController != null) {
-      currentController.applyTranslate(viLang, enLang, !isTranslate);
+    if (homeController != null) {
+      homeController.applyTranslate(viLang, enLang, !isTranslate);
+    }
+    if (booksController != null) {
+      booksController.applyTranslate(viLang, enLang, !isTranslate);
+    }
+    if (editController != null) {
+      editController.applyTranslate(viLang, enLang, !isTranslate);
+    }
+    if (usersController != null) {
+      usersController.applyTranslate(viLang, enLang, !isTranslate);
     }
     isTranslate = !isTranslate;
   }
@@ -242,54 +385,66 @@ public class BaseController {
     avatarMenu.show(avatar, menuX - 143, menuY + 5);
   }
 
-  private void switchPane(String fxmlPath) {
-    try {
-      if (currentController != null) {
-        currentController.removeLang(viLang, enLang);
-      }
-
-      if (mainPane != null) {
-        mainPane.getChildren().clear();
-        bigPane.getChildren().remove(mainPane);
-        mainPane = null;
-      }
-
-      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
-      AnchorPane anchorPane = fxmlLoader.load();
-
-      currentController = fxmlLoader.getController();
-      currentController.setUpLanguage(viLang, enLang);
-
-      bigPane.getChildren().add(anchorPane);
-      mainPane = anchorPane;
-
-      if (isDark && currentController != null) {
-        currentController.applyDarkMode(isDark);
-      }
-
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
+//  private void switchPane(String fxmlPath) {
+//    try {
+//      if (currentController != null) {
+//        currentController.removeLang(viLang, enLang);
+//      }
+//
+//      if (mainPane != null) {
+//        mainPane.getChildren().clear();
+//        bigPane.getChildren().remove(mainPane);
+//        mainPane = null;
+//      }
+//
+//      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
+//      AnchorPane anchorPane = fxmlLoader.load();
+//
+//      currentController = fxmlLoader.getController();
+//      currentController.setUpLanguage(viLang, enLang);
+//
+//      bigPane.getChildren().add(anchorPane);
+//      mainPane = anchorPane;
+//
+//      if (isDark && currentController != null) {
+//        currentController.applyDarkMode(isDark);
+//      }
+//
+//    } catch (Exception e) {
+//      e.printStackTrace();
+//    }
+//  }
 
   @FXML
   public void moveDashboard() {
-    switchPane("/org/example/demo/FXML/Home.fxml");
+    mainPane.setVisible(true);
+    bookPane.setVisible(false);
+    editPane.setVisible(false);
+    userPane.setVisible(false);
   }
 
   @FXML
   public void moveBooks() {
-    switchPane("/org/example/demo/FXML/Books.fxml");
+    mainPane.setVisible(false);
+    bookPane.setVisible(true);
+    editPane.setVisible(false);
+    userPane.setVisible(false);
   }
 
   @FXML
   public void moveUser() {
-    switchPane("/org/example/demo/FXML/Users.fxml");
+    mainPane.setVisible(false);
+    bookPane.setVisible(false);
+    editPane.setVisible(false);
+    userPane.setVisible(true);
   }
 
   @FXML
   public void moveEdit() {
-    switchPane("/org/example/demo/FXML/Edit.fxml");
+    mainPane.setVisible(false);
+    bookPane.setVisible(false);
+    editPane.setVisible(true);
+    userPane.setVisible(false);
   }
 
 }

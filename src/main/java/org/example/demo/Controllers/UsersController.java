@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 import javafx.animation.ParallelTransition;
+import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Transition;
@@ -16,6 +17,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.layout.AnchorPane;
@@ -25,8 +27,10 @@ import javafx.util.Duration;
 import org.example.demo.CustomUI.SuggestionView;
 import org.example.demo.CustomUI.UserView;
 import org.example.demo.Interfaces.MainInfo;
+import org.example.demo.Models.BookShelf.Book;
 import org.example.demo.Models.Library;
 import org.example.demo.Models.Suggestion.Suggestion;
+import org.example.demo.Models.Users.User;
 
 public class UsersController implements MainInfo {
 
@@ -49,6 +53,7 @@ public class UsersController implements MainInfo {
   @FXML
   private JFXButton prevPageButton;
 
+  @FXML private Label banListLabel;
   @FXML
   private JFXListView<SuggestionView> BanList;
 
@@ -164,7 +169,7 @@ public class UsersController implements MainInfo {
 
   private void showUser(int idUser) {
     Thread thread = new Thread(() -> {
-      UserView userView = new UserView(Library.getInstance().getUser(idUser),mainPane.getParent().getBlendMode());
+      UserView userView = new UserView();
       Platform.runLater(() -> {
         mainPane.getChildren().add(userView);
         userView.setScaleX(0);
@@ -173,6 +178,15 @@ public class UsersController implements MainInfo {
         transition.setToX(1);
         transition.setToY(1);
         transition.play();
+        Thread thread1=new Thread(()->{
+          User user=Library.getInstance().getUser(idUser);
+          Platform.runLater(()->{
+            PauseTransition pauseTransition=new PauseTransition(Duration.millis(700));
+            pauseTransition.setOnFinished(e->{userView.setUser(user);});
+            pauseTransition.play();
+          });
+        });
+        thread1.start();
       });
     });
     thread.start();
@@ -338,17 +352,22 @@ public class UsersController implements MainInfo {
   @Override
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
       boolean isTranslate) {
-
+    if(isTranslate){
+      nameTextField.setPromptText("Enter name");
+      banListLabel.setText("List banned Users");
+    }
+    else {
+      nameTextField.setPromptText("Nhập tên");
+      banListLabel.setText("Danh sách người bị cấm");
+    }
+    if(mainPane.getChildren().getLast() instanceof UserView){
+      ((UserView) mainPane.getChildren().getLast()).applyTranslate(null,null,isTranslate);
+    }
   }
 
   // viLang lưu nội dung tiếng Việt gắn với Object, enLang lưu tiếng Anh
   @Override
   public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
 
-  }
-
-  // giải phóng các node vừa thêm vào hashMap
-  @Override
-  public void removeLang(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
   }
 }

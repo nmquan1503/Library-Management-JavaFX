@@ -1,11 +1,15 @@
 package org.example.demo.CustomUI;
 
+import com.jfoenix.controls.JFXButton;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
+import javafx.animation.ParallelTransition;
+import javafx.animation.RotateTransition;
+import javafx.animation.Transition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -18,6 +22,10 @@ import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Arc;
+import javafx.util.Duration;
+import org.example.demo.Controllers.BaseController;
 import org.example.demo.Database.JDBC;
 import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.Library;
@@ -27,51 +35,101 @@ import org.example.demo.Models.Users.User;
 
 public class EditUserView extends ScrollPane implements MainInfo {
 
+  @FXML private AnchorPane viewPane;
+
   @FXML private AnchorPane wrapper;
   @FXML private ImageView imageUser;
+
   @FXML private TextField nameTextField;
   @FXML private Label idLabel;
+
+  @FXML private Label birthdayTag;
   @FXML private TextField birthdayTextField;
+
+  @FXML private Label addressTag;
   @FXML private TextField addressTextField;
+
+  @FXML private Label phoneNumberTag;
   @FXML private TextField phoneNumberTextField;
+
+  @FXML private Label emailTag;
   @FXML private TextField emailTextField;
+
+  @FXML private Label endBanDateTag;
   @FXML private TextField endBanDateTextField;
 
-  private Library library;
+  @FXML private JFXButton saveButton;
+
+  @FXML private Pane loadingPane;
+  private Transition loadingTransition;
+
   private ArrayList<Suggestion> listUsers;
   private Runnable laterAction;
   private User oldUser;
 
-  public EditUserView(Library library, ArrayList<Suggestion> listUsers,Runnable laterAction,BlendMode blendMode){
+  private HashMap<Object,String >viLang;
+  private HashMap<Object,String > enLang;
 
+  public EditUserView(){
     initView();
-    initImage(null,blendMode);
-    initId(null);
-    initBirthday(null);
-    initPhoneNumber(null);
-    initEndBanDate(null);
-    this.library=library;
-    this.listUsers=listUsers;
-    this.laterAction=laterAction;
-    this.oldUser=null;
+    initLoadingTransition();
   }
 
-  public EditUserView(Library library,ArrayList<Suggestion> listUsers, User oldUser,Runnable laterAction,BlendMode blendMode){
-
+  public EditUserView(ArrayList<Suggestion> listUsers,Runnable laterAction){
     initView();
-    initImage(oldUser,blendMode);
-    initName(oldUser);
-    initId(oldUser);
-    initBirthday(oldUser);
-    initAddress(oldUser);
-    initPhoneNumber(oldUser);
-    initEmail(oldUser);
-    initEndBanDate(oldUser);
+    initDefaultImage();
+    initDefaultId();
+    setupPhoneNumberTextField();
+    setupDateTextField(endBanDateTextField);
+    setupDateTextField(birthdayTextField);
+    viLang=new HashMap<>();
+    enLang=new HashMap<>();
+    setUpLanguage(viLang,enLang);
+    if(BaseController.isTranslate){
+      applyTranslate(null,null,true);
+    }
+    viewPane.getChildren().remove(loadingPane);
+    loadingPane=null;
+    loadingTransition=null;
+  }
 
-    this.library=library;
+  public void setLaterAction(ArrayList<Suggestion> listUsers, Runnable laterAction){
     this.listUsers=listUsers;
-    this.oldUser=oldUser;
     this.laterAction=laterAction;
+  }
+
+  public void setUser(User user){
+    if(user==null){
+      initDefaultImage();
+      initDefaultId();
+    }
+    else {
+      initImage(user);
+      initName(user);
+      initId(user);
+      initBirthday(user);
+      initAddress(user);
+      initPhoneNumber(user);
+      initEmail(user);
+      initEndBanDate(user);
+    }
+    this.oldUser=user;
+  }
+
+  public void completeSetup(){
+    setupPhoneNumberTextField();
+    setupDateTextField(endBanDateTextField);
+    setupDateTextField(birthdayTextField);
+    viLang=new HashMap<>();
+    enLang=new HashMap<>();
+    setUpLanguage(viLang,enLang);
+    if(BaseController.isTranslate){
+      applyTranslate(null,null,true);
+    }
+    viewPane.getChildren().remove(loadingPane);
+    loadingPane=null;
+    loadingTransition.stop();
+    loadingTransition=null;
   }
 
   private void initEndBanDate(User user){
@@ -93,6 +151,11 @@ public class EditUserView extends ScrollPane implements MainInfo {
   }
 
   private void initPhoneNumber(User user){
+      if(user.getPhoneNumber()!=null){
+        phoneNumberTextField.setText(user.getPhoneNumber());
+      }
+  }
+  private void setupPhoneNumberTextField(){
     phoneNumberTextField.textProperty().addListener(new ChangeListener<String>() {
       @Override
       public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -101,80 +164,76 @@ public class EditUserView extends ScrollPane implements MainInfo {
         }
       }
     });
-    if(user!=null){
-      if(user.getPhoneNumber()!=null){
-        phoneNumberTextField.setText(user.getPhoneNumber());
-      }
-    }
   }
   
   private void initAddress(User user){
-    if(user!=null){
       if(user.getAddress()!=null){
         addressTextField.setText(user.getAddress());
       }
-    }
   }
 
   private void initBirthday(User user){
     setupDateTextField(birthdayTextField);
-    if(user!=null){
       if(user.getBirthday()!=null){
         Date date=new Date(user.getBirthday());
         birthdayTextField.setText(date.getDay()+"/"+date.getMonth()+"/"+date.getYear());
       }
-    }
 
   }
   private void initName(User user){
-    if(user!=null){
       if(user.getName()!=null) {
         nameTextField.setText(user.getName());
       }
-    }
   }
 
   private void initId(User user){
-    if(user==null){
-      int id=-1;
-      Connection connection= JDBC.getConnection();
-      try{
-        String query="select max(id_user) as id "+
-            "from user ";
-        PreparedStatement statement=connection.prepareStatement(query);
-        ResultSet resultSet=statement.executeQuery();
-        if(resultSet.next()){
-          id=resultSet.getInt("id")+1;
-        }
-      }
-      catch (Exception e){
-        e.printStackTrace();
-      }
-      JDBC.closeConnection(connection);
-
-      if(id!=-1)idLabel.setText("#"+id);
+    if(user.getId()==-1){
+      initDefaultId();
     }
     else {
       idLabel.setText("#"+user.getId());
     }
   }
+  private void initDefaultId(){
+    int id=-1;
+    Connection connection= JDBC.getConnection();
+    try{
+      String query="select max(id_book) as id "+
+          "from books ";
+      PreparedStatement statement=connection.prepareStatement(query);
+      ResultSet resultSet=statement.executeQuery();
+      if(resultSet.next()){
+        id=resultSet.getInt("id")+1;
+      }
+    }
+    catch (Exception e){
+      e.printStackTrace();
+    }
+    JDBC.closeConnection(connection);
+    idLabel.setText("#"+id);
+  }
 
-  private void initImage(User user, BlendMode blendMode){
-    if(user==null){
-      imageUser.setImage(new Image(Objects.requireNonNull(
-          getClass().getResourceAsStream("/org/example/demo/Assets/basic.jpg"))));
+
+  private void initImage(User user){
+    if(user.getAvatar()==null) {
+      initDefaultImage();
+      return;
     }
-    else if(user.getAvatar()==null){
-      imageUser.setImage(new Image(Objects.requireNonNull(
-          getClass().getResourceAsStream("/org/example/demo/Assets/basic.jpg"))));
-    }
-    else {
       imageUser.setImage(user.getAvatar());
+
+    if(BaseController.isDark){
+      wrapper.setBlendMode(BlendMode.DIFFERENCE);
     }
+    else wrapper.setBlendMode(BlendMode.SRC_OVER);
 
-    if(blendMode==null)wrapper.setBlendMode(BlendMode.SRC_OVER);
-    else wrapper.setBlendMode(blendMode);
-
+  }
+  private void initDefaultImage(){
+    imageUser.setImage(new Image(Objects.requireNonNull(
+        getClass().getResourceAsStream("/org/example/demo/Assets/basic.jpg"))));
+    if(BaseController.isDark){
+      wrapper.setBlendMode(BlendMode.DIFFERENCE);
+    }
+    else wrapper.setBlendMode(BlendMode.SRC_OVER);
   }
 
   private void initView(){
@@ -212,7 +271,7 @@ public class EditUserView extends ScrollPane implements MainInfo {
     AnchorPane mainPane=(AnchorPane) this.getParent();
     ConfirmBox confirmBox=new ConfirmBox(
         "Xác nhận hủy sự thay đổi?",
-        "Nếu bạn chọn \"No\", bạn sẽ được tiếp tục thay đổi thông tin người mượn.",
+        "Nếu bạn chọn \"Hủy\", bạn sẽ được tiếp tục thay đổi thông tin người mượn.",
         ()->{
           mainPane.getChildren().removeLast();
           mainPane.getChildren().removeLast();
@@ -250,14 +309,14 @@ public class EditUserView extends ScrollPane implements MainInfo {
     AnchorPane mainPane=(AnchorPane) this.getParent();
     ConfirmBox confirmBox=new ConfirmBox(
         "Xác nhận Lưu?",
-        "Nếu bạn chọn \"No\", bạn sẽ được tiếp tục thay đổi thông tin người mượn.",
+        "Nếu bạn chọn \"Hủy\", bạn sẽ được tiếp tục thay đổi thông tin người mượn.",
         ()->{
           mainPane.getChildren().removeLast();
           Thread thread=new Thread(()->{
-            if(oldUser!=null)library.deleteUser(oldUser);
+            if(oldUser!=null)Library.getInstance().deleteUser(oldUser);
             User newUser=createNewUser();
             if(newUser!=null) {
-              library.insertUserWithID(newUser, newUser.getId());
+              Library.getInstance().insertUserWithID(newUser, newUser.getId());
 
               if (oldUser == null) {
                 listUsers.add(new Suggestion(newUser));
@@ -323,6 +382,30 @@ public class EditUserView extends ScrollPane implements MainInfo {
     return newDate;
   }
 
+  private void initLoadingTransition() {
+    Arc arc1 = (Arc) loadingPane.getChildren().getFirst();
+    Arc arc2 = (Arc) loadingPane.getChildren().get(1);
+    Arc arc3 = (Arc) loadingPane.getChildren().get(2);
+
+    RotateTransition transition1 = new RotateTransition(Duration.millis(1000), arc1);
+    transition1.setByAngle(360);
+    transition1.setCycleCount(Transition.INDEFINITE);
+    transition1.setAutoReverse(false);
+
+    RotateTransition transition2 = new RotateTransition(Duration.millis(700), arc2);
+    transition2.setByAngle(360);
+    transition2.setCycleCount(Transition.INDEFINITE);
+    transition2.setAutoReverse(false);
+
+    RotateTransition transition3 = new RotateTransition(Duration.millis(400), arc3);
+    transition3.setByAngle(360);
+    transition3.setCycleCount(Transition.INDEFINITE);
+    transition3.setAutoReverse(false);
+
+    loadingTransition = new ParallelTransition(transition1, transition2, transition3);
+    loadingTransition.play();
+  }
+
 
   @Override
   public void applyDarkMode(boolean isDark) {
@@ -337,7 +420,41 @@ public class EditUserView extends ScrollPane implements MainInfo {
   @Override
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
       boolean isTranslate) {
+    if(isTranslate){
 
+      nameTextField.setPromptText("Name");
+
+      birthdayTag.setText("Birthday: ");
+      birthdayTextField.setPromptText("Birthday");
+
+      addressTag.setText("Address: ");
+      addressTextField.setPromptText("Address");
+
+      phoneNumberTag.setText("Phone number: ");
+      phoneNumberTextField.setPromptText("Phone number");
+
+      endBanDateTag.setText("Banned until: ");
+      endBanDateTextField.setPromptText("End ban date");
+
+      saveButton.setText("Save");
+    }
+    else {
+      nameTextField.setPromptText("Tên");
+
+      birthdayTag.setText("Ngày sinh: ");
+      birthdayTextField.setPromptText("Ngày sinh");
+
+      addressTag.setText("Địa chỉ: ");
+      addressTextField.setPromptText("Địa chỉ");
+
+      phoneNumberTag.setText("Số điện thoại: ");
+      phoneNumberTextField.setPromptText("Số điện thoại");
+
+      endBanDateTag.setText("Bị cấm tới ngày: ");
+      endBanDateTextField.setPromptText("Ngày hết hạn cấm");
+
+      saveButton.setText("Lưu");
+    }
   }
 
   @Override
@@ -345,8 +462,4 @@ public class EditUserView extends ScrollPane implements MainInfo {
 
   }
 
-  @Override
-  public void removeLang(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
-
-  }
 }
