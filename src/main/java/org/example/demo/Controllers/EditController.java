@@ -345,7 +345,6 @@ public class EditController implements MainInfo {
   // set BlendMode của các ImageView là DIFFERENCE nếu isDark = true và SRC_OVER trong th còn lại
   @Override
   public void applyDarkMode(boolean isDark) {
-
   }
 
   // Không gọi setUpLanguage ở đây
@@ -361,8 +360,4 @@ public class EditController implements MainInfo {
 
   }
 
-  // giải phóng các node vừa thêm vào hashMap
-  @Override
-  public void removeLang(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
-  }
 }
