@@ -1,0 +1,67 @@
+@font-face {
+    font-family: 'HYWenHei-85W';
+}
+
+* {
+    -fx-font-family: 'HYWenHei-85W';
+    -fx-font-size: 13px; /* Bạn có thể thay đổi kích thước font nếu muốn */
+}
+
+#mainPane {
+    -fx-background-color: rgba(220,220,220,1);
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+#BackgroundPane{
+  -fx-background-color:rgba(250,110,150);
+}
+/* Loại bỏ viền và chỉ giữ đường kẻ dưới */
+.text-field {
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 5px 0;
+    -fx-transition: all 0.3s ease;  /* Thêm hiệu ứng chuyển tiếp */
+    -fx-translate-y: 2px; /* Dịch chuyển toàn bộ TextField xuống một chút */
+}
+
+/* Tạo prompt text đậm như text bình thường và có màu hồng */
+.text-field .text {
+    -fx-fill: #584f58;  /* Màu hồng rõ cho prompt text */
+}
+
+
+HBox {
+    -fx-border-color: black; /* Kẻ đường viền cho toàn bộ HBox */
+    -fx-border-width: 0 0 1 0; /* Chỉ có viền dưới */
+    -fx-padding: 0 0 0 0; /* Điều chỉnh khoảng cách dưới */
+}
+.lock-icon {
+    -fx-fill: transparent;      /* Không tô màu bên trong */
+    -fx-stroke: black;          /* Đường viền màu đen */
+    -fx-stroke-width: 1.3;      /* Độ dày của đường viền */
+    -fx-translate-x: 3px;        /* Dịch chuyển icon sang phải */
+}
+.jfx-buttonLogIn {
+    -fx-background-color: rgba(200, 200, 200, 1); /* Màu nền sáng hơn */
+}
+.x-icon {
+     -fx-fill: transparent; /* Để icon không bị tô màu bên trong */
+     -fx-stroke: black; /* Đặt màu cho đường viền của icon */
+     -fx-stroke-width: 1px; /* Điều chỉnh độ dày của đường viền */
+}
+.jfx-button:disabled {
+    -fx-background-color: rgba(200, 200, 200, 1); /* Màu nền khi bị vô hiệu hóa */
+    -fx-opacity: 1; /* Đảm bảo không bị thay đổi độ trong suốt */
+}
+
+.jfx-button:disabled:hover {
+    -fx-background-color: rgba(200, 200, 200, 1); /* Loại bỏ hiệu ứng hover khi bị vô hiệu hóa */
+}
+
+#loadingPane {
+    -fx-background-color: rgba(0, 0, 0, 0.5); /* Màu đen với độ trong suốt 50% */
+}
+
+.label-error{
+    -fx-background-color: rgba(0, 0, 0, 0.5); /* Màu nền */
+    -fx-font-size: 15px; /* Thay đổi kích thước chữ cho ComboBox */
+}

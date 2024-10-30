@@ -67,6 +67,12 @@ public class BaseController {
   @FXML
   private AnchorPane userPane;
 
+  @FXML
+  private AnchorPane borrowPane;
+
+  @FXML
+  private AnchorPane returnPane;
+
   private HomeController homeController;
 
   private BooksController booksController;
@@ -75,17 +81,25 @@ public class BaseController {
 
   private UsersController usersController;
 
+  private BorrowBookController borrowBookController;
+
+  private ReturnBookController returnBookController;
+
   @FXML
   public void initialize() {
     Thread loadMainThread = new Thread(new LoadMainTask());
     Thread loadBookThread = new Thread(new LoadBookTask());
     Thread loadEditThread = new Thread(new LoadEditTask());
     Thread loadUserThread = new Thread(new LoadUserTask());
+    Thread loadBorrowThread = new Thread(new LoadBorrowBookTask());
+    Thread loadReturnThread = new Thread(new LoadReturnBookTask());
 
     loadMainThread.start();
     loadBookThread.start();
     loadEditThread.start();
     loadUserThread.start();
+    loadBorrowThread.start();
+    loadReturnThread.start();
 
     if (!isDark) {
       checkMode.setText("☀");
@@ -108,6 +122,8 @@ public class BaseController {
     bookPane.setVisible(false);
     editPane.setVisible(false);
     userPane.setVisible(false);
+    borrowPane.setVisible(false);
+    returnPane.setVisible(false);
   }
 
   private class LoadMainTask extends Task<Void> {
@@ -166,6 +182,34 @@ public class BaseController {
     }
   }
 
+  private class LoadBorrowBookTask extends Task<Void> {
+
+    @Override
+    protected Void call() {
+      loadBorrow();
+      return null;
+    }
+
+    @Override
+    protected void succeeded() {
+      Platform.runLater(() -> bigPane.getChildren().add(borrowPane));
+    }
+  }
+
+  private class LoadReturnBookTask extends Task<Void> {
+
+    @Override
+    protected Void call() {
+      loadReturn();
+      return null;
+    }
+
+    @Override
+    protected void succeeded() {
+      Platform.runLater(() -> bigPane.getChildren().add(returnPane));
+    }
+  }
+
   private void loadMain() {
     try {
       FXMLLoader fxmlLoader = new FXMLLoader(
@@ -218,6 +262,32 @@ public class BaseController {
     }
   }
 
+  private void loadBorrow() {
+    try {
+      FXMLLoader fxmlLoader = new FXMLLoader(
+          getClass().getResource("/org/example/demo/FXML/BorrowBook.fxml"));
+      borrowPane = fxmlLoader.load();
+
+      borrowBookController = fxmlLoader.getController();
+      borrowBookController.setUpLanguage(viLang, enLang);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void loadReturn() {
+    try {
+      FXMLLoader fxmlLoader = new FXMLLoader(
+          getClass().getResource("/org/example/demo/FXML/ReturnBook.fxml"));
+      returnPane = fxmlLoader.load();
+
+      returnBookController = fxmlLoader.getController();
+      returnBookController.setUpLanguage(viLang, enLang);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
   @FXML
   public void darkMode() {
     if (!isDark) {
@@ -244,6 +314,14 @@ public class BaseController {
 
     if (editController != null) {
       editController.applyDarkMode(!isDark);
+    }
+
+    if (returnBookController != null) {
+      returnBookController.applyDarkMode(!isDark);
+    }
+
+    if (borrowBookController != null) {
+      borrowBookController.applyDarkMode(!isDark);
     }
 
     isDark = !isDark;
@@ -347,6 +425,12 @@ public class BaseController {
     if (usersController != null) {
       usersController.applyTranslate(viLang, enLang, !isTranslate);
     }
+    if (borrowBookController != null) {
+      borrowBookController.applyTranslate(viLang, enLang, !isTranslate);
+    }
+    if (returnBookController != null) {
+      returnBookController.applyTranslate(viLang, enLang, !isTranslate);
+    }
     isTranslate = !isTranslate;
   }
 
@@ -421,6 +505,8 @@ public class BaseController {
     bookPane.setVisible(false);
     editPane.setVisible(false);
     userPane.setVisible(false);
+    borrowPane.setVisible(false);
+    returnPane.setVisible(false);
   }
 
   @FXML
@@ -429,6 +515,8 @@ public class BaseController {
     bookPane.setVisible(true);
     editPane.setVisible(false);
     userPane.setVisible(false);
+    borrowPane.setVisible(false);
+    returnPane.setVisible(false);
   }
 
   @FXML
@@ -437,6 +525,8 @@ public class BaseController {
     bookPane.setVisible(false);
     editPane.setVisible(false);
     userPane.setVisible(true);
+    borrowPane.setVisible(false);
+    returnPane.setVisible(false);
   }
 
   @FXML
@@ -445,6 +535,28 @@ public class BaseController {
     bookPane.setVisible(false);
     editPane.setVisible(true);
     userPane.setVisible(false);
+    borrowPane.setVisible(false);
+    returnPane.setVisible(false);
+  }
+
+  @FXML
+  public void moveBorrowBook() {
+    mainPane.setVisible(false);
+    bookPane.setVisible(false);
+    editPane.setVisible(false);
+    userPane.setVisible(false);
+    borrowPane.setVisible(true);
+    returnPane.setVisible(false);
+  }
+
+  @FXML
+  public void moveReturnBook() {
+    mainPane.setVisible(false);
+    bookPane.setVisible(false);
+    editPane.setVisible(false);
+    userPane.setVisible(false);
+    borrowPane.setVisible(false);
+    returnPane.setVisible(true);
   }
 
 }

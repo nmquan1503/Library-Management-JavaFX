@@ -1,0 +1,77 @@
+@font-face {
+    font-family: 'HYWenHei-85W';
+}
+
+* {
+    -fx-font-family: 'HYWenHei-85W';
+    -fx-text-fill: #584f58;
+}
+.jfx-list-view .list-cell {
+    -fx-pref-height: 50; /* Thiết lập chiều cao cho mỗi item (tuỳ chọn) */
+}
+.Anchor-Pane-mainPane{
+  -fx-background-color: rgba(220,220,220,1);
+  -fx-border-radius:12px 0px 0px 0px;
+  -fx-background-radius:12px 0px 0px 0px;
+}
+.label-title{
+  -fx-font-size: 22px;
+  -fx-border-radius: 10px 30px 10px 30px; /* Top-left, Top-right, Bottom-right, Bottom-left */
+}
+.text-field{
+  -fx-border-color:transparent;
+  -fx-background-color: rgba(255,255,255,1);
+}
+#Basic{
+  -fx-background-color:rgba(255,255,255,1);
+  -fx-background-radius:8;
+  -fx-border-radius:8;
+}
+#ListView {
+    -fx-background-color: rgba(255,255,255,1);
+    -fx-background-radius: 8;
+}
+#ListView .scroll-bar {
+    -fx-background-color: rgba(255,255,255,1);
+    -fx-background-radius: 8;
+}
+#ListView .scroll-bar .thumb{
+    -fx-background-color: rgba(170,170,170,1);
+    -fx-background-radius: 8;
+}
+#ListView .scroll-bar .thumb:hover{
+    -fx-background-color: rgba(150,150,150,1);
+}
+#ListView .scroll-bar .thumb:pressed {
+    -fx-background-color: rgba(120,120,120,1);
+}
+#ListView .scroll-bar .increment-button {
+    -fx-background-color: rgba(170,170,170,1);
+    -fx-shape: "M 0 0 L 4 4 L 8 0 Z";
+}
+#ListView .scroll-bar .decrement-button {
+    -fx-background-color: rgba(170,170,170,1);
+    -fx-shape: "M 0 4 L 8 4 L 4 0 Z";
+}
+#ListView .scroll-bar .increment-button:hover,
+#ListView .scroll-bar .decrement-button:hover{
+    -fx-background-color: rgba(150,150,150,1);
+}
+#ListView .scroll-bar .increment-button:pressed,
+#ListView .scroll-bar .decrement-button:pressed{
+    -fx-background-color: rgba(120,120,120,1);
+}
+#ListView .list-cell:hover {
+    -fx-background-color: rgba(220, 220, 220, 1); /* Màu nền khi hover */
+}
+#SearchBar{
+    -fx-background-color:rgba(255,255,255,1);
+    -fx-background-radius:8;
+    -fx-border-radius:8;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 1, 1);
+}
+#VBoxSeparate{
+  -fx-background-color:rgba(255,255,255,1);
+  -fx-border-color:rgba(0,0,0,1);
+   -fx-border-width: 0 1 0 0;
+}

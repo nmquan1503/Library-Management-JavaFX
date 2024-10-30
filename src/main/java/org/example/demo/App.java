@@ -8,8 +8,6 @@ import javafx.stage.Stage;
 
 import java.util.Objects;
 
-import static javafx.application.Application.launch;
-
 public class App extends Application {
 
   @Override
