@@ -1,8 +1,11 @@
 package org.example.demo.Controllers;
 
+import com.jfoenix.controls.JFXListView;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -13,11 +16,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 
@@ -60,6 +67,12 @@ public class BorrowBookController {
     private AnchorPane secondPane;
 
     @FXML
+    private JFXListView suggestionUser;
+
+    @FXML
+    private TextField userSearchBox;
+
+    @FXML
     public void rightController() {
         pageNow++;
         left.setDisable(false);
@@ -86,7 +99,11 @@ public class BorrowBookController {
         x = 5*pageNow;
         tableView.setItems(FXCollections.observableArrayList(dataList.subList(5*(pageNow-1),x)));
     }
-
+    private List<String> allSuggestions = Arrays.asList(
+            "apple", "banana", "orange", "grape", "watermelon",
+            "pineapple", "peach", "pear", "kiwi"
+    );
+    private ObservableList<String> suggestions;
     @FXML
     public void muonSachController() {
         secondPane.setDisable(false);
@@ -104,6 +121,19 @@ public class BorrowBookController {
     }
     @FXML
     public void initialize() {
+        suggestions = FXCollections.observableArrayList();
+        suggestionUser.setItems(suggestions);
+        userSearchBox.textProperty().addListener((observable, oldValue, newValue) -> {
+            updateSuggestions(newValue);
+        });
+
+        // Lắng nghe sự kiện khi người dùng chọn gợi ý
+        suggestionUser.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                userSearchBox.setText((String) newValue); // Đặt giá trị của TextField thành gợi ý đã chọn
+                suggestionUser.setVisible(false); // Ẩn danh sách gợi ý sau khi chọn
+            }
+        });
         secondPane.setDisable(true);
         secondPane.setVisible(false);
         tableView.setSelectionModel(null);
@@ -178,5 +208,25 @@ public class BorrowBookController {
         tableView.setPrefHeight(5 * 55 + 51);
         tableView.setItems(FXCollections.observableArrayList(dataList.subList(0,5)));
 
+    }
+
+    private void updateSuggestions(String input) {
+        suggestions.clear();
+        if (input.isEmpty()) {
+            suggestionUser.setVisible(false);
+            return;
+        }
+
+        // Lọc danh sách gợi ý dựa trên đầu vào
+        for (String suggestion : allSuggestions) {
+            if (suggestion.toLowerCase().startsWith(input.toLowerCase())) {
+                suggestions.add(suggestion);
+            }
+        }
+
+        // Cập nhật danh sách gợi ý và hiển thị nếu có gợi ý
+        suggestionUser.setVisible(!suggestions.isEmpty());
+        suggestionUser.setMinHeight(suggestions.size()*50);
+        suggestionUser.setMaxHeight(suggestions.size()*50);
     }
 }

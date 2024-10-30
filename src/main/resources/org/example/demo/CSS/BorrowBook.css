@@ -6,11 +6,7 @@
     -fx-font-family: 'HYWenHei-85W';
     -fx-text-fill: #584f58;
 }
-.Anchor-Pane-mainPane{
-  -fx-background-color: rgba(220,220,220,1);
-  -fx-border-radius:12px 0px 0px 0px;
-  -fx-background-radius:12px 0px 0px 0px;
-}
+
 /* Style cho ComboBox với hiệu ứng lồi */
 /* Style cho ComboBox với hiệu ứng lồi */
 .combo-box {
