@@ -8,6 +8,7 @@ import javafx.animation.ScaleTransition;
 import javafx.animation.Transition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -20,6 +21,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Arc;
 import javafx.util.Duration;
+import org.example.demo.API.TextToSpeech;
 import org.example.demo.API.Translate;
 import org.example.demo.Controllers.BaseController;
 import org.example.demo.Interfaces.MainInfo;
@@ -84,6 +86,8 @@ public class BookView extends ScrollPane implements MainInfo {
   private HashMap<Object,String > viLang;
   private HashMap<Object,String > enLang;
 
+  private TextToSpeech tts;
+
 
   public BookView(){
     try {
@@ -103,6 +107,8 @@ public class BookView extends ScrollPane implements MainInfo {
     this.setId("FadedScrollPane");
 
     initLoadingTransition();
+
+    tts=new TextToSpeech();
 
   }
 
@@ -141,8 +147,13 @@ public class BookView extends ScrollPane implements MainInfo {
           getClass().getResourceAsStream("/org/example/demo/Assets/basic.jpg"))));
     }
     else imageBook.setImage(new Image(book.getImageLink()));
-    if(BaseController.isDark) wrapper.setBlendMode(BlendMode.DIFFERENCE);
-    else wrapper.setBlendMode(BlendMode.SRC_OVER);
+    if(BaseController.isDark){
+      wrapper.setBlendMode(BlendMode.DIFFERENCE);
+      wrapper.setId("wrapper_dark");
+    }
+    else{
+      wrapper.setBlendMode(BlendMode.SRC_OVER);
+    }
   }
 
   private void setTitle(Book book){
@@ -308,6 +319,7 @@ public class BookView extends ScrollPane implements MainInfo {
 
   @FXML
   private void ExitView(){
+    tts.stopSpeak();
     ScaleTransition transition=new ScaleTransition(Duration.millis(200),this);
     transition.setToX(0);
     transition.setToY(0);
@@ -320,7 +332,80 @@ public class BookView extends ScrollPane implements MainInfo {
 
   @FXML
   private void Speak(){
-
+    String oup="";
+    if(titleLabel!=null) {
+      if (!titleLabel.getText().isEmpty()) {
+        if(BaseController.isTranslate)oup=oup.concat("Book's name: "+titleLabel.getText()+"\n");
+        else oup = oup.concat("Tên sách: " + titleLabel.getText() + "\n");
+      }
+    }
+    if(authorList!=null){
+      if(!authorList.getChildren().isEmpty()){
+        oup=oup.concat("Các tác giả: ");
+        for(Node node: authorList.getChildren()){
+          if(node instanceof Label){
+            String author=((Label) node).getText();
+            oup=oup.concat(author+", ");
+          }
+        }
+        oup=oup.concat("\n");
+      }
+    }
+    if(publisherLabel!=null){
+      if(!publisherLabel.getText().isEmpty()){
+        oup=oup.concat(publisherTag.getText()+publisherLabel.getText()+"\n");
+      }
+    }
+    if(publishedDateLabel!=null){
+      if(!publishedDateLabel.getText().isEmpty()){
+        oup=oup.concat(publishedDateTag.getText()+publishedDateLabel.getText()+"\n");
+      }
+    }
+    if(descriptionLabel!=null){
+      if(!descriptionLabel.getText().isEmpty()){
+        oup=oup.concat(descriptionTag.getText()+descriptionLabel.getText()+"\n");
+      }
+    }
+    if(categoryList!=null){
+      if(!categoryList.getChildren().isEmpty()){
+        oup=oup.concat(categoryTag.getText());
+        for(Node node:categoryList.getChildren()){
+          if(node instanceof Label){
+            oup=oup.concat(((Label) node).getText()+", ");
+          }
+        }
+        oup=oup.concat("\n");
+      }
+    }
+    if(pageCountLabel!=null){
+      if(!pageCountLabel.getText().isEmpty()){
+        oup=oup.concat(pageCountTag.getText()+pageCountLabel.getText());
+        if(BaseController.isTranslate)oup=oup.concat(" pages\n");
+        else oup=oup.concat(" trang\n");
+      }
+    }
+    if(ratingCountLabel!=null){
+      if(!ratingCountLabel.getText().isEmpty()){
+        oup=oup.concat(ratingCountTag.getText()+ratingCountLabel.getText()+"\n");
+      }
+    }
+    if(averageRatingLabel!=null){
+      if(!averageRatingLabel.getText().isEmpty()){
+        if(BaseController.isTranslate){
+          oup=oup.concat("Quality: "+averageRatingLabel.getText()+" out of 5 stars\n");
+        }
+        else oup=oup.concat("Chất lượng: "+averageRatingLabel.getText()+" trên 5 sao\n");
+      }
+    }
+    if(quantityLabel!=null){
+      if(!quantityLabel.getText().isEmpty()){
+        oup=oup.concat(quantityTag.getText()+quantityLabel.getText()+"\n");
+      }
+    }
+    tts.stopSpeak();
+    tts=new TextToSpeech();
+    if(BaseController.isTranslate)tts.SpeakPassage(oup,Language.ENGLISH);
+    else tts.SpeakPassage(oup,Language.VIETNAMESE);
   }
 
   private void initLoadingTransition() {
@@ -351,9 +436,11 @@ public class BookView extends ScrollPane implements MainInfo {
   public void applyDarkMode(boolean isDark) {
     if(isDark){
       this.wrapper.setBlendMode(BlendMode.DIFFERENCE);
+      this.wrapper.setId("wrapper_dark");
     }
     else {
       this.wrapper.setBlendMode(BlendMode.SRC_OVER);
+      this.wrapper.setId("wrapper_light");
     }
   }
 

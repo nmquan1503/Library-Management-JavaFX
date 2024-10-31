@@ -46,7 +46,19 @@
 
 #viewPane{
   -fx-background-color:rgba(255,255,255,1);
-  -fx-border-color:rgba(255,255,255,1);
+  -fx-border-color:#E464C0;
+  -fx-border-width:3;
   -fx-border-radius:8;
   -fx-background-radius:8;
+}
+
+#wrapper_light{
+  -fx-border-width: 2;
+  -fx-border-radius: 6;
+  -fx-border-color:#E464C0;
+}
+#wrapper_dark{
+  -fx-border-width: 2;
+  -fx-border-radius: 6;
+  -fx-border-color:#1B9B3F;
 }

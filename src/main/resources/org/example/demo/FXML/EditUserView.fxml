@@ -20,9 +20,13 @@
           <children>
             <HBox spacing="30.0">
               <children>
-                        <AnchorPane fx:id="wrapper">
+                        <AnchorPane prefWidth="150.0">
                            <children>
-                      <ImageView fx:id="imageUser" fitHeight="225.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                              <AnchorPane id="wrapper_light" fx:id="wrapper">
+                                 <children>
+                            <ImageView fx:id="imageUser" fitHeight="225.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0" />
+                                 </children>
+                              </AnchorPane>
                            </children>
                         </AnchorPane>
                 <VBox prefWidth="240.0" spacing="10.0">
@@ -127,7 +131,7 @@
             <Font name="System Bold Italic" size="18.0" />
           </font>
         </JFXButton>
-            <Pane id="Basic" fx:id="loadingPane" prefWidth="500.0" stylesheets="@../CSS/Pagination.css" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="30.0">
+            <Pane id="Basic" fx:id="loadingPane" prefWidth="500.0" stylesheets="@../CSS/Pagination.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="25.0">
                <children>
                   <Arc fill="#ffffff00" layoutX="250.0" layoutY="247.0" length="270.0" radiusX="20.0" radiusY="20.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="5.0" />
                   <Arc fill="#ffffff00" layoutX="250.0" layoutY="247.0" length="270.0" radiusX="26.0" radiusY="26.0" startAngle="90.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="5.0" />

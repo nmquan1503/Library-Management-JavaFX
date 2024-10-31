@@ -63,7 +63,7 @@
    </VBox>
   <Pane id="SearchBar" layoutX="20.0" layoutY="20.0" maxHeight="40.0" prefHeight="40.0" prefWidth="455.0" stylesheets="@../CSS/SearchTextField.css">
     <children>
-      <VBox id="Basic" layoutY="3.0" prefWidth="170.0">
+      <VBox id="Basic" layoutX="4.0" layoutY="3.0" prefHeight="33.0" prefWidth="166.0">
         <children>
           <HBox id="Basic">
             <children>

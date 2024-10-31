@@ -153,6 +153,7 @@ public class EditBookView extends ScrollPane implements MainInfo {
     }
     if(BaseController.isDark){
       wrapper.setBlendMode(BlendMode.DIFFERENCE);
+      wrapper.setId("wrapper_dark");
     }
     else wrapper.setBlendMode(BlendMode.SRC_OVER);
   }
@@ -443,8 +444,12 @@ public class EditBookView extends ScrollPane implements MainInfo {
   public void applyDarkMode(boolean isDark) {
     if(isDark){
       this.wrapper.setBlendMode(BlendMode.DIFFERENCE);
+      wrapper.setId("wrapper_dark");
     }
-    else this.wrapper.setBlendMode(BlendMode.SRC_OVER);
+    else {
+      this.wrapper.setBlendMode(BlendMode.SRC_OVER);
+      wrapper.setId("wrapper_light");
+    }
   }
 
   @Override

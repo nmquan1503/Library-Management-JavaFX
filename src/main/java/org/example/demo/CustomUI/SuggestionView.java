@@ -48,6 +48,7 @@ public class SuggestionView extends HBox implements MainInfo {
     wrapper.setPrefHeight(height);
     wrapper.setPrefWidth(height/1.5);
     wrapper.setAlignment(Pos.CENTER);
+    wrapper.setStyle("-fx-effect: dropshadow(gaussian, #E464C0, 20, 0, 3, 3);");
 
     image=new ImageView(suggestion.getIcon());
     image.setPreserveRatio(true);
@@ -76,8 +77,12 @@ public class SuggestionView extends HBox implements MainInfo {
   public void applyDarkMode(boolean isDark) {
     if(isDark){
       wrapper.setBlendMode(BlendMode.DIFFERENCE);
+      wrapper.setStyle("-fx-effect: dropshadow(gaussian, #1B9B3F, 20, 0, 3, 3);");
     }
-    else wrapper.setBlendMode(BlendMode.SRC_OVER);
+    else{
+      wrapper.setStyle("-fx-effect: dropshadow(gaussian, #E464C0, 20, 0, 3, 3);");
+      wrapper.setBlendMode(BlendMode.SRC_OVER);
+    }
   }
 
   @Override
