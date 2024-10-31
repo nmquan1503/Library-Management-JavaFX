@@ -25,14 +25,17 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Arc;
 import javafx.util.Duration;
 import org.example.demo.CustomUI.BookView;
+import org.example.demo.CustomUI.ConfirmBox;
 import org.example.demo.CustomUI.SuggestionView;
 import org.example.demo.Database.JDBC;
 import org.example.demo.Interfaces.MainInfo;
@@ -43,6 +46,7 @@ import org.example.demo.Models.Trie.Trie;
 
 public class BooksController implements MainInfo {
 
+  @FXML private Label topChoicesLabel;
   @FXML
   private AnchorPane advertisementPane;
   @FXML
@@ -83,7 +87,6 @@ public class BooksController implements MainInfo {
   @FXML
   private JFXListView<SuggestionView> ListBooks;
 
-  private Library library;
   private ArrayList<Suggestion> listSuggestions;
   private Trie categories;
   @FXML
@@ -101,7 +104,6 @@ public class BooksController implements MainInfo {
     startTimeLine();
     setUpPageNumberTextField();
     setupFocusTextField();
-    library = new Library();
     initView();
 
   }
@@ -444,7 +446,7 @@ public class BooksController implements MainInfo {
       Platform.runLater(() -> {
         ListBooks.setItems(list);
         for (int i = start; i <= end; i++) {
-          list.add(new SuggestionView(listSuggestions.get(i), 80, 400));
+          list.add(new SuggestionView(listSuggestions.get(i), 80, 400,mainPane.getParent().getBlendMode()));
         }
       });
     });
@@ -533,7 +535,7 @@ public class BooksController implements MainInfo {
 
   private void showBook(int idBook) {
     Thread thread = new Thread(() -> {
-      BookView bookView = new BookView(library.getBook(idBook));
+      BookView bookView=new BookView();
       Platform.runLater(() -> {
         mainPane.getChildren().add(bookView);
         bookView.setScaleX(0);
@@ -542,6 +544,15 @@ public class BooksController implements MainInfo {
         transition.setToX(1);
         transition.setToY(1);
         transition.play();
+        Thread thread1=new Thread(()->{
+          Book book=Library.getInstance().getBook(idBook);
+          Platform.runLater(()->{
+            PauseTransition pauseTransition=new PauseTransition(Duration.millis(700));
+            pauseTransition.setOnFinished(e->{bookView.setBook(book);});
+            pauseTransition.play();
+          });
+        });
+        thread1.start();
       });
     });
     thread.start();
@@ -559,10 +570,10 @@ public class BooksController implements MainInfo {
     ObservableList<SuggestionView> observableList = FXCollections.observableArrayList();
     titleListView.setItems(observableList);
     Thread thread = new Thread(() -> {
-      ArrayList<Suggestion> listSuggestions = library.getBookSuggestions(prefix);
+      ArrayList<Suggestion> listSuggestions = Library.getInstance().getBookSuggestions(prefix);
       Platform.runLater(() -> {
         for (int i = 0; i < Math.min(10, listSuggestions.size()); i++) {
-          observableList.add(new SuggestionView(listSuggestions.get(i), 35, 230));
+          observableList.add(new SuggestionView(listSuggestions.get(i), 35, 230,mainPane.getParent().getBlendMode()));
         }
         titleListView.setVisible(true);
         int heightOfListView = Math.min(titleListView.getItems().size(), 5) * 40;
@@ -602,7 +613,7 @@ public class BooksController implements MainInfo {
 
   private void initView() {
     Thread thread = new Thread(() -> {
-      listSuggestions = library.getBookSuggestions("");
+      listSuggestions = Library.getInstance().getBookSuggestions("");
       Platform.runLater(() -> {
         setListBooks(1);
         pageNumberTextField.setText("1");
@@ -642,7 +653,7 @@ public class BooksController implements MainInfo {
     Thread thread1 = new Thread(() -> {
       if (!category.isEmpty()) {
         for (int i = 21; i < listSuggestions.size(); i++) {
-          Book book = library.getBook(listSuggestions.get(i).getId());
+          Book book = Library.getInstance().getBook(listSuggestions.get(i).getId());
           if (book.getCategories() == null) {
             listSuggestions.remove(i);
             i--;
@@ -658,10 +669,10 @@ public class BooksController implements MainInfo {
       }
     });
     Thread thread = new Thread(() -> {
-      listSuggestions = library.getBookSuggestions(titleTextField.getText());
+      listSuggestions = Library.getInstance().getBookSuggestions(titleTextField.getText());
       if (!category.isEmpty()) {
         for (int i = 0; i < Math.min(21, listSuggestions.size()); i++) {
-          Book book = library.getBook(listSuggestions.get(i).getId());
+          Book book = Library.getInstance().getBook(listSuggestions.get(i).getId());
           if (book.getCategories() == null) {
             listSuggestions.remove(i);
             i--;
@@ -732,18 +743,59 @@ public class BooksController implements MainInfo {
   @Override
   public void applyDarkMode(boolean isDark) {
 
-  }
+        if(isDark){
+          advertisementPane.setBlendMode(BlendMode.DIFFERENCE);
+        }
+        else {
+          advertisementPane.setBlendMode(BlendMode.SRC_OVER);
+        }
 
+        for(SuggestionView suggestionView:ListBooks.getItems()){
+          suggestionView.applyDarkMode(isDark);
+        }
+
+        for(SuggestionView suggestionView:titleListView.getItems()){
+          suggestionView.applyDarkMode(isDark);
+        }
+
+        int id=mainPane.getChildren().size()-1;
+
+        if(mainPane.getChildren().get(id) instanceof BookView){
+          ((BookView) mainPane.getChildren().get(id)).applyDarkMode(isDark);
+        }
+        else if(mainPane.getChildren().get(id-1) instanceof BookView){
+          ((BookView) mainPane.getChildren().get(id-1)).applyDarkMode(isDark);
+        }
+
+  }
   // Không gọi setUpLanguage ở đây
   @Override
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
       boolean isTranslate) {
+    if(isTranslate){
+      categoryTextField.setPromptText("Category");
+      titleTextField.setPromptText("Title");
+      topChoicesLabel.setText("Top choices");
+    }
+    else {
+      categoryTextField.setPromptText("Thể loại");
+      titleTextField.setPromptText("Tiêu đề");
+      topChoicesLabel.setText("Lựa chọn hàng đầu");
+    }
 
+    int id=mainPane.getChildren().size()-1;
+
+    if(mainPane.getChildren().get(id) instanceof ConfirmBox){
+      ((ConfirmBox) mainPane.getChildren().getLast()).applyTranslate(null,null,isTranslate);
+      id--;
+    }
+    if(mainPane.getChildren().get(id) instanceof BookView){
+      ((BookView) mainPane.getChildren().get(id)).applyTranslate(null,null,isTranslate);
+    }
   }
 
   // viLang lưu nội dung tiếng Việt gắn với Object, enLang lưu tiếng Anh
   @Override
   public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
-
   }
 }

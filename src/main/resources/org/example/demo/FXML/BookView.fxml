@@ -7,14 +7,20 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Arc?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane id="basic" prefHeight="520.0" prefWidth="880.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane id="viewPane" layoutX="200.0" layoutY="40.0" prefWidth="500.0" AnchorPane.bottomAnchor="40.0" AnchorPane.topAnchor="40.0">
+      <AnchorPane id="viewPane" fx:id="viewPane" layoutX="200.0" layoutY="40.0" prefWidth="500.0" AnchorPane.bottomAnchor="40.0" AnchorPane.topAnchor="40.0">
          <children>
-            <ImageView fx:id="imageBook" fitHeight="225.0" fitWidth="150.0" layoutX="40.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true" />
+            <AnchorPane fx:id="wrapper" layoutX="40.0" layoutY="30.0" prefHeight="225.0" prefWidth="150.0">
+               <children>
+                  <ImageView fx:id="imageBook" fitHeight="225.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </AnchorPane>
             <VBox layoutX="220.0" layoutY="30.0" prefWidth="240.0">
                <children>
                   <Label fx:id="titleLabel" ellipsisString="" prefWidth="240.0" wrapText="true">
@@ -29,7 +35,7 @@
                <children>
                   <HBox fx:id="publisherBox">
                      <children>
-                        <Label minWidth="-Infinity" text="Nhà xuất bản: " wrapText="true">
+                        <Label fx:id="publisherTag" minWidth="-Infinity" text="Nhà xuất bản: " wrapText="true">
                            <font>
                               <Font name="System Bold Italic" size="18.0" />
                            </font>
@@ -43,7 +49,7 @@
                   </HBox>
                   <HBox fx:id="publishedDateBox">
                      <children>
-                        <Label minWidth="-Infinity" text="Năm xuất bản: " wrapText="true">
+                        <Label fx:id="publishedDateTag" minWidth="-Infinity" text="Năm xuất bản: " wrapText="true">
                            <font>
                               <Font name="System Bold Italic" size="18.0" />
                            </font>
@@ -57,7 +63,7 @@
                   </HBox>
                   <HBox fx:id="descriptionBox">
                      <children>
-                        <Label minWidth="-Infinity" text="Mô tả: " wrapText="true">
+                        <Label fx:id="descriptionTag" minWidth="-Infinity" text="Mô tả: " wrapText="true">
                            <font>
                               <Font name="System Bold Italic" size="18.0" />
                            </font>
@@ -71,7 +77,7 @@
                   </HBox>
                   <HBox fx:id="categoryBox">
                      <children>
-                        <Label minWidth="-Infinity" text="Thể loại: " wrapText="true">
+                        <Label fx:id="categoryTag" minWidth="-Infinity" text="Thể loại: " wrapText="true">
                            <font>
                               <Font name="System Bold Italic" size="18.0" />
                            </font>
@@ -81,7 +87,7 @@
                   </HBox>
                   <HBox fx:id="pageCountBox">
                      <children>
-                        <Label minWidth="-Infinity" text="Độ dài: " wrapText="true">
+                        <Label fx:id="pageCountTag" minWidth="-Infinity" text="Độ dài: " wrapText="true">
                            <font>
                               <Font name="System Bold Italic" size="18.0" />
                            </font>
@@ -95,7 +101,7 @@
                   </HBox>
                   <HBox fx:id="ratingCountBox">
                      <children>
-                        <Label minWidth="-Infinity" text="Số lượng đánh giá: " wrapText="true">
+                        <Label fx:id="ratingCountTag" minWidth="-Infinity" text="Số lượng đánh giá: " wrapText="true">
                            <font>
                               <Font name="System Bold Italic" size="18.0" />
                            </font>
@@ -114,7 +120,7 @@
                               <Font name="System Bold Italic" size="24.0" />
                            </font>
                         </Label>
-                        <Label text=" trên 5" textFill="RED" wrapText="true">
+                        <Label text=" / 5" textFill="RED" wrapText="true">
                            <font>
                               <Font name="System Bold Italic" size="18.0" />
                            </font>
@@ -132,7 +138,7 @@
                   </HBox>
                   <HBox fx:id="quantityBox">
                      <children>
-                        <Label minWidth="-Infinity" text="Số lượng: " wrapText="true">
+                        <Label fx:id="quantityTag" minWidth="-Infinity" text="Số lượng: " wrapText="true">
                            <font>
                               <Font name="System Bold Italic" size="18.0" />
                            </font>
@@ -156,6 +162,13 @@
                   <FontAwesomeIconView glyphName="VOLUME_UP" size="20" />
                </graphic>
             </JFXButton>
+            <Pane id="Basic" fx:id="loadingPane" prefWidth="500.0" stylesheets="@../CSS/Pagination.css" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="30.0">
+               <children>
+                  <Arc fill="#ffffff00" layoutX="250.0" layoutY="262.0" length="270.0" radiusX="20.0" radiusY="20.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="5.0" />
+                  <Arc fill="#ffffff00" layoutX="250.0" layoutY="262.0" length="270.0" radiusX="26.0" radiusY="26.0" startAngle="90.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="5.0" />
+                  <Arc fill="#ffffff00" layoutX="250.0" layoutY="262.0" length="270.0" radiusX="32.0" radiusY="32.0" startAngle="180.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="5.0" />
+               </children>
+            </Pane>
          </children>
          <padding>
             <Insets bottom="30.0" />

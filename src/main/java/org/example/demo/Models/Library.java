@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Objects;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import org.example.demo.Database.JDBC;
 import org.example.demo.Models.BookShelf.Book;
@@ -19,15 +20,28 @@ import org.example.demo.Models.Users.UserList;
 
 public class Library {
 
+  private static Library instance;
+  static {
+    instance=new Library();
+  }
+
   private BookShelf bookShelf;
   private UserList userList;
   private BorrowHistory borrowHistory;
 
-  public Library() {
+  private Library() {
     this.bookShelf = new BookShelf();
     this.userList = new UserList();
     borrowHistory = new BorrowHistory();
   }
+
+  public static Library getInstance(){
+    if(instance==null){
+      instance=new Library();
+    }
+    return instance;
+  }
+
 
   /**
    * save history of borrowing in database.
