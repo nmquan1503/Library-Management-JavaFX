@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Objects;
 import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
+import javafx.animation.ScaleTransition;
 import javafx.animation.Transition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,8 +20,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Arc;
 import javafx.util.Duration;
+import org.example.demo.API.TextToSpeech;
 import org.example.demo.Controllers.BaseController;
 import org.example.demo.Interfaces.MainInfo;
+import org.example.demo.Models.Language;
 import org.example.demo.Models.Users.Date;
 import org.example.demo.Models.Users.User;
 
@@ -62,6 +65,8 @@ public class UserView extends ScrollPane implements MainInfo {
   private HashMap<Object,String > viLang;
   private HashMap<Object,String > enLang;
 
+  private TextToSpeech tts;
+
   public UserView(){
     try {
       FXMLLoader fxmlLoader = new FXMLLoader(
@@ -80,7 +85,7 @@ public class UserView extends ScrollPane implements MainInfo {
     this.setId("FadedScrollPane");
 
     initLoadingTransition();
-
+    tts=new TextToSpeech();
   }
 
   public void setUser(User user){
@@ -118,8 +123,10 @@ public class UserView extends ScrollPane implements MainInfo {
     }
     if(BaseController.isDark){
       wrapper.setBlendMode(BlendMode.DIFFERENCE);
+      wrapper.setId("wrapper_dark");
     }
     else wrapper.setBlendMode(BlendMode.SRC_OVER);
+    wrapper.setPrefWidth(imageUser.getFitWidth()+6);
   }
   
   private void setName(User user){
@@ -177,12 +184,63 @@ public class UserView extends ScrollPane implements MainInfo {
 
   @FXML
   private void ExitView(){
-    AnchorPane mainPane=(AnchorPane) this.getParent();
-    mainPane.getChildren().remove(this);
+    tts.stopSpeak();
+    ScaleTransition transition=new ScaleTransition(Duration.millis(200),this);
+    transition.setToX(0);
+    transition.setToY(0);
+    transition.setOnFinished(e->{
+      AnchorPane mainPane=(AnchorPane) this.getParent();
+      mainPane.getChildren().remove(this);
+    });
+    transition.play();
   }
 
   @FXML
   private void Speak(){
+    String oup="";
+    if(nameLabel!=null){
+      if(!nameLabel.getText().isEmpty()){
+        if(BaseController.isTranslate)oup=oup.concat("Name user: "+nameLabel.getText()+"\n");
+        else oup=oup.concat("Tên người mượn: "+nameLabel.getText()+"\n");
+      }
+    }
+
+    if(birthdayLabel!=null){
+      if(!birthdayLabel.getText().isEmpty()){
+        oup=oup.concat(birthdayTag.getText()+birthdayLabel.getText()+"\n");
+      }
+    }
+
+    if(addressLabel!=null){
+      if(!addressLabel.getText().isEmpty()){
+        oup=oup.concat(addressTag.getText()+addressLabel.getText()+"\n");
+      }
+    }
+
+    if(phoneNumberLabel!=null){
+      if(!phoneNumberLabel.getText().isEmpty()){
+        oup=oup.concat(phoneNumberTag.getText()+phoneNumberLabel.getText()+"\n");
+      }
+    }
+
+    if(emailLabel!=null){
+      if(!emailLabel.getText().isEmpty()){
+        oup=oup.concat(emailTag.getText()+emailLabel.getText()+"\n");
+      }
+    }
+
+    if(endBanDateLabel!=null){
+      if(!endBanDateLabel.getText().isEmpty()){
+        oup=oup.concat(endBanDateTag.getText()+endBanDateLabel.getText()+"\n");
+      }
+    }
+
+    tts.stopSpeak();
+    tts=new TextToSpeech();
+    if(BaseController.isTranslate){
+      tts.SpeakPassage(oup, Language.ENGLISH);
+    }
+    else tts.SpeakPassage(oup,Language.VIETNAMESE);
 
   }
 
@@ -214,9 +272,11 @@ public class UserView extends ScrollPane implements MainInfo {
   public void applyDarkMode(boolean isDark) {
     if(isDark){
       this.wrapper.setBlendMode(BlendMode.DIFFERENCE);
+      wrapper.setId("wrapper_dark");
     }
     else {
       this.wrapper.setBlendMode(BlendMode.SRC_OVER);
+      wrapper.setId("wrapper_light");
     }
   }
 

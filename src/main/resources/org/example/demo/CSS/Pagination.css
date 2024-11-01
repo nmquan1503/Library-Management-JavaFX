@@ -10,6 +10,10 @@
 #ListView {
     -fx-background-color: rgba(255,255,255,1);
     -fx-background-radius: 8;
+    -fx-border-radius:8;
+    -fx-border-color:#E464C0;
+    -fx-border-width:2;
+    -fx-effect: dropshadow(gaussian, #E464C0, 5, 0, 1, 1);
 }
 #ListView .scroll-bar {
     -fx-background-color: rgba(255,255,255,1);

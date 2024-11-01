@@ -16,9 +16,9 @@
   <children>
     <AnchorPane id="viewPane" fx:id="viewPane" layoutX="200.0" layoutY="40.0" prefWidth="500.0" AnchorPane.bottomAnchor="40.0" AnchorPane.topAnchor="40.0">
       <children>
-            <AnchorPane fx:id="wrapper" layoutX="40.0" layoutY="30.0" prefHeight="225.0" prefWidth="150.0">
+            <AnchorPane id="wrapper_light" fx:id="wrapper" layoutX="40.0" layoutY="30.0">
                <children>
-              <ImageView fx:id="imageUser" fitHeight="225.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+              <ImageView fx:id="imageUser" fitHeight="225.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0" />
                </children>
             </AnchorPane>
         <VBox fx:id="infoBox" layoutX="40.0" layoutY="270.0" prefWidth="420.0" spacing="5.0">
@@ -115,11 +115,11 @@
             <FontAwesomeIconView glyphName="VOLUME_UP" size="20" />
           </graphic>
         </JFXButton>
-            <Pane id="Basic" fx:id="loadingPane" prefWidth="500.0" stylesheets="@../CSS/Pagination.css" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="30.0">
+            <Pane id="Basic" fx:id="loadingPane" prefWidth="500.0" stylesheets="@../CSS/Pagination.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="25.0">
                <children>
-                  <Arc fill="#ffffff00" layoutX="250.0" layoutY="197.0" length="270.0" radiusX="20.0" radiusY="20.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="5.0" />
-                  <Arc fill="#ffffff00" layoutX="250.0" layoutY="197.0" length="270.0" radiusX="26.0" radiusY="26.0" startAngle="90.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="5.0" />
-                  <Arc fill="#ffffff00" layoutX="250.0" layoutY="197.0" length="270.0" radiusX="32.0" radiusY="32.0" startAngle="180.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="5.0" />
+                  <Arc fill="#ffffff00" layoutX="247.0" layoutY="197.0" length="270.0" radiusX="20.0" radiusY="20.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="5.0" />
+                  <Arc fill="#ffffff00" layoutX="247.0" layoutY="197.0" length="270.0" radiusX="26.0" radiusY="26.0" startAngle="90.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="5.0" />
+                  <Arc fill="#ffffff00" layoutX="247.0" layoutY="197.0" length="270.0" radiusX="32.0" radiusY="32.0" startAngle="180.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="5.0" />
                </children>
             </Pane>
       </children>

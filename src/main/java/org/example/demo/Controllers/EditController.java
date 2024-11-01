@@ -521,6 +521,16 @@ public class EditController implements MainInfo {
     for(EditBox editBox:listViewBooks.getItems()){
       editBox.applyDarkMode(isDark);
     }
+    int id=mainPane.getChildren().size()-1;
+    if(mainPane.getChildren().get(id) instanceof ConfirmBox){
+      id--;
+    }
+    if(mainPane.getChildren().get(id) instanceof EditUserView){
+      ((EditUserView) mainPane.getChildren().get(id)).applyDarkMode(isDark);
+    }
+    else if(mainPane.getChildren().get(id) instanceof EditBookView){
+      ((EditBookView) mainPane.getChildren().get(id)).applyDarkMode(isDark);
+    }
   }
 
   // Không gọi setUpLanguage ở đây
