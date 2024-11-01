@@ -257,11 +257,15 @@ public class StartController {
 
           // Kiểm tra tài khoản
           if (resultSet.next()) {
+            JDBC.closeConnection(connection);
             return true; // Tài khoản hợp lệ
           }
+          JDBC.closeConnection(connection);
         } catch (Exception e) {
+
           e.printStackTrace();
         }
+
         return false; // Tài khoản không hợp lệ
       }
 
