@@ -3,12 +3,18 @@ package org.example.demo.Controllers;
 import com.jfoenix.controls.JFXButton;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Objects;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
@@ -18,6 +24,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.effect.BlendMode;
+import javafx.stage.Stage;
 import org.example.demo.API.Translate;
 import org.example.demo.Models.Language;
 
@@ -350,7 +357,7 @@ public class BaseController {
 
     changeInfo.setOnAction(e -> handleChangeAccountInfo());
     translate.setOnAction(e -> handleTranslate());
-    logOut.setOnAction(e -> handleLogout());
+    logOut.setOnAction(this::handleLogout);
 
     avatarMenu.getItems().addAll(changeInfo, translate, logOut);
   }
@@ -359,8 +366,22 @@ public class BaseController {
 
   }
 
-  private void handleLogout() {
+  private void handleLogout(ActionEvent event) {
+    logoutHelper(event, mainPane);
+  }
 
+  private void logoutHelper(ActionEvent event, Node anyNodeInTheScene) {
+    try {
+      Parent root = FXMLLoader.load(
+          Objects.requireNonNull(getClass().getResource("/org/example/demo/FXML/Start.fxml")));
+      Scene newScene = new Scene(root);
+
+      Stage stage = (Stage) anyNodeInTheScene.getScene().getWindow();
+      stage.setScene(newScene);
+      stage.show();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   private void setUpLang() {
@@ -469,39 +490,10 @@ public class BaseController {
     avatarMenu.show(avatar, menuX - 143, menuY + 5);
   }
 
-//  private void switchPane(String fxmlPath) {
-//    try {
-//      if (currentController != null) {
-//        currentController.removeLang(viLang, enLang);
-//      }
-//
-//      if (mainPane != null) {
-//        mainPane.getChildren().clear();
-//        bigPane.getChildren().remove(mainPane);
-//        mainPane = null;
-//      }
-//
-//      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
-//      AnchorPane anchorPane = fxmlLoader.load();
-//
-//      currentController = fxmlLoader.getController();
-//      currentController.setUpLanguage(viLang, enLang);
-//
-//      bigPane.getChildren().add(anchorPane);
-//      mainPane = anchorPane;
-//
-//      if (isDark && currentController != null) {
-//        currentController.applyDarkMode(isDark);
-//      }
-//
-//    } catch (Exception e) {
-//      e.printStackTrace();
-//    }
-//  }
-
   @FXML
   public void moveDashboard() {
     mainPane.setVisible(true);
+    homeController.refresh();
     bookPane.setVisible(false);
     editPane.setVisible(false);
     userPane.setVisible(false);

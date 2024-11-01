@@ -9,6 +9,7 @@ module org.example.demo {
   requires com.fasterxml.jackson.databind;
   requires jdk.compiler;
   requires de.jensd.fx.glyphs.fontawesome;
+  requires java.prefs;
 
   opens org.example.demo.Controllers;
   opens org.example.demo.CustomUI to javafx.fxml;

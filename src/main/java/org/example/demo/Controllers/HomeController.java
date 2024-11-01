@@ -11,7 +11,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +33,6 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Side;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
@@ -112,7 +110,43 @@ public class HomeController implements MainInfo {
   @FXML
   private Label helloTxt;
 
+  @FXML
+  private Label numBookTxt;
+
+  @FXML
+  private Label numStuTxt;
+
+  @FXML
+  private Label overDueTxt;
+
+  @FXML
+  private Label banStuTxt;
+
+  @FXML
+  private Label tableLibTxt;
+
+  @FXML
+  private Label borrowRateTxt;
+
+  @FXML
+  private Button allBtn;
+
+  private JFXTreeTableView<LibrarianTable> tempTable;
+
+  private ScatterChart<String, Number> fullyScatterChart;
+
+  private AreaChart<?, ?> fullyAreaChart;
+
   public void initialize() {
+    displayTime();
+    displayMiniPaneTotal();
+    displayHomeTable();
+    displayCirclePro();
+    displayScatter();
+    displayArea();
+  }
+
+  public void refresh() {
     displayTime();
     displayMiniPaneTotal();
     displayHomeTable();
@@ -167,7 +201,7 @@ public class HomeController implements MainInfo {
     colonFlashTimeline.play();
   }
 
-  private void updateTime(Label[] digitLabels) {
+  public void updateTime(Label[] digitLabels) {
     LocalDateTime now = LocalDateTime.now();
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
     String currentTime = now.format(formatter);
@@ -179,7 +213,7 @@ public class HomeController implements MainInfo {
     }
   }
 
-  private void displayMiniPaneTotal() {
+  public void displayMiniPaneTotal() {
     Connection conn = null;
     PreparedStatement pstmt = null;
     ResultSet rs = null;
@@ -255,7 +289,7 @@ public class HomeController implements MainInfo {
     }
   }
 
-  private void displayHomeTable() {
+  public void displayHomeTable() {
 
     Connection conn = null;
     PreparedStatement preparedStatement = null;
@@ -280,6 +314,9 @@ public class HomeController implements MainInfo {
 
       JFXTreeTableColumn<LibrarianTable, String> librarianNameColumn = new JFXTreeTableColumn<>(
           "Tên");
+      if (BaseController.isTranslate) {
+        librarianNameColumn.setText("Name");
+      }
       librarianNameColumn.setCellValueFactory(param -> param.getValue().getValue().nameProperty());
       librarianNameColumn.setPrefWidth(160);
       librarianNameColumn.setMinWidth(160);
@@ -492,13 +529,25 @@ public class HomeController implements MainInfo {
       conn = JDBC.getConnection();
 
       XYChart.Series<String, Number> adultSeries = new XYChart.Series<>();
-      adultSeries.setName("Người lớn");
+      if (BaseController.isTranslate) {
+        adultSeries.setName("Adult");
+      } else {
+        adultSeries.setName("Người lớn");
+      }
 
       XYChart.Series<String, Number> childrenSeries = new XYChart.Series<>();
-      childrenSeries.setName("Học sinh");
+      if (BaseController.isTranslate) {
+        childrenSeries.setName("Student");
+      } else {
+        childrenSeries.setName("Học sinh");
+      }
 
       XYChart.Series<String, Number> elderlySeries = new XYChart.Series<>();
-      elderlySeries.setName("Người già");
+      if (BaseController.isTranslate) {
+        elderlySeries.setName("Elder");
+      } else {
+        elderlySeries.setName("Người già");
+      }
 
       String sql = "SELECT b.published_date AS publish_year, " +
           "SUM(CASE WHEN EXTRACT(YEAR FROM now()) - EXTRACT(YEAR FROM u.birthday) BETWEEN 18 AND 59 THEN 1 ELSE 0 END) AS adult_count, "
@@ -568,6 +617,12 @@ public class HomeController implements MainInfo {
       scatter.getData().clear();
       scatter.getData().addAll(adultSeries, childrenSeries, elderlySeries);
 
+      if (!BaseController.isTranslate) {
+        scatter.setTitle("Phân bố");
+      } else {
+        scatter.setTitle("Scatter");
+      }
+
       CategoryAxis xAxis = (CategoryAxis) scatter.getXAxis();
 
       xAxis.setCategories(allYears);
@@ -611,8 +666,13 @@ public class HomeController implements MainInfo {
     try {
       conn = JDBC.getConnection();
 
-      areaChart.getXAxis().setLabel("Tháng");
-      areaChart.getYAxis().setLabel("Số lượt mượn");
+      if (!BaseController.isTranslate) {
+        areaChart.getXAxis().setLabel("Tháng");
+        areaChart.getYAxis().setLabel("Số lượt mượn");
+      } else {
+        areaChart.getXAxis().setLabel("Month");
+        areaChart.getYAxis().setLabel("Number of books borrowing");
+      }
       areaChart.getXAxis().setStyle("-fx-font-size: 9px;");
       areaChart.getYAxis().setStyle("-fx-font-size: 9px;");
 
@@ -695,7 +755,7 @@ public class HomeController implements MainInfo {
     AnchorPane fullyScatter = new AnchorPane();
     fullyScatter.getStyleClass().add("sub-pane");
 
-    ScatterChart<?, ?> fullyScatterChart = createScatterChartCopy(scatter);
+    fullyScatterChart = createScatterChartCopy(scatter);
     fullyScatter.getChildren().add(fullyScatterChart);
     blur.getChildren().add(fullyScatter);
 
@@ -858,8 +918,13 @@ public class HomeController implements MainInfo {
 
     ScatterChart<String, Number> copiedScatterChart = new ScatterChart<>(xAxis, yAxis);
 
-    copiedScatterChart.getXAxis().setLabel("Năm xuất bản");
-    copiedScatterChart.getYAxis().setLabel("Sách mượn");
+    if (BaseController.isTranslate) {
+      copiedScatterChart.getXAxis().setLabel("Publish Year");
+      copiedScatterChart.getYAxis().setLabel("Num of borrowing books");
+    } else {
+      copiedScatterChart.getXAxis().setLabel("Năm xuất bản");
+      copiedScatterChart.getYAxis().setLabel("Sách mượn");
+    }
     copiedScatterChart.getXAxis().setStyle("-fx-font-size: 15px;");
     copiedScatterChart.getYAxis().setStyle("-fx-font-size: 15px;");
     copiedScatterChart.setLegendVisible(true);
@@ -909,7 +974,11 @@ public class HomeController implements MainInfo {
     }
 
     customizeCopiedScatterLegend(copiedScatterChart);
-    copiedScatterChart.setTitle("Số lượng sách mượn theo Năm xuất Bản và Độ tuổi");
+    if (BaseController.isTranslate) {
+      copiedScatterChart.setTitle("Number of borrowed books by Publication Year and Age Group");
+    } else {
+      copiedScatterChart.setTitle("Số lượng sách mượn theo Năm xuất Bản và Độ tuổi");
+    }
     copiedScatterChart.setTitleSide(Side.TOP);
     copiedScatterChart.setPadding(new Insets(20, 0, 0, 0));
 
@@ -972,7 +1041,7 @@ public class HomeController implements MainInfo {
 
       rs = preparedStatement.executeQuery();
 
-      JFXTreeTableView<LibrarianTable> tempTable = new JFXTreeTableView<>();
+      tempTable = new JFXTreeTableView<>();
 
       tempTable.setPrefWidth(415);
 
@@ -984,6 +1053,9 @@ public class HomeController implements MainInfo {
 
       JFXTreeTableColumn<LibrarianTable, String> librarianNameColumn = new JFXTreeTableColumn<>(
           "Tên");
+      if (BaseController.isTranslate) {
+        librarianNameColumn.setText("Name");
+      }
       librarianNameColumn.setCellValueFactory(param -> param.getValue().getValue().nameProperty());
       librarianNameColumn.setPrefWidth(170);
       librarianNameColumn.setMinWidth(170);
@@ -1008,11 +1080,11 @@ public class HomeController implements MainInfo {
 
       final TreeItem<LibrarianTable> root = new RecursiveTreeItem<>(librarian,
           RecursiveTreeObject::getChildren);
+      tempTable.getColumns().clear();
       tempTable.getColumns()
           .setAll(librarianIdColumn, librarianNameColumn, librarianEmailColumn);
       tempTable.setRoot(root);
       tempTable.setShowRoot(false);
-
       fullyList.getChildren().add(tempTable);
       AnchorPane.setTopAnchor(tempTable, 10.0);
       AnchorPane.setBottomAnchor(tempTable, 10.0);
@@ -1068,7 +1140,7 @@ public class HomeController implements MainInfo {
     fullyList.getStyleClass().add("sub-pane");
 
     scaleUp(fullyList);
-    AreaChart<?, ?> fullyAreaChart = createAreaChartCopy(areaChart);
+    fullyAreaChart = createAreaChartCopy(areaChart);
     fullyList.getChildren().add(fullyAreaChart);
     blur.getChildren().add(fullyList);
 
@@ -1115,7 +1187,11 @@ public class HomeController implements MainInfo {
       copiedAreaChart.getData().add(newSeries);
     }
 
-    copiedAreaChart.setTitle("Số lượng sách mượn theo từng tháng trong các năm");
+    if (BaseController.isTranslate) {
+      copiedAreaChart.setTitle("The number of books borrowed each month throughout the year");
+    } else {
+      copiedAreaChart.setTitle("Số lượng sách mượn theo từng tháng trong các năm");
+    }
     copiedAreaChart.setTitleSide(Side.TOP);
     copiedAreaChart.setPadding(new Insets(20, 0, 0, 0));
 
@@ -1126,74 +1202,107 @@ public class HomeController implements MainInfo {
   @Override
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
       boolean isTranslate) {
-//    List<Label> labels = getAllTextLabels();
-//    List<Button> buttons = getAllTextButtons();
-//    for (Label label : labels) {
-//      if (label != null) {
-//        if (isTranslate) {
-//          label.setText(enLang.get(label));
-//        } else {
-//          label.setText(viLang.get(label));
-//        }
-//      }
-//    }
-//    for (Button button : buttons) {
-//      if (button != null) {
-//        if (isTranslate) {
-//          button.setText(enLang.get(button));
-//        } else {
-//          button.setText(viLang.get(button));
-//        }
-//      }
-//    }
     if (isTranslate) {
       helloTxt.setText(enLang.get(helloTxt));
+      numBookTxt.setText("Books");
+      numStuTxt.setText("Students");
+      overDueTxt.setText("Overdue books");
+      banStuTxt.setText("Banned students");
+      tableLibTxt.setText(enLang.get(tableLibTxt));
+      borrowRateTxt.setText("Borrowing Rate");
+
+      allBtn.setText("All");
+      if (tempTable != null) {
+        tempTable.getColumns().get(1).setText("Name");
+      }
+      librarianView.getColumns().get(1).setText("Name");
+
+      scatter.setTitle("Scatter");
+      if (fullyScatterChart != null) {
+        fullyScatterChart.getXAxis().setLabel("Publish Year");
+        fullyScatterChart.getYAxis().setLabel("Num of borrowing books");
+        fullyScatterChart.setTitle("Number of borrowed books by Publication Year and Age Group");
+      }
+
+      areaChart.setTitle("Book borrowing Statistics");
+      areaChart.getXAxis().setLabel("Month");
+      areaChart.getYAxis().setLabel("Num of loans");
+      if (fullyAreaChart != null) {
+        fullyAreaChart.getXAxis().setLabel("Month");
+        fullyAreaChart.getYAxis().setLabel("Number of books borrowing");
+        fullyAreaChart.setTitle("The number of books borrowed each month throughout the year");
+      }
     } else {
       helloTxt.setText(viLang.get(helloTxt));
+      numBookTxt.setText("Số sách");
+      numStuTxt.setText("Số sinh viên");
+      overDueTxt.setText("Số sách quá hạn");
+      banStuTxt.setText("Số sinh viên bị cấm");
+      tableLibTxt.setText(viLang.get(tableLibTxt));
+      borrowRateTxt.setText("Tỉ lệ sách đã mượn");
+      scatter.setTitle("Phân bố");
+
+      allBtn.setText("Tất cả");
+      if (tempTable != null) {
+        tempTable.getColumns().get(1).setText("Tên");
+      }
+      librarianView.getColumns().get(1).setText("Tên");
+
+      if (fullyScatterChart != null) {
+        fullyScatterChart.getXAxis().setLabel("Năm xuất bản");
+        fullyScatterChart.getYAxis().setLabel("Sách mượn");
+        fullyScatterChart.setTitle("Số lượng sách mượn theo Năm xuất Bản và Độ tuổi");
+      }
+
+      areaChart.setTitle("Thống kê mượn sách");
+      areaChart.getXAxis().setLabel("Tháng");
+      areaChart.getYAxis().setLabel("Số lượt mượn");
+      if (fullyAreaChart != null) {
+        fullyAreaChart.getXAxis().setLabel("Tháng");
+        fullyAreaChart.getYAxis().setLabel("Số lượt mượn");
+        fullyAreaChart.setTitle("Số lượng sách mượn theo từng tháng trong các năm");
+      }
+    }
+    if (fullyScatterChart != null) {
+      renameSeries(fullyScatterChart);
+    }
+
+  }
+
+  private void renameSeries(ScatterChart<String, Number> scatter) {
+    for (XYChart.Series<String, Number> series : scatter.getData()) {
+      String currentName = series.getName();
+
+      if (!BaseController.isTranslate) {
+        if ("Người lớn".equals(currentName) || "Adult".equals(currentName)) {
+          series.setName("Adult");
+        } else if ("Học sinh".equals(currentName) || "Student".equals(currentName)) {
+          series.setName("Student");
+        } else if ("Người già".equals(currentName) || "Elder".equals(currentName)) {
+          series.setName("Elder");
+        }
+      } else {
+        if ("Adult".equals(currentName) || "Người lớn".equals(currentName)) {
+          series.setName("Người lớn");
+        } else if ("Student".equals(currentName) || "Học sinh".equals(currentName)) {
+          series.setName("Học sinh");
+        } else if ("Elder".equals(currentName) || "Người già".equals(currentName)) {
+          series.setName("Người già");
+        }
+      }
     }
   }
+
 
   // viLang lưu nội dung tiếng Việt gắn với Object, enLang lưu tiếng Anh
   @Override
   public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
     viLang.put(helloTxt, helloTxt.getText());
+    viLang.put(tableLibTxt, tableLibTxt.getText());
     enLang.put(helloTxt,
-        Translate.translate(helloTxt.getText(), Language.VIETNAMESE, Language.ENGLISH));
-  }
-
-  public List<Label> getAllTextLabels() {
-    List<Label> labels = new ArrayList<>();
-    findLabelsAndButtonsWithText(homePane, labels, null);
-    return labels;
-  }
-
-  public List<Button> getAllTextButtons() {
-    List<Button> buttons = new ArrayList<>();
-    findLabelsAndButtonsWithText(homePane, null, buttons);
-    return buttons;
-  }
-
-  private void findLabelsAndButtonsWithText(Node node, List<Label> labels, List<Button> buttons) {
-    if (node instanceof Label && labels != null) {
-      Label label = (Label) node;
-      if (isTextOnly(label.getText())) {
-        labels.add(label);
-      }
-    } else if (node instanceof Button && buttons != null) {
-      Button button = (Button) node;
-      if (isTextOnly(button.getText())) {
-        buttons.add(button);
-      }
-    }
-    if (node instanceof Parent) {
-      for (Node child : ((Parent) node).getChildrenUnmodifiable()) {
-        findLabelsAndButtonsWithText(child, labels, buttons);
-      }
-    }
-  }
-
-  private boolean isTextOnly(String text) {
-    return text != null && !text.trim().isEmpty() && !text.matches("\\d+");
+        Translate.translate(helloTxt.getText(), Language.VIETNAMESE, Language.ENGLISH) + " ");
+    enLang.put(tableLibTxt,
+        Translate.translate(tableLibTxt.getText(), Language.VIETNAMESE, Language.ENGLISH));
   }
 
 }
