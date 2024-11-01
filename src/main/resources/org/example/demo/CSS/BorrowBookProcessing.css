@@ -6,9 +6,7 @@
     -fx-font-family: 'HYWenHei-85W';
     -fx-text-fill: #584f58;
 }
-.jfx-list-view .list-cell {
-    -fx-pref-height: 50; /* Thiết lập chiều cao cho mỗi item (tuỳ chọn) */
-}
+
 .Anchor-Pane-mainPane{
   -fx-background-color: rgba(220,220,220,1);
   -fx-border-radius:12px 0px 0px 0px;

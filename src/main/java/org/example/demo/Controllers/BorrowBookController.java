@@ -1,9 +1,13 @@
 package org.example.demo.Controllers;
 
 import com.jfoenix.controls.JFXListView;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javafx.collections.FXCollections;
@@ -26,6 +30,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import org.example.demo.Database.JDBC;
+import org.example.demo.Models.Suggestion.Suggestion;
+import org.example.demo.Models.Trie.Trie;
 
 
 public class BorrowBookController {
@@ -72,6 +79,8 @@ public class BorrowBookController {
     @FXML
     private TextField userSearchBox;
 
+    private Trie userNameTrie;
+
     @FXML
     public void rightController() {
         pageNow++;
@@ -99,10 +108,7 @@ public class BorrowBookController {
         x = 5*pageNow;
         tableView.setItems(FXCollections.observableArrayList(dataList.subList(5*(pageNow-1),x)));
     }
-    private List<String> allSuggestions = Arrays.asList(
-            "apple", "banana", "orange", "grape", "watermelon",
-            "pineapple", "peach", "pear", "kiwi"
-    );
+    private ArrayList<Suggestion> userSuggestions;
     private ObservableList<String> suggestions;
     @FXML
     public void muonSachController() {
@@ -119,8 +125,12 @@ public class BorrowBookController {
         );
         sortBox.setValue("Hành Động Mượn Sách");
     }
+    private void addUserSuggestions() {
+        userSuggestions =
+    }
     @FXML
     public void initialize() {
+        addBox();
         suggestions = FXCollections.observableArrayList();
         suggestionUser.setItems(suggestions);
         userSearchBox.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -132,6 +142,8 @@ public class BorrowBookController {
             if (newValue != null) {
                 userSearchBox.setText((String) newValue); // Đặt giá trị của TextField thành gợi ý đã chọn
                 suggestionUser.setVisible(false); // Ẩn danh sách gợi ý sau khi chọn
+                suggestionUser.setMinHeight(0);
+                suggestionUser.setMaxHeight(0);
             }
         });
         secondPane.setDisable(true);
@@ -214,6 +226,8 @@ public class BorrowBookController {
         suggestions.clear();
         if (input.isEmpty()) {
             suggestionUser.setVisible(false);
+            suggestionUser.setMinHeight(0);
+            suggestionUser.setMaxHeight(0);
             return;
         }
 
@@ -226,7 +240,7 @@ public class BorrowBookController {
 
         // Cập nhật danh sách gợi ý và hiển thị nếu có gợi ý
         suggestionUser.setVisible(!suggestions.isEmpty());
-        suggestionUser.setMinHeight(suggestions.size()*50);
-        suggestionUser.setMaxHeight(suggestions.size()*50);
+        suggestionUser.setMinHeight(suggestions.size()*35);
+        suggestionUser.setMaxHeight(suggestions.size()*35);
     }
 }

@@ -243,11 +243,15 @@ public class StartController {
 
                     // Kiểm tra tài khoản
                     if (resultSet.next()) {
+                        JDBC.closeConnection(connection);
                         return true; // Tài khoản hợp lệ
                     }
+                    JDBC.closeConnection(connection);
                 } catch (Exception e) {
+
                     e.printStackTrace();
                 }
+
                 return false; // Tài khoản không hợp lệ
             }
 
@@ -319,11 +323,9 @@ public class StartController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/demo/FXML/BorrowBook.fxml"));
             root = loader.load();
 
-            BorrowBookController borrowBookController =loader.getController();
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);
-            borrowBookController.addBox();
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
