@@ -95,6 +95,8 @@ public class StartController {
   private ProgressIndicator loadingIndicator;
   private Preferences prefs;
 
+  private static int id;
+
   public StartController() {
     prefs = Preferences.userNodeForPackage(StartController.class);
   }
@@ -246,7 +248,7 @@ public class StartController {
     Task<Boolean> loginTask = new Task<>() {
       @Override
       protected Boolean call() throws Exception {
-        String query = "SELECT * FROM librarian WHERE username_account = ? AND password_account = ?";
+        String query = "SELECT id_librarian FROM librarian WHERE username_account = ? AND password_account = ?";
 
         try (Connection connection = JDBC.getConnection()) {
           PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -258,6 +260,7 @@ public class StartController {
 
           // Kiểm tra tài khoản
           if (resultSet.next()) {
+            id = resultSet.getInt("id_librarian");
             JDBC.closeConnection(connection);
             return true; // Tài khoản hợp lệ
           }
@@ -554,6 +557,7 @@ public class StartController {
     };
     animationTimer.start(); // Bắt đầu animation
   }
-
-
+  public static int getID() {     // lấy id người quản lý
+    return id;
+  }
 }
