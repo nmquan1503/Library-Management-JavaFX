@@ -26,6 +26,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.effect.BlendMode;
 import javafx.stage.Stage;
 import org.example.demo.API.Translate;
+import org.example.demo.App;
 import org.example.demo.Models.Language;
 
 public class BaseController {
@@ -107,6 +108,17 @@ public class BaseController {
     loadUserThread.start();
     loadBorrowThread.start();
     loadReturnThread.start();
+
+    try {
+      loadMainThread.join();
+      loadBookThread.join();
+      loadEditThread.join();
+      loadUserThread.join();
+      loadBorrowThread.join();
+      loadReturnThread.join();
+    } catch (InterruptedException e) {
+      System.out.println("Thread interrupted: " + e.getMessage());
+    }
 
     if (!isDark) {
       checkMode.setText("☀");
@@ -357,7 +369,7 @@ public class BaseController {
 
     changeInfo.setOnAction(e -> handleChangeAccountInfo());
     translate.setOnAction(e -> handleTranslate());
-    logOut.setOnAction(this::handleLogout);
+    logOut.setOnAction(e -> handleLogout());
 
     avatarMenu.getItems().addAll(changeInfo, translate, logOut);
   }
@@ -366,22 +378,9 @@ public class BaseController {
 
   }
 
-  private void handleLogout(ActionEvent event) {
-    logoutHelper(event, mainPane);
-  }
-
-  private void logoutHelper(ActionEvent event, Node anyNodeInTheScene) {
-    try {
-      Parent root = FXMLLoader.load(
-          Objects.requireNonNull(getClass().getResource("/org/example/demo/FXML/Start.fxml")));
-      Scene newScene = new Scene(root);
-
-      Stage stage = (Stage) anyNodeInTheScene.getScene().getWindow();
-      stage.setScene(newScene);
-      stage.show();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+  private void handleLogout() {
+    App.primaryStage.setScene(App.startScene);
+    App.primaryStage.show();
   }
 
   private void setUpLang() {
