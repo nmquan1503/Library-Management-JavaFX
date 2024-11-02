@@ -988,15 +988,15 @@ public class HomeController implements MainInfo {
   private void customizeCopiedScatterLegend(ScatterChart<String, Number> scatterChart) {
     for (Node legendItem : scatterChart.lookupAll(".chart-legend-item")) {
       Label label = (Label) legendItem;
-      if (label.getText().equals("Người lớn")) {
+      if (label.getText().equals("Người lớn") || label.getText().equals("Adult")) {
         Polygon triangle = new Polygon(0, 10, 10, 10, 5, 0);
         triangle.setStyle("-fx-fill: #ff6666;");
         label.setGraphic(triangle);
-      } else if (label.getText().equals("Học sinh")) {
+      } else if (label.getText().equals("Học sinh") || label.getText().equals("Student")) {
         Circle circle = new Circle(5);
         circle.setStyle("-fx-fill: #66ff66;");
         label.setGraphic(circle);
-      } else if (label.getText().equals("Người già")) {
+      } else if (label.getText().equals("Người già") || label.getText().equals("Elder")) {
         Rectangle rectangle = new Rectangle(10, 10);
         rectangle.setStyle("-fx-fill: #00ccff;");
         label.setGraphic(rectangle);
@@ -1202,6 +1202,8 @@ public class HomeController implements MainInfo {
   @Override
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
       boolean isTranslate) {
+    renameSeries(scatter);
+    customizeCopiedScatterLegend(scatter);
     if (isTranslate) {
       helloTxt.setText(enLang.get(helloTxt));
       numBookTxt.setText("Books");
@@ -1265,6 +1267,7 @@ public class HomeController implements MainInfo {
     }
     if (fullyScatterChart != null) {
       renameSeries(fullyScatterChart);
+      customizeCopiedScatterLegend(fullyScatterChart);
     }
 
   }
@@ -1274,19 +1277,19 @@ public class HomeController implements MainInfo {
       String currentName = series.getName();
 
       if (!BaseController.isTranslate) {
-        if ("Người lớn".equals(currentName) || "Adult".equals(currentName)) {
+        if (currentName.equals("Người lớn")) {
           series.setName("Adult");
-        } else if ("Học sinh".equals(currentName) || "Student".equals(currentName)) {
+        } else if (currentName.equals("Học sinh")) {
           series.setName("Student");
-        } else if ("Người già".equals(currentName) || "Elder".equals(currentName)) {
+        } else if (currentName.equals("Người già")) {
           series.setName("Elder");
         }
       } else {
-        if ("Adult".equals(currentName) || "Người lớn".equals(currentName)) {
+        if (currentName.equals("Adult")) {
           series.setName("Người lớn");
-        } else if ("Student".equals(currentName) || "Học sinh".equals(currentName)) {
+        } else if (currentName.equals("Student")) {
           series.setName("Học sinh");
-        } else if ("Elder".equals(currentName) || "Người già".equals(currentName)) {
+        } else if (currentName.equals("Elder")) {
           series.setName("Người già");
         }
       }

@@ -457,8 +457,7 @@ public class BaseController {
   @FXML
   public void avatarClicked() {
     for (MenuItem item : avatarMenu.getItems()) {
-      if (item.getGraphic() instanceof FontAwesomeIconView) {
-        FontAwesomeIconView icon = (FontAwesomeIconView) item.getGraphic();
+      if (item.getGraphic() instanceof FontAwesomeIconView icon) {
         if (isDark) {
           icon.setFill(javafx.scene.paint.Color.WHITE);
         } else {
