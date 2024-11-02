@@ -39,6 +39,7 @@ import javafx.scene.layout.StackPane;
 
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.example.demo.App;
 import org.example.demo.Database.JDBC;
 
 public class StartController {
@@ -338,21 +339,23 @@ public class StartController {
   }
 
   private void loadHomeScene(ActionEvent event) {
-    try {
-      FXMLLoader loader = new FXMLLoader(
-          getClass().getResource("/org/example/demo/FXML/Base.fxml"));
-      root = loader.load();
-
-      Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-      Scene scene = new Scene(root);
-      stage.setScene(scene);
-      stage.show();
-    } catch (IOException e) {
-      e.printStackTrace();
-
-    }
+//    try {
+//      FXMLLoader loader = new FXMLLoader(
+//          getClass().getResource("/org/example/demo/FXML/Base.fxml"));
+//      root = loader.load();
+//      Scene mainScene = new Scene(root);
+//
+//      ((Node) event.getSource()).getScene().getWindow().hide();
+//      Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+//      stage.setScene(mainScene);
+//      stage.show();
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//
+//    }
+    App.primaryStage.setScene(App.baseScene);
+    App.primaryStage.show();
   }
-
 
   @FXML
   public void initialize() {
