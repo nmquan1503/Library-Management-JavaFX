@@ -356,6 +356,12 @@ public class StartController {
 //      e.printStackTrace();
 //
 //    }
+    BaseController.getBookPane().setVisible(false);
+    BaseController.getBorrowPane().setVisible(false);
+    BaseController.getEditPane().setVisible(false);
+    BaseController.getReturnPane().setVisible(false);
+    BaseController.getUserPane().setVisible(false);
+    BaseController.getMainPane().setVisible(true);
     App.primaryStage.setScene(App.baseScene);
     App.primaryStage.show();
   }
@@ -557,6 +563,7 @@ public class StartController {
     };
     animationTimer.start(); // Bắt đầu animation
   }
+
   public static int getID() {     // lấy id người quản lý
     return id;
   }

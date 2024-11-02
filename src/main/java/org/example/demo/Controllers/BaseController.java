@@ -64,22 +64,22 @@ public class BaseController {
   private Tooltip avtText;
 
   @FXML
-  private AnchorPane mainPane;
+  private static AnchorPane mainPane;
 
   @FXML
-  private AnchorPane bookPane;
+  private static AnchorPane bookPane;
 
   @FXML
-  private AnchorPane editPane;
+  private static AnchorPane editPane;
 
   @FXML
-  private AnchorPane userPane;
+  private static AnchorPane userPane;
 
   @FXML
-  private AnchorPane borrowPane;
+  private static AnchorPane borrowPane;
 
   @FXML
-  private AnchorPane returnPane;
+  private static AnchorPane returnPane;
 
   private HomeController homeController;
 
@@ -92,6 +92,30 @@ public class BaseController {
   private BorrowBookController borrowBookController;
 
   private ReturnBookController returnBookController;
+
+  public static AnchorPane getMainPane() {
+    return mainPane;
+  }
+
+  public static AnchorPane getBookPane() {
+    return bookPane;
+  }
+
+  public static AnchorPane getEditPane() {
+    return editPane;
+  }
+
+  public static AnchorPane getUserPane() {
+    return userPane;
+  }
+
+  public static AnchorPane getBorrowPane() {
+    return borrowPane;
+  }
+
+  public static AnchorPane getReturnPane() {
+    return returnPane;
+  }
 
   @FXML
   public void initialize() {
@@ -501,6 +525,7 @@ public class BaseController {
 
   @FXML
   public void moveBooks() {
+    homeController.clearTimeline();
     mainPane.setVisible(false);
     bookPane.setVisible(true);
     editPane.setVisible(false);
@@ -511,6 +536,7 @@ public class BaseController {
 
   @FXML
   public void moveUser() {
+    homeController.clearTimeline();
     mainPane.setVisible(false);
     bookPane.setVisible(false);
     editPane.setVisible(false);
@@ -521,6 +547,7 @@ public class BaseController {
 
   @FXML
   public void moveEdit() {
+    homeController.clearTimeline();
     mainPane.setVisible(false);
     bookPane.setVisible(false);
     editPane.setVisible(true);
@@ -531,6 +558,7 @@ public class BaseController {
 
   @FXML
   public void moveBorrowBook() {
+    homeController.clearTimeline();
     mainPane.setVisible(false);
     bookPane.setVisible(false);
     editPane.setVisible(false);
@@ -541,6 +569,7 @@ public class BaseController {
 
   @FXML
   public void moveReturnBook() {
+    homeController.clearTimeline();
     mainPane.setVisible(false);
     bookPane.setVisible(false);
     editPane.setVisible(false);
