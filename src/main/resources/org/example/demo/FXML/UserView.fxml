@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Arc?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="basic" prefHeight="520.0" prefWidth="880.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+  <children>
+    <AnchorPane id="viewPane" fx:id="viewPane" layoutX="200.0" layoutY="40.0" prefWidth="500.0" AnchorPane.bottomAnchor="40.0" AnchorPane.topAnchor="40.0">
+      <children>
+            <AnchorPane id="wrapper_light" fx:id="wrapper" layoutX="40.0" layoutY="30.0">
+               <children>
+              <ImageView fx:id="imageUser" fitHeight="225.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0" />
+               </children>
+            </AnchorPane>
+        <VBox fx:id="infoBox" layoutX="40.0" layoutY="270.0" prefWidth="420.0" spacing="5.0">
+               <children>
+                  <HBox fx:id="birthdayBox">
+                     <children>
+                        <Label fx:id="birthdayTag" text="Ngày sinh: " wrapText="true">
+                           <font>
+                              <Font name="System Bold Italic" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="birthdayLabel" wrapText="true">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="addressBox">
+                     <children>
+                        <Label fx:id="addressTag" text="Địa chỉ: " wrapText="true">
+                           <font>
+                              <Font name="System Bold Italic" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="addressLabel" wrapText="true">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="phoneNumberBox">
+                     <children>
+                        <Label fx:id="phoneNumberTag" text="Số điện thoại: " wrapText="true">
+                           <font>
+                              <Font name="System Bold Italic" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="phoneNumberLabel" wrapText="true">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="emailBox">
+                     <children>
+                        <Label fx:id="emailTag" text="Email: " wrapText="true">
+                           <font>
+                              <Font name="System Bold Italic" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="emailLabel" wrapText="true">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="endBanDateBox">
+                     <children>
+                        <Label fx:id="endBanDateTag" text="Bị cấm tới ngày: " textFill="RED" wrapText="true">
+                           <font>
+                              <Font name="System Bold Italic" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="endBanDateLabel" textFill="RED" wrapText="true">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+               </children>
+        </VBox>
+      <Label fx:id="nameLabel" ellipsisString="" layoutX="220.0" layoutY="30.0" prefWidth="240.0" wrapText="true">
+        <font>
+          <Font name="System Bold Italic" size="24.0" />
+        </font>
+      </Label>
+            <Label fx:id="idLabel" layoutX="220.0" layoutY="70.0" prefWidth="240.0">
+               <font>
+                  <Font name="System Bold Italic" size="18.0" />
+               </font>
+            </Label>
+        <JFXButton contentDisplay="CENTER" ellipsisString="" layoutX="465.0" onAction="#ExitView" prefHeight="35.0" prefWidth="35.0">
+          <graphic>
+            <FontAwesomeIconView glyphName="REMOVE" size="20" />
+          </graphic>
+        </JFXButton>
+        <JFXButton contentDisplay="CENTER" ellipsisString="" layoutX="465.0" layoutY="35.0" onAction="#Speak" prefHeight="35.0" prefWidth="35.0">
+          <graphic>
+            <FontAwesomeIconView glyphName="VOLUME_UP" size="20" />
+          </graphic>
+        </JFXButton>
+            <Pane id="Basic" fx:id="loadingPane" prefWidth="500.0" stylesheets="@../CSS/Pagination.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="25.0">
+               <children>
+                  <Arc fill="#ffffff00" layoutX="247.0" layoutY="197.0" length="270.0" radiusX="20.0" radiusY="20.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="5.0" />
+                  <Arc fill="#ffffff00" layoutX="247.0" layoutY="197.0" length="270.0" radiusX="26.0" radiusY="26.0" startAngle="90.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="5.0" />
+                  <Arc fill="#ffffff00" layoutX="247.0" layoutY="197.0" length="270.0" radiusX="32.0" radiusY="32.0" startAngle="180.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="5.0" />
+               </children>
+            </Pane>
+      </children>
+      <padding>
+        <Insets bottom="30.0" />
+      </padding>
+    </AnchorPane>
+  </children>
+</AnchorPane>

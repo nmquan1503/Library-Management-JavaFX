@@ -1,0 +1,53 @@
+#ContentOfSuggestion{
+  -fx-font-size:16;
+  -fx-font-weight: bold;
+}
+
+#IconOfContent{
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 20, 0, 3, 3);
+}
+
+#ListView {
+    -fx-background-color: rgba(255,255,255,1);
+    -fx-background-radius: 8;
+    -fx-border-radius:8;
+    -fx-border-color:#E464C0;
+    -fx-border-width:2;
+    -fx-effect: dropshadow(gaussian, #E464C0, 5, 0, 1, 1);
+}
+#ListView .scroll-bar {
+    -fx-background-color: rgba(255,255,255,1);
+    -fx-background-radius: 8;
+}
+#ListView .scroll-bar .thumb{
+    -fx-background-color: rgba(170,170,170,1);
+    -fx-background-radius: 8;
+}
+#ListView .scroll-bar .thumb:hover{
+    -fx-background-color: rgba(150,150,150,1);
+}
+#ListView .scroll-bar .thumb:pressed {
+    -fx-background-color: rgba(120,120,120,1);
+}
+#ListView .scroll-bar .increment-button {
+    -fx-background-color: rgba(170,170,170,1);
+    -fx-shape: "M 0 0 L 4 4 L 8 0 Z";
+}
+#ListView .scroll-bar .decrement-button {
+    -fx-background-color: rgba(170,170,170,1);
+    -fx-shape: "M 0 4 L 8 4 L 4 0 Z";
+}
+#ListView .scroll-bar .increment-button:hover,
+#ListView .scroll-bar .decrement-button:hover{
+    -fx-background-color: rgba(150,150,150,1);
+}
+#ListView .scroll-bar .increment-button:pressed,
+#ListView .scroll-bar .decrement-button:pressed{
+    -fx-background-color: rgba(120,120,120,1);
+}
+
+#Basic{
+  -fx-background-color:rgba(255,255,255,1);
+  -fx-background-radius:8;
+  -fx-border-radius:8;
+}

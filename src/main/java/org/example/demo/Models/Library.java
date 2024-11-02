@@ -53,7 +53,9 @@ public class Library {
    */
   public int borrowBook(Book book, User user, Date borrowedDate) {
     return borrowHistory.addBorrowing(
-            new Borrowing(-1, book.getId(), user.getId(), borrowedDate, borrowedDate.add(10), null));
+
+        new Borrowing(-1, book.getId(), user.getId(), borrowedDate, borrowedDate.add(10), null));
+
   }
 
   /**
@@ -155,6 +157,23 @@ public class Library {
     return userList.insertUserWithID(user, idUser);
   }
 
+
+
+
+  public static void main(String[] args) {
+    Library library = new Library();
+    Image image = new Image(Objects.requireNonNull(
+        Library.class.getResourceAsStream("/org/example/demo/Assets/basic.jpg")));
+    User user = new User("Nguyễn Minh Quân",
+        new Date(2005, 3, 15),
+        "Thái Bình",
+        "minhquan15032005@gmail.com",
+        "0346399421",
+        image,
+        new Date(2000, 0, 0));
+    library.insertUser(user);
+
+  }
 
 
 

@@ -49,12 +49,7 @@ public class Translate {
     return text;
   }
 
-  public static void main(String[] args) {
-    System.out.println(translate("Consider a 256kb 4-way set associative cache with 256 byte cache\n"
-            + "lines for a processor that uses 64-bit data words and 48-bit byte\n"
-            + "addresses. Assume the variable x, of type uint64, is stored in memory\n"
-            + "at location 0x4A85_B413_A518. Assume that x is present in the cache,\n"
-            + "and char* ptr = 0x4A85 B400 0000. Determine if the following\n"
-            + "accesses will cause a cache miss or hit or say if it can’t be determined.\n", Language.ENGLISH, Language.VIETNAMESE));
-  }
+//  public static void main(String[] args) {
+//    System.out.println(translate("speak", Language.ENGLISH, Language.VIETNAMESE));
+//  }
 }

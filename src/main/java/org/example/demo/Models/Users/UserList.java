@@ -52,7 +52,7 @@ public class UserList {
           "address.name_address as address, " +
           "user.ban_date as ban_date, " +
           "user.avatar as avatar " +
-          "from user join address on user.id_address=address.id_address " +
+          "from user left join address on user.id_address=address.id_address " +
           "where user.id_user = (?)";
       PreparedStatement preparedStatement = connection.prepareStatement(query);
       preparedStatement.setInt(1, id);
@@ -62,13 +62,19 @@ public class UserList {
       }
       resultSet.next();
       String name_user = resultSet.getString("name_user");
-      Date birthday = (Date) resultSet.getDate("birthday");
+      Date birthday = null;
+      if (resultSet.getDate("birthday") != null) {
+        birthday = new Date(resultSet.getDate("birthday"));
+      }
       String phone_number = resultSet.getString("phone_number");
       String email_user = resultSet.getString("email");
       String address = resultSet.getString("address");
-      Date ban_date = (Date) resultSet.getDate("ban_date");
+      Date ban_date = null;
+      if (resultSet.getDate("ban_date") != null) {
+        ban_date = new Date(resultSet.getDate("ban_date"));
+      }
       Image avatar = createImageFromBlob(resultSet.getBinaryStream("avatar"));
-      user = new User(name_user, birthday, phone_number, email_user, address, avatar, ban_date);
+      user = new User(id, name_user, birthday, address, email_user, avatar, phone_number, ban_date);
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
@@ -127,5 +133,30 @@ public class UserList {
     return listUser;
   }
 
+  public int insertUserWithID(User user, int idUser) {
+    int id = user.SaveInfo();
+    Connection connection = JDBC.getConnection();
+    try {
+      String query = "update user set id_user=(?) where id_user=(?)";
+      PreparedStatement statement = connection.prepareStatement(query);
+      statement.setInt(1, idUser);
+      statement.setInt(2, id);
+      statement.executeUpdate();
+      user.setId(idUser);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    JDBC.closeConnection(connection);
+    users.insertNode(user.getName(), user.getId());
+    return idUser;
+  }
+
+  public static void main(String[] args) {
+    UserList userList=new UserList();
+    User user=userList.getUser(1);
+    if (user == null) {
+      System.out.println(1);
+    }
+  }
 
 }

@@ -9,9 +9,10 @@ module org.example.demo {
   requires com.fasterxml.jackson.databind;
   requires jdk.compiler;
   requires de.jensd.fx.glyphs.fontawesome;
-    requires mysql.connector.j;
-    requires java.prefs;
+  requires java.prefs;
 
-    opens org.example.demo.Controllers;
+  opens org.example.demo.Controllers;
+  opens org.example.demo.CustomUI to javafx.fxml;
   exports org.example.demo;
+  opens org.example.demo.Interfaces;
 }

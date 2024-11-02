@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,216 +32,241 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import org.example.demo.Database.JDBC;
+import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.Suggestion.Suggestion;
 import org.example.demo.Models.Trie.Trie;
 
 
-public class BorrowBookController {
+public class BorrowBookController implements MainInfo {
 
-    private ObservableList<TableData> dataList;
-    private int pageNow;
+  private ObservableList<TableData> dataList;
+  private int pageNow;
 
-    @FXML
-    private AnchorPane mainPane;
+  @FXML
+  private AnchorPane mainPane;
 
-    @FXML
-    private ComboBox sortBox;
+  @FXML
+  private ComboBox sortBox;
 
-    @FXML
-    private TableView<TableData> tableView; // Gán ID của TableView từ Scene Builder
+  @FXML
+  private TableView<TableData> tableView; // Gán ID của TableView từ Scene Builder
 
-    @FXML
-    private TableColumn<TableData,String> typeColumn;
+  @FXML
+  private TableColumn<TableData, String> typeColumn;
 
-    @FXML
-    private TableColumn<TableData,String> userColumn;
+  @FXML
+  private TableColumn<TableData, String> userColumn;
 
-    @FXML
-    private TableColumn<TableData,String> bookColumn;
+  @FXML
+  private TableColumn<TableData, String> bookColumn;
 
-    @FXML
-    private TableColumn<TableData,String> timeColumn;
+  @FXML
+  private TableColumn<TableData, String> timeColumn;
 
-    @FXML
-    private Button right;
+  @FXML
+  private Button right;
 
-    @FXML
-    private Button left;
+  @FXML
+  private Button left;
 
-    @FXML
-    private Label pageNumber;
+  @FXML
+  private Label pageNumber;
 
-    @FXML
-    private AnchorPane secondPane;
+  @FXML
+  private AnchorPane secondPane;
 
-    @FXML
-    private JFXListView suggestionUser;
+  @FXML
+  private JFXListView suggestionUser;
 
-    @FXML
-    private TextField userSearchBox;
+  @FXML
+  private TextField userSearchBox;
 
-    private Trie userNameTrie;
+  private Trie userNameTrie;
 
-    @FXML
-    public void rightController() {
-        pageNow++;
-        left.setDisable(false);
-        pageNumber.setText(String.valueOf(pageNow));
-        int x = dataList.size();
-        if ( x <= 5*pageNow ) {
-            right.setDisable(true);
-            right.setStyle(""); // Khôi phục màu mặc định nếu không đủ điều kiện
-        }
-        else x = 5*pageNow;
-        tableView.setItems(FXCollections.observableArrayList(dataList.subList(5*(pageNow-1),x)));
+  @FXML
+  public void rightController() {
+    pageNow++;
+    left.setDisable(false);
+    pageNumber.setText(String.valueOf(pageNow));
+    int x = dataList.size();
+    if (x <= 5 * pageNow) {
+      right.setDisable(true);
+      right.setStyle(""); // Khôi phục màu mặc định nếu không đủ điều kiện
+    } else {
+      x = 5 * pageNow;
     }
+    tableView.setItems(FXCollections.observableArrayList(dataList.subList(5 * (pageNow - 1), x)));
+  }
 
-    @FXML
-    public void leftController() {
-        pageNow--;
-        pageNumber.setText(String.valueOf(pageNow));
-        right.setDisable(false);
-        int x = 0;
-        if ( pageNow == 1 ) {
-            left.setDisable(true);
-            left.setStyle(""); // Khôi phục màu mặc định nếu không đủ điều kiện
-        }
-        x = 5*pageNow;
-        tableView.setItems(FXCollections.observableArrayList(dataList.subList(5*(pageNow-1),x)));
+  @FXML
+  public void leftController() {
+    pageNow--;
+    pageNumber.setText(String.valueOf(pageNow));
+    right.setDisable(false);
+    int x = 0;
+    if (pageNow == 1) {
+      left.setDisable(true);
+      left.setStyle(""); // Khôi phục màu mặc định nếu không đủ điều kiện
     }
-    private ArrayList<Suggestion> userSuggestions;
-    private ObservableList<String> suggestions;
-    @FXML
-    public void muonSachController() {
-        secondPane.setDisable(false);
-        secondPane.setVisible(true);
-        mainPane.setVisible(false);
-        mainPane.setDisable(true);
-    }
-    public void addBox() {
-        sortBox.getItems().addAll(
-                "Hành Động Mượn Sách",
-                "Hành Động Trả Sách",
-                "Toàn Bộ Lịch Sử"
-        );
-        sortBox.setValue("Hành Động Mượn Sách");
-    }
-    private void addUserSuggestions() {
-        userSuggestions =
-    }
-    @FXML
-    public void initialize() {
-        addBox();
-        suggestions = FXCollections.observableArrayList();
-        suggestionUser.setItems(suggestions);
-        userSearchBox.textProperty().addListener((observable, oldValue, newValue) -> {
-            updateSuggestions(newValue);
-        });
+    x = 5 * pageNow;
+    tableView.setItems(FXCollections.observableArrayList(dataList.subList(5 * (pageNow - 1), x)));
+  }
 
-        // Lắng nghe sự kiện khi người dùng chọn gợi ý
-        suggestionUser.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                userSearchBox.setText((String) newValue); // Đặt giá trị của TextField thành gợi ý đã chọn
-                suggestionUser.setVisible(false); // Ẩn danh sách gợi ý sau khi chọn
-                suggestionUser.setMinHeight(0);
-                suggestionUser.setMaxHeight(0);
-            }
-        });
-        secondPane.setDisable(true);
-        secondPane.setVisible(false);
-        tableView.setSelectionModel(null);
-        pageNow=1;
-        left.setDisable(true);
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String Today = now.format(formatter);
-        dataList = FXCollections.observableArrayList(
-            new TableData("Mượn", "THAO", "Harry Potter và Phòng Chứa Bí Mật", Today ),
-                new TableData("Trả", "THAO", "Harry Potter và Bảo Bối Tử Thần", Today ),
-                new TableData("Mượn", "THAO", "Harry Potter và tên tù nhân ngục Azkaban", Today ),
-                new TableData("Mượn", "THAO", "Harry Potter Va Bao Boi Tu Than", Today ),
-                new TableData("Mượn", "THAO", "Harry Potter và bảo bối tử thần", Today ),
-                new TableData("Trả", "THAO", "Harry Potter và phòng chứa bí mật", Today ),
-                new TableData("Mượn", "THAO", "Harry Potter & hội phượng hoàng", Today ),
-                new TableData("Mượn", "THAO", "Harry Potter and the Deathly Hallows", Today ),
-                new TableData("Mượn", "THAO", "Harry Potter and the Chamber of Secrets", Today ),
-                new TableData("Trả", "THAO", "\u200Fهيرى پوٹر اور رازوں کا کمره :\u200F", Today ),
-                new TableData("Trả", "THAO", "Marsupilami", Today ),
-                new TableData("Mượn", "THAO", "Doraemon", Today )
+  private ArrayList<Suggestion> userSuggestions;
+  private ObservableList<String> suggestions;
 
+  @FXML
+  public void muonSachController() {
+    secondPane.setDisable(false);
+    secondPane.setVisible(true);
+    mainPane.setVisible(false);
+    mainPane.setDisable(true);
+  }
 
-        );
-        for ( TableData x: dataList) {
-            String s = x.getBook();
-            if ( s.length() >= 20 ) {
-                String t="";
-                boolean check = false;
-                for ( int i = 0 ; i < s.length(); i++) {
-                    t=t+s.charAt(i);
-                    if ( i >= 20 && s.charAt(i) == ' ' && check == false ){
-                        check=true;
-                        t=t+"\n";
-                    }
-                }
-                x.setBook(t);
-            }
-        }
-        if ( dataList.size() <= 5 ) {
-            right.setDisable(true);
-        }
-        typeColumn.setReorderable(false);
-        userColumn.setReorderable(false);
-        bookColumn.setReorderable(false);
-        typeColumn.setCellValueFactory(new PropertyValueFactory<TableData,String>("action"));
-        userColumn.setCellValueFactory(new PropertyValueFactory<TableData,String>("user"));
-        bookColumn.setCellValueFactory(new PropertyValueFactory<TableData,String>("book"));
-        timeColumn.setCellValueFactory(new PropertyValueFactory<TableData,String>("date"));
+  public void addBox() {
+    sortBox.getItems().addAll(
+        "Hành Động Mượn Sách",
+        "Hành Động Trả Sách",
+        "Toàn Bộ Lịch Sử"
+    );
+    sortBox.setValue("Hành Động Mượn Sách");
+  }
 
-        bookColumn.setCellFactory(tc -> {
-            return new javafx.scene.control.TableCell<TableData, String>() {
-                private final Text text = new Text();
+  private void addUserSuggestions() {
+  }
 
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty || item == null) {
-                        setGraphic(null);
-                    } else {
-                        text.setText(item);
-                        text.wrappingWidthProperty().bind(getTableColumn().widthProperty()); // Đặt wrappingWidth để tự động xuống dòng
-                        text.setStyle("-fx-font-family: 'HYWenHei-85W'; -fx-fill: #8e8e8e;-fx-font-size: 17px;");
-                        text.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
-                        setAlignment(javafx.geometry.Pos.CENTER); // Căn giữa nội dung trong ô
-                        setGraphic(text);
-                    }
-                }
-            };
-        });
+  @FXML
+  public void initialize() {
+    addBox();
+    suggestions = FXCollections.observableArrayList();
+    suggestionUser.setItems(suggestions);
+    userSearchBox.textProperty().addListener((observable, oldValue, newValue) -> {
+      updateSuggestions(newValue);
+    });
 
-        tableView.setPrefHeight(5 * 55 + 51);
-        tableView.setItems(FXCollections.observableArrayList(dataList.subList(0,5)));
-
-    }
-
-    private void updateSuggestions(String input) {
-        suggestions.clear();
-        if (input.isEmpty()) {
-            suggestionUser.setVisible(false);
+    // Lắng nghe sự kiện khi người dùng chọn gợi ý
+    suggestionUser.getSelectionModel().selectedItemProperty()
+        .addListener((observable, oldValue, newValue) -> {
+          if (newValue != null) {
+            userSearchBox.setText(
+                (String) newValue); // Đặt giá trị của TextField thành gợi ý đã chọn
+            suggestionUser.setVisible(false); // Ẩn danh sách gợi ý sau khi chọn
             suggestionUser.setMinHeight(0);
             suggestionUser.setMaxHeight(0);
-            return;
-        }
+          }
+        });
+    secondPane.setDisable(true);
+    secondPane.setVisible(false);
+    tableView.setSelectionModel(null);
+    pageNow = 1;
+    left.setDisable(true);
+    LocalDateTime now = LocalDateTime.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    String Today = now.format(formatter);
+    dataList = FXCollections.observableArrayList(
+        new TableData("Mượn", "THAO", "Harry Potter và Phòng Chứa Bí Mật", Today),
+        new TableData("Trả", "THAO", "Harry Potter và Bảo Bối Tử Thần", Today),
+        new TableData("Mượn", "THAO", "Harry Potter và tên tù nhân ngục Azkaban", Today),
+        new TableData("Mượn", "THAO", "Harry Potter Va Bao Boi Tu Than", Today),
+        new TableData("Mượn", "THAO", "Harry Potter và bảo bối tử thần", Today),
+        new TableData("Trả", "THAO", "Harry Potter và phòng chứa bí mật", Today),
+        new TableData("Mượn", "THAO", "Harry Potter & hội phượng hoàng", Today),
+        new TableData("Mượn", "THAO", "Harry Potter and the Deathly Hallows", Today),
+        new TableData("Mượn", "THAO", "Harry Potter and the Chamber of Secrets", Today),
+        new TableData("Trả", "THAO", "\u200Fهيرى پوٹر اور رازوں کا کمره :\u200F", Today),
+        new TableData("Trả", "THAO", "Marsupilami", Today),
+        new TableData("Mượn", "THAO", "Doraemon", Today)
 
-        // Lọc danh sách gợi ý dựa trên đầu vào
-        for (String suggestion : allSuggestions) {
-            if (suggestion.toLowerCase().startsWith(input.toLowerCase())) {
-                suggestions.add(suggestion);
-            }
+    );
+    for (TableData x : dataList) {
+      String s = x.getBook();
+      if (s.length() >= 20) {
+        String t = "";
+        boolean check = false;
+        for (int i = 0; i < s.length(); i++) {
+          t = t + s.charAt(i);
+          if (i >= 20 && s.charAt(i) == ' ' && check == false) {
+            check = true;
+            t = t + "\n";
+          }
         }
-
-        // Cập nhật danh sách gợi ý và hiển thị nếu có gợi ý
-        suggestionUser.setVisible(!suggestions.isEmpty());
-        suggestionUser.setMinHeight(suggestions.size()*35);
-        suggestionUser.setMaxHeight(suggestions.size()*35);
+        x.setBook(t);
+      }
     }
+    if (dataList.size() <= 5) {
+      right.setDisable(true);
+    }
+    typeColumn.setReorderable(false);
+    userColumn.setReorderable(false);
+    bookColumn.setReorderable(false);
+    typeColumn.setCellValueFactory(new PropertyValueFactory<TableData, String>("action"));
+    userColumn.setCellValueFactory(new PropertyValueFactory<TableData, String>("user"));
+    bookColumn.setCellValueFactory(new PropertyValueFactory<TableData, String>("book"));
+    timeColumn.setCellValueFactory(new PropertyValueFactory<TableData, String>("date"));
+
+    bookColumn.setCellFactory(tc -> {
+      return new javafx.scene.control.TableCell<TableData, String>() {
+        private final Text text = new Text();
+
+        @Override
+        protected void updateItem(String item, boolean empty) {
+          super.updateItem(item, empty);
+          if (empty || item == null) {
+            setGraphic(null);
+          } else {
+            text.setText(item);
+            text.wrappingWidthProperty()
+                .bind(getTableColumn().widthProperty()); // Đặt wrappingWidth để tự động xuống dòng
+            text.setStyle(
+                "-fx-font-family: 'HYWenHei-85W'; -fx-fill: #8e8e8e;-fx-font-size: 17px;");
+            text.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+            setAlignment(javafx.geometry.Pos.CENTER); // Căn giữa nội dung trong ô
+            setGraphic(text);
+          }
+        }
+      };
+    });
+
+    tableView.setPrefHeight(5 * 55 + 51);
+    tableView.setItems(FXCollections.observableArrayList(dataList.subList(0, 5)));
+
+  }
+
+  private void updateSuggestions(String input) {
+//    suggestions.clear();
+//    if (input.isEmpty()) {
+//      suggestionUser.setVisible(false);
+//      suggestionUser.setMinHeight(0);
+//      suggestionUser.setMaxHeight(0);
+//      return;
+//    }
+//
+//    // Lọc danh sách gợi ý dựa trên đầu vào
+//    for (String suggestion : allSuggestions) {
+//      if (suggestion.toLowerCase().startsWith(input.toLowerCase())) {
+//        suggestions.add(suggestion);
+//      }
+//    }
+//
+//    // Cập nhật danh sách gợi ý và hiển thị nếu có gợi ý
+//    suggestionUser.setVisible(!suggestions.isEmpty());
+//    suggestionUser.setMinHeight(suggestions.size() * 35);
+//    suggestionUser.setMaxHeight(suggestions.size() * 35);
+  }
+
+  @Override
+  public void applyDarkMode(boolean isDark) {
+
+  }
+
+  @Override
+  public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
+      boolean isTranslate) {
+
+  }
+
+  @Override
+  public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
+
+  }
 }

@@ -1,0 +1,30 @@
+#Tab{
+  -fx-background-color:rgba(0,0,0,0.7);
+  -fx-pref-height:30;
+  -fx-pref-width:70;
+  -fx-background-radius:8 8 0 0;
+  -fx-border-radius:8 8 0 0;
+  -fx-font-size:14;
+  -fx-font-weight:bold;
+  -fx-text-alignment: center;
+  -fx-alignment: center;
+}
+#Tab:selected{
+    -fx-background-color:rgba(200,200,200,1);
+    -fx-pref-height:35;
+    -fx-pref-width:75;
+    -fx-background-radius:8 8 0 0;
+    -fx-border-radius:8 8 0 0;
+}
+#Tab:focused{
+  -fx-focus-color:transparent;
+  -fx-paint-focus-color:transparent;
+  -fx-border-color: transparent;
+}
+#TabPane{
+  -fx-background-color:rgba(255,255,255,1);
+  -fx-background-radius:8;
+}
+#TabPane .tab-header-background{
+  -fx-background-color:rgba(255,255,255,1);
+}
