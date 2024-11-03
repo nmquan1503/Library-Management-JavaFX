@@ -1,30 +1,34 @@
 package org.example.demo.Controllers;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXListView;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.Objects;
+import java.util.List;
+import java.util.stream.Collectors;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.effect.BlendMode;
-import javafx.stage.Stage;
+import javafx.stage.Popup;
 import org.example.demo.API.Translate;
 import org.example.demo.App;
 import org.example.demo.Models.Language;
@@ -81,6 +85,12 @@ public class BaseController {
   @FXML
   private static AnchorPane returnPane;
 
+  @FXML
+  private Button searchBtn;
+
+  @FXML
+  private Button deleteSearchBtn;
+
   private HomeController homeController;
 
   private BooksController booksController;
@@ -118,7 +128,18 @@ public class BaseController {
   }
 
   @FXML
+  private JFXListView<String> suggestionListView;
+
+  private List<String> allSuggestions = List.of("Dashboard", "User", "Sách", "Borrowing", "Trả",
+      "Tùy chỉnh", "DarkMode", "LightMode", "Log out", "Chỉnh sửa thông tin", "Thông báo", "Dịch",
+      "Màn hình chính", "Học sinh", "Book", "Mượn", "Return", "Chỉnh sửa", "Chế độ tối",
+      "Chế độ sáng", "Đăng xuất", "Account Setting", "Notification", "Translate", "Home",
+      "Người mượn", "Copy", "Lending", "Hoàn trả sách", "Edit", "Tối", "Sáng", "Logout", "Setting",
+      "Announcement", "Convert Language");
+
+  @FXML
   public void initialize() {
+    setupAutocomplete();
     Thread loadMainThread = new Thread(new LoadMainTask());
     Thread loadBookThread = new Thread(new LoadBookTask());
     Thread loadEditThread = new Thread(new LoadEditTask());
@@ -167,6 +188,207 @@ public class BaseController {
     userPane.setVisible(false);
     borrowPane.setVisible(false);
     returnPane.setVisible(false);
+  }
+
+  public void styleListViewScrollBars(JFXListView<?> listView) {
+    ScrollBar verticalScrollBar = (ScrollBar) listView.lookup(".scroll-bar:vertical");
+    if (verticalScrollBar != null) {
+      verticalScrollBar.setStyle("-fx-background-color: transparent;" +
+          "-fx-opacity: 0");
+    }
+  }
+
+  public void setupListViewWithStyledScrollBars(JFXListView<?> listView) {
+    Platform.runLater(() -> styleListViewScrollBars(listView));
+  }
+
+  private void setupAutocomplete() {
+    Popup suggestionPopup = new Popup();
+    suggestionListView = new JFXListView<>();
+    suggestionListView.setStyle("-fx-background-color: transparent;" +
+        "-fx-border-color: Transparent");
+    suggestionListView.setCellFactory(lv -> new ListCell<>() {
+      @Override
+      protected void updateItem(String item, boolean empty) {
+        super.updateItem(item, empty);
+        if (empty || item == null) {
+          setText(null);
+          setStyle("");
+        } else {
+          setText(item);
+          if (!isDark) {
+            setStyle("-fx-text-fill: BLACK;" +
+                "-fx-background-color: #f2f2f2;" +
+                "-fx-padding: 5px;");
+          } else {
+            setStyle("-fx-text-fill: WHITE;" +
+                "-fx-background-color: BLACK;" +
+                "-fx-padding: 5px;");
+          }
+        }
+
+        setOnMouseEntered(event -> {
+          if (!isDark) {
+            setStyle("-fx-text-fill: BLACK;" +
+                "-fx-background-color: LIGHTGRAY;" +
+                "-fx-cursor: hand;" +
+                "-fx-padding: 5px;");
+          } else {
+            setStyle("-fx-text-fill: WHITE;" +
+                "-fx-background-color: #1C1C1C;" +
+                "-fx-cursor: hand;" +
+                "-fx-padding: 5px;");
+          }
+        });
+
+        setOnMouseExited(event -> {
+          if (!isDark) {
+            setStyle("-fx-text-fill: BLACK;" +
+                "-fx-background-color: #f2f2f2;" +
+                "-fx-cursor: hand;" +
+                "-fx-padding: 5px;");
+          } else {
+            setStyle("-fx-text-fill: WHITE;" +
+                "-fx-background-color: BLACK;" +
+                "-fx-cursor: hand;" +
+                "-fx-padding: 5px;");
+          }
+        });
+      }
+    });
+    suggestionPopup.getContent().add(suggestionListView);
+    suggestionListView.setPrefWidth(300);
+    suggestionListView.setMaxHeight(100);
+    suggestionPopup.setAutoHide(true);
+
+    searchBase.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
+      String input = searchBase.getText().trim();
+      if (input.isEmpty()) {
+        suggestionPopup.hide();
+      } else {
+        List<String> filteredSuggestions = allSuggestions.stream()
+            .filter(item -> !item.trim().isEmpty())
+            .filter(item -> item.toLowerCase().startsWith(input.toLowerCase()))
+            .collect(Collectors.toList());
+
+        if (!filteredSuggestions.isEmpty()) {
+          suggestionListView.setItems(FXCollections.observableArrayList(filteredSuggestions));
+          setupListViewWithStyledScrollBars(suggestionListView);
+          if (!suggestionPopup.isShowing()) {
+            suggestionPopup.show(searchBase,
+                searchBase.localToScreen(0, searchBase.getHeight()).getX(),
+                searchBase.localToScreen(0, searchBase.getHeight()).getY());
+          }
+        } else {
+          suggestionPopup.hide();
+        }
+      }
+    });
+
+    suggestionListView.setOnMouseClicked(event -> {
+      if (!suggestionListView.getSelectionModel().isEmpty()) {
+        searchBase.setText(suggestionListView.getSelectionModel().getSelectedItem());
+        performActionStr(suggestionListView.getSelectionModel().getSelectedItem());
+        suggestionPopup.hide();
+      }
+    });
+
+    suggestionListView.setOnKeyPressed(event -> {
+      if (event.getCode() == KeyCode.UP || event.getCode() == KeyCode.DOWN) {
+        suggestionListView.requestFocus();
+      } else if (event.getCode() == KeyCode.ENTER) {
+        searchBase.setText(suggestionListView.getSelectionModel().getSelectedItem());
+        suggestionPopup.hide();
+        String enterTxt = searchBase.getText().trim();
+        int matchIndex = -1;
+        for (int i = 0; i < allSuggestions.size(); i++) {
+          if (allSuggestions.get(i).equalsIgnoreCase(enterTxt)) {
+            matchIndex = i;
+            break;
+          }
+        }
+
+        if (matchIndex != -1) {
+          performAction(matchIndex);
+        }
+      }
+    });
+
+    searchBase.setOnKeyPressed(event -> {
+      if (event.getCode() == KeyCode.ENTER) {
+        String enterTxt = searchBase.getText().trim();
+        int matchIndex = -1;
+        for (int i = 0; i < allSuggestions.size(); i++) {
+          if (allSuggestions.get(i).equalsIgnoreCase(enterTxt)) {
+            matchIndex = i;
+            break;
+          }
+        }
+
+        if (matchIndex != -1) {
+          performAction(matchIndex);
+        }
+      }
+    });
+
+    searchBtn.setOnAction(event -> {
+      performActionStr(searchBase.getText().trim());
+    });
+
+    deleteSearchBtn.setOnAction(event -> {
+      searchBase.setText("");
+    });
+
+  }
+
+  private int getSuggestionIdx(String text) {
+    for (int i = 0; i < allSuggestions.size(); i++) {
+      if (text.equalsIgnoreCase(allSuggestions.get(i))) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  private void performActionStr(String txt) {
+    int idx = getSuggestionIdx(txt);
+    if (idx != -1) {
+      performAction(idx);
+    }
+  }
+
+  private void performAction(int idx) {
+    idx %= 12;
+    if (idx == 0) {
+      moveDashboard();
+    } else if (idx == 1) {
+      moveUser();
+    } else if (idx == 2) {
+      moveBooks();
+    } else if (idx == 3) {
+      moveBorrowBook();
+    } else if (idx == 4) {
+      moveReturnBook();
+    } else if (idx == 5) {
+      moveEdit();
+    } else if (idx == 6) {
+      if (!isDark) {
+        darkMode();
+      }
+    } else if (idx == 7) {
+      if (isDark) {
+        darkMode();
+      }
+    } else if (idx == 8) {
+      handleLogout();
+    } else if (idx == 9) {
+      handleChangeAccountInfo();
+    } else if (idx == 10) {
+      System.out.println("Setup notification later");
+    } else if (idx == 11) {
+      handleTranslate();
+    }
+    searchBase.setText("");
   }
 
   private class LoadMainTask extends Task<Void> {
