@@ -5,6 +5,14 @@
 * {
     -fx-font-family: 'HYWenHei-85W';
     -fx-text-fill: #584f58;
+
+}
+#Basic{
+  -fx-background-color:transparent;
+  -fx-background-radius:8;
+  -fx-border-radius:8;
+
+  -fx-shape: "M 100 150 L 700 150 A 15 50 0 1 1 700 350 L 100 350 A 15 50 0 0 1 100 150";
 }
 
 .Anchor-Pane-mainPane{
@@ -20,56 +28,122 @@
   -fx-border-color:transparent;
   -fx-background-color: rgba(255,255,255,1);
 }
-#Basic{
-  -fx-background-color:rgba(255,255,255,1);
-  -fx-background-radius:8;
-  -fx-border-radius:8;
-}
+
 #ListView {
-    -fx-background-color: rgba(255,255,255,1);
+
+    -fx-background-color: transparent;
     -fx-background-radius: 8;
+
 }
-#ListView .scroll-bar {
-    -fx-background-color: rgba(255,255,255,1);
-    -fx-background-radius: 8;
+#ListView .scroll-bar:horizontal,
+#ListView .scroll-bar:vertical {
+    -fx-opacity: 0;
+    -fx-pref-width: 0;
+    -fx-pref-height: 0;
 }
-#ListView .scroll-bar .thumb{
-    -fx-background-color: rgba(170,170,170,1);
-    -fx-background-radius: 8;
-}
-#ListView .scroll-bar .thumb:hover{
-    -fx-background-color: rgba(150,150,150,1);
-}
-#ListView .scroll-bar .thumb:pressed {
-    -fx-background-color: rgba(120,120,120,1);
-}
-#ListView .scroll-bar .increment-button {
-    -fx-background-color: rgba(170,170,170,1);
-    -fx-shape: "M 0 0 L 4 4 L 8 0 Z";
-}
-#ListView .scroll-bar .decrement-button {
-    -fx-background-color: rgba(170,170,170,1);
-    -fx-shape: "M 0 4 L 8 4 L 4 0 Z";
-}
-#ListView .scroll-bar .increment-button:hover,
-#ListView .scroll-bar .decrement-button:hover{
-    -fx-background-color: rgba(150,150,150,1);
-}
-#ListView .scroll-bar .increment-button:pressed,
-#ListView .scroll-bar .decrement-button:pressed{
-    -fx-background-color: rgba(120,120,120,1);
+#ListView .list-cell{
+    -fx-background-color: #f2e6c9;
+    -fx-font-size: 14;
 }
 #ListView .list-cell:hover {
     -fx-background-color: rgba(220, 220, 220, 1); /* Màu nền khi hover */
 }
-#SearchBar{
-    -fx-background-color:rgba(255,255,255,1);
-    -fx-background-radius:8;
-    -fx-border-radius:8;
+
+#SearchBar {
+    -fx-background-color: #fff8e8;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-font-size: 14;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 1, 1);
+    -fx-shape: "M 100 150 L 700 150 A 15 50 0 1 1 700 350 L 100 350 Z";
+}
+#SearchBar1 {
+    -fx-background-color: #ebd9b4;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-font-size: 14;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 1, 1);
+    -fx-shape: "M 100 150 L 700 150 A 15 50 0 1 1 700 350 L 100 350 A 15 50 0 0 1 100 150";
+}
+/* Hình dạng thay đổi */
+#SearchBar.newShape {
+    -fx-background-color: #fff8e8;
+        -fx-background-radius: 8;
+        -fx-border-radius: 8;
+        -fx-font-size: 14;
+        -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 1, 1);
+    -fx-shape: "M 100 150 L 700 150 Q 739 150 739 250 L 739 350 L 100 350 Z ";
 }
 #VBoxSeparate{
-  -fx-background-color:rgba(255,255,255,1);
-  -fx-border-color:rgba(0,0,0,1);
-   -fx-border-width: 0 1 0 0;
+  -fx-background-color:transparent;
+
+}
+#SearchText{
+  -fx-background-color:transparent;
+   -fx-prompt-text-fill: #8e8e8e;
+}
+#userInfoPane {
+    -fx-background-radius: 16;
+    -fx-background-color: rgba(255, 255, 255, 1);
+}
+#InstanceLabel {
+    -fx-background-color: #ebd9b4; /* Màu nền */
+    -fx-border-color: #D1B588; /* Màu viền */
+    -fx-border-width: 1px;
+    -fx-padding: 10px;
+
+    /* Tạo phần lồi ra bằng cách giả lập hai đoạn vuông góc ở trên và dưới */
+    -fx-background-insets: 0;
+    -fx-font-size: 14px;
+}
+#InstanceLabel1 {
+    -fx-background-color: #fff8e8; /* Màu nền */
+    -fx-border-color: #D1B588; /* Màu viền */
+    -fx-border-width: 1px;
+    -fx-padding: 10px;
+    /* Tạo phần lồi ra bằng cách giả lập hai đoạn vuông góc ở trên và dưới */
+    -fx-background-insets: 0;
+    -fx-font-size: 14px;
+}
+#SearchIcon{
+    -fx-background-color: transparent;
+
+}
+#SearchIcon:hover {
+    -fx-cursor: hand; /* Chuyển đổi con trỏ thành hình bàn tay */
+}
+#SearchIcon:pressed {
+    -fx-cursor: hand; /* Con trỏ vẫn là hình bàn tay khi nhấn */
+}
+.tooltip {
+    -fx-text-fill: black;      /* Màu chữ trắng */
+    -fx-background-color: white; /* Màu nền trắng */
+    -fx-padding: 5;            /* Thêm khoảng cách */
+}
+
+#ErrorText {
+   -fx-background-color: rgba(0, 0, 0, 0.5); /* Màu nền */
+   -fx-font-size: 15px; /* Thay đổi kích thước chữ cho ComboBox */
+   -fx-text-fill: white;
+}
+.date-picker {
+  -fx-background-color: #fff8e8; /* Màu nền */
+      -fx-border-color: #D1B588; /* Màu viền */
+      -fx-border-width: 1px;
+      /* Tạo phần lồi ra bằng cách giả lập hai đoạn vuông góc ở trên và dưới */
+      -fx-background-insets: 0;
+      -fx-font-size: 14px;
+}
+.date-picker .arrow-button {
+    -fx-background-color: transparent; /* Nền trong suốt */
+    -fx-background-radius: 0; /* Loại bỏ bo góc nếu cần */
+    -fx-border-color: transparent; /* Loại bỏ viền */
+}
+.date-picker .arrow-button:hover {
+    -fx-cursor: hand;
+}
+.date-picker .text-field {
+    -fx-background-color: #fff8e8; /* Đặt màu nền tùy ý */
+    -fx-background-insets: 0; /* Đảm bảo màu nền không bị ảnh hưởng bởi insets */
+
 }
