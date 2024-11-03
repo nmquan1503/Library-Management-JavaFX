@@ -208,6 +208,8 @@ public class BaseController {
     suggestionListView.setStyle("-fx-background-color: transparent;" +
         "-fx-border-color: Transparent");
     suggestionListView.setCellFactory(lv -> new ListCell<>() {
+      private boolean isHovered = false;
+
       @Override
       protected void updateItem(String item, boolean empty) {
         super.updateItem(item, empty);
@@ -216,44 +218,54 @@ public class BaseController {
           setStyle("");
         } else {
           setText(item);
-          if (!isDark) {
-            setStyle("-fx-text-fill: BLACK;" +
-                "-fx-background-color: #f2f2f2;" +
-                "-fx-padding: 5px;");
-          } else {
-            setStyle("-fx-text-fill: WHITE;" +
-                "-fx-background-color: BLACK;" +
-                "-fx-padding: 5px;");
-          }
+          updateStyle();
         }
 
+        // focus effect
+        selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
+          updateStyle();
+        });
+
+        // Hover effect
         setOnMouseEntered(event -> {
-          if (!isDark) {
-            setStyle("-fx-text-fill: BLACK;" +
-                "-fx-background-color: LIGHTGRAY;" +
-                "-fx-cursor: hand;" +
-                "-fx-padding: 5px;");
-          } else {
-            setStyle("-fx-text-fill: WHITE;" +
-                "-fx-background-color: #1C1C1C;" +
-                "-fx-cursor: hand;" +
-                "-fx-padding: 5px;");
-          }
+          isHovered = true;
+          updateStyle();
         });
 
         setOnMouseExited(event -> {
-          if (!isDark) {
-            setStyle("-fx-text-fill: BLACK;" +
-                "-fx-background-color: #f2f2f2;" +
-                "-fx-cursor: hand;" +
-                "-fx-padding: 5px;");
-          } else {
-            setStyle("-fx-text-fill: WHITE;" +
-                "-fx-background-color: BLACK;" +
-                "-fx-cursor: hand;" +
-                "-fx-padding: 5px;");
-          }
+          isHovered = false;
+          updateStyle();
         });
+      }
+
+      private void updateStyle() {
+        if (isEmpty()) {
+          return;
+        }
+
+        String style;
+        if (isSelected()) {
+          if (!isDark) {
+            style = "-fx-text-fill: #A21D33; -fx-background-color: #FFC1E3;";
+          } else {
+            style = "-fx-text-fill: #ffdd4a; -fx-background-color: #2c5f2d;";
+          }
+        } else if (isHovered) {
+          if (!isDark) {
+            style = "-fx-text-fill: BLACK; -fx-background-color: LIGHTGRAY;";
+          } else {
+            style = "-fx-text-fill: WHITE; -fx-background-color: #1C1C1C;";
+          }
+        } else {
+          if (!isDark) {
+            style = "-fx-text-fill: BLACK; -fx-background-color: #f2f2f2;";
+          } else {
+            style = "-fx-text-fill: WHITE; -fx-background-color: BLACK;";
+          }
+        }
+
+        style += "-fx-cursor: hand; -fx-padding: 5px;";
+        setStyle(style);
       }
     });
     suggestionPopup.getContent().add(suggestionListView);
