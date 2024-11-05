@@ -3,6 +3,7 @@ package org.example.demo.Models.Borrowing;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import org.example.demo.Database.JDBC;
 import org.example.demo.Models.Users.Date;
@@ -74,6 +75,7 @@ public class BorrowHistory {
           "from books "+
           "where id_book=(?)";
       PreparedStatement preparedStatement=connection.prepareStatement(query);
+      preparedStatement.setInt(1,borrowing.getIdBook());
       ResultSet resultSet=preparedStatement.executeQuery();
       int quantityBook=0;
       if(resultSet.next()){
@@ -89,7 +91,7 @@ public class BorrowHistory {
       preparedStatement.executeUpdate();
 
       query = "insert into borrowing(id_book,id_user,borrowed_date,due_date,returned_date) values (?,?,?,?,?)";
-      preparedStatement = connection.prepareStatement(query);
+      preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
       preparedStatement.setInt(1, borrowing.getIdBook());
       preparedStatement.setInt(2, borrowing.getIdUser());
       preparedStatement.setDate(3, borrowing.getBorrowedDate());

@@ -537,6 +537,7 @@ public class BooksController implements MainInfo {
     Thread thread = new Thread(() -> {
       BookView bookView=new BookView();
       Platform.runLater(() -> {
+        mainPane.requestFocus();
         mainPane.getChildren().add(bookView);
         bookView.setScaleX(0);
         bookView.setScaleY(0);

@@ -76,6 +76,5 @@ public class Date extends java.sql.Date {
 
   public static void main(String[] args) {
     Date myDate = new Date(2024, 10, 1); // Create a date
-
   }
 }
