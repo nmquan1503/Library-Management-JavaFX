@@ -207,8 +207,8 @@ public class UserView extends ScrollPane implements MainInfo {
         }
         if(parent instanceof AnchorPane){
           ((AnchorPane) parent).getChildren().add(
-              new Warning("No interner!",
-                  "Please check your network connection and try again."
+              new Warning("Mất kết nối mạng!",
+                  "Vui lòng kiểm tra lại kết nối của bạn và thử lại."
               )
           );
         }
