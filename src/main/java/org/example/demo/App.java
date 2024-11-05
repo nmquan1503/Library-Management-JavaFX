@@ -9,13 +9,39 @@ import java.util.Objects;
 
 public class App extends Application {
 
+  public static Stage primaryStage;
+
+  public static Scene startScene;
+
+  public static Scene baseScene;
+
+  public static Scene accountEditScene;
+
   @Override
-  public void start(Stage primaryStage) throws Exception {
-    Parent root = FXMLLoader.load(
-        Objects.requireNonNull(getClass().getResource("/org/example/demo/FXML/Start.fxml")));
+  public void start(Stage stage) throws Exception {
+    primaryStage = stage;
+    if (startScene == null) {
+      Parent root1 = FXMLLoader.load(
+          Objects.requireNonNull(getClass().getResource("/org/example/demo/FXML/Start.fxml")));
+      startScene = new Scene(root1);
+    }
+
+    if (baseScene == null) {
+      Parent root2 = FXMLLoader.load(
+          Objects.requireNonNull(getClass().getResource("/org/example/demo/FXML/Base.fxml")));
+      baseScene = new Scene(root2);
+    }
+
+    if (accountEditScene == null) {
+      Parent root3 = FXMLLoader.load(
+          Objects.requireNonNull(
+              getClass().getResource("/org/example/demo/FXML/AccountSetting.fxml")));
+      accountEditScene = new Scene(root3);
+    }
+
     primaryStage.setTitle("Library Management");
     primaryStage.setResizable(false);
-    primaryStage.setScene(new Scene(root));
+    primaryStage.setScene(startScene);
     primaryStage.show();
   }
 

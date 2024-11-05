@@ -53,7 +53,9 @@ public class Library {
    */
   public int borrowBook(Book book, User user, Date borrowedDate) {
     return borrowHistory.addBorrowing(
+
         new Borrowing(-1, book.getId(), user.getId(), borrowedDate, borrowedDate.add(10), null));
+
   }
 
   /**
@@ -155,6 +157,9 @@ public class Library {
     return userList.insertUserWithID(user, idUser);
   }
 
+
+
+
   public static void main(String[] args) {
     Library library = new Library();
     Image image = new Image(Objects.requireNonNull(
@@ -169,6 +174,7 @@ public class Library {
     library.insertUser(user);
 
   }
+
 
 
 }

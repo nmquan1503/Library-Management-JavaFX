@@ -1,10 +1,7 @@
 package org.example.demo.Models.Users;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

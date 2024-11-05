@@ -1,0 +1,89 @@
+.background {
+  -fx-background-color: #f2f2f2;
+}
+
+.title {
+  -fx-font-weight: bold;
+}
+
+.decorElipse {
+   -fx-fill: linear-gradient(from 50% 0% to 50% 100%,
+                                     transparent 40%,
+                                     #00c9ff 50%,
+                                     #92fe9d 100% );
+}
+
+.edit-account-btn {
+  -fx-text-fill: #f2f2f2;
+  -fx-font-size: 22;
+}
+
+.edit-account-btn:hover {
+  -fx-underline: true;
+  -fx-cursor: hand;
+}
+
+.select-avatar-btn {
+    -fx-background-color: rgba(52, 152, 219, 0.7);
+    -fx-text-fill: #f2f2f2;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+    -fx-background-radius: 50;
+    -fx-padding: 5 10;
+    -fx-border-color: transparent;
+    -fx-border-radius: 50;
+}
+
+.select-avatar-btn:hover {
+    -fx-background-color: rgba(41, 128, 185, 0.85);
+    -fx-cursor: hand;
+}
+
+.select-avatar-arc {
+    -fx-fill: rgba(128, 128, 128, 0.6);
+    -fx-stroke: transparent;
+    -fx-cursor: hand;
+}
+
+.camera-icon {
+    -fx-cursor: hand;
+}
+
+.promptField {
+    -fx-padding: 0px 10px;
+    -fx-font-size: 14px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-focus-color: #1E90FF;
+    -fx-faint-focus-color: transparent;
+    -fx-text-fill: #333333;
+}
+
+.promptField:hover {
+    -fx-border-color: #888888;
+}
+
+.promptField:focused {
+    -fx-border-color: #1E90FF;
+    -fx-background-color: #f9f9f9;
+}
+
+.save-btn {
+    -fx-background-color: #ceeffa;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0.0, 0, 1);
+}
+
+.save-btn:hover {
+    -fx-background-color: #a3e0f5;
+    -fx-cursor: hand;
+}
+
+.notification-fade {
+  -fx-background-color: #84e19a;
+  -fx-background-radius: 50%;
+  -fx-border-radius: 50%;
+}

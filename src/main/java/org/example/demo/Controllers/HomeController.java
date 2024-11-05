@@ -4,6 +4,8 @@ import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import java.io.Closeable;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,6 +40,8 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Data;
+import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
@@ -137,6 +141,18 @@ public class HomeController implements MainInfo {
 
   private AreaChart<?, ?> fullyAreaChart;
 
+  private Timeline shadowTimeline;
+
+  private Timeline progressAnimation;
+
+  private Timeline timeTimeline;
+
+  private Timeline colonFlashTimeline;
+
+  private Timeline animationTimeline;
+
+  private Timeline shadowLabelTimeline;
+
   public void initialize() {
     displayTime();
     displayMiniPaneTotal();
@@ -147,6 +163,7 @@ public class HomeController implements MainInfo {
   }
 
   public void refresh() {
+    clearTimeline();
     displayTime();
     displayMiniPaneTotal();
     displayHomeTable();
@@ -187,18 +204,22 @@ public class HomeController implements MainInfo {
     distanceLeft += 70;
     AnchorPane.setLeftAnchor(digitLabels[4], distanceLeft);
 
-    Timeline timeline = new Timeline(
-        new KeyFrame(Duration.seconds(1), event -> updateTime(digitLabels)));
-    timeline.setCycleCount(Timeline.INDEFINITE);
-    timeline.play();
+    if (timeTimeline == null) {
+      timeTimeline = new Timeline(
+          new KeyFrame(Duration.seconds(1), event -> updateTime(digitLabels)));
+      timeTimeline.setCycleCount(Timeline.INDEFINITE);
+      timeTimeline.play();
+    }
 
-    Timeline colonFlashTimeline = new Timeline(
-        new KeyFrame(Duration.seconds(1), event -> {
-          colon.setVisible(!colon.isVisible());
-        })
-    );
-    colonFlashTimeline.setCycleCount(Animation.INDEFINITE);
-    colonFlashTimeline.play();
+    if (colonFlashTimeline == null) {
+      colonFlashTimeline = new Timeline(
+          new KeyFrame(Duration.seconds(1), event -> {
+            colon.setVisible(!colon.isVisible());
+          })
+      );
+      colonFlashTimeline.setCycleCount(Animation.INDEFINITE);
+      colonFlashTimeline.play();
+    }
   }
 
   public void updateTime(Label[] digitLabels) {
@@ -341,6 +362,8 @@ public class HomeController implements MainInfo {
 
       final TreeItem<LibrarianTable> root = new RecursiveTreeItem<>(librarian,
           RecursiveTreeObject::getChildren);
+      librarianView.setRoot(null);
+
       librarianView.getColumns()
           .setAll(librarianIdColumn, librarianNameColumn, librarianEmailColumn);
       librarianView.setRoot(root);
@@ -394,6 +417,10 @@ public class HomeController implements MainInfo {
     }
   }
 
+  public void setLibName(String name) {
+    librarianName.setText(name);
+  }
+
   // Display borrowed books / total books
   private void displayCirclePro() {
     Connection conn = null;
@@ -442,18 +469,18 @@ public class HomeController implements MainInfo {
       animatedCircle.setTranslateX(0);
       animatedCircle.setTranslateY(-80);
 
-      Timeline animation = new Timeline();
+      animationTimeline = new Timeline();
       for (int i = 0; i < 360; i++) {
         final int angle = i;
-        animation.getKeyFrames().add(new KeyFrame(Duration.seconds(i / 60.0), e -> {
+        animationTimeline.getKeyFrames().add(new KeyFrame(Duration.seconds(i / 60.0), e -> {
           double radians = Math.toRadians(angle);
           animatedCircle.setTranslateX(80 * Math.sin(radians));
           animatedCircle.setTranslateY(-80 * Math.cos(radians));
         }));
       }
 
-      animation.setCycleCount(Animation.INDEFINITE);
-      animation.play();
+      animationTimeline.setCycleCount(Animation.INDEFINITE);
+      animationTimeline.play();
 
       circleProgress.getChildren().add(animatedCircle);
 
@@ -485,7 +512,7 @@ public class HomeController implements MainInfo {
       parallelTransition.setCycleCount(Animation.INDEFINITE);
       parallelTransition.play();
 
-      Timeline progressAnimation = new Timeline();
+      progressAnimation = new Timeline();
       int finalProgress = (int) (progress * 100);
       double totalDuration = 2.0;
       double incrementDuration = totalDuration / finalProgress;
@@ -528,21 +555,21 @@ public class HomeController implements MainInfo {
     try {
       conn = JDBC.getConnection();
 
-      XYChart.Series<String, Number> adultSeries = new XYChart.Series<>();
+      Series<String, Number> adultSeries = new Series<>();
       if (BaseController.isTranslate) {
         adultSeries.setName("Adult");
       } else {
         adultSeries.setName("Người lớn");
       }
 
-      XYChart.Series<String, Number> childrenSeries = new XYChart.Series<>();
+      Series<String, Number> childrenSeries = new Series<>();
       if (BaseController.isTranslate) {
         childrenSeries.setName("Student");
       } else {
         childrenSeries.setName("Học sinh");
       }
 
-      XYChart.Series<String, Number> elderlySeries = new XYChart.Series<>();
+      Series<String, Number> elderlySeries = new Series<>();
       if (BaseController.isTranslate) {
         elderlySeries.setName("Elder");
       } else {
@@ -580,7 +607,7 @@ public class HomeController implements MainInfo {
           filteredYears.add(String.valueOf(year));
         }
 
-        XYChart.Data<String, Number> adultData = new XYChart.Data<>(String.valueOf(year),
+        Data<String, Number> adultData = new Data<>(String.valueOf(year),
             adultCount);
         Polygon adultTriangle = new Polygon();
         adultTriangle.getPoints().addAll(new Double[]{
@@ -595,7 +622,7 @@ public class HomeController implements MainInfo {
         adultData.setNode(adultTriangle);
         adultSeries.getData().add(adultData);
 
-        XYChart.Data<String, Number> childrenData = new XYChart.Data<>(String.valueOf(year),
+        Data<String, Number> childrenData = new Data<>(String.valueOf(year),
             childrenCount);
         Circle childrenCircle = new Circle(4.5, Color.web("#66ff66"));
         if (childrenCount == 0) {
@@ -604,7 +631,7 @@ public class HomeController implements MainInfo {
         childrenData.setNode(childrenCircle);
         childrenSeries.getData().add(childrenData);
 
-        XYChart.Data<String, Number> elderlyData = new XYChart.Data<>(String.valueOf(year),
+        Data<String, Number> elderlyData = new Data<>(String.valueOf(year),
             elderlyCount);
         Rectangle elderlyRectangle = new Rectangle(6, 6, Color.web("#00ccff"));
         if (elderlyCount == 0) {
@@ -706,18 +733,18 @@ public class HomeController implements MainInfo {
         previousYearData.put(month, previousTotal);
       }
 
-      XYChart.Series<String, Number> seriesCurrentYear = new XYChart.Series<>();
+      Series<String, Number> seriesCurrentYear = new Series<>();
       seriesCurrentYear.setName(String.valueOf(LocalDate.now().getYear()));
       for (String month : months) {
         int total = currentYearData.getOrDefault(month, 0);
-        seriesCurrentYear.getData().add(new XYChart.Data<>(month, total));
+        seriesCurrentYear.getData().add(new Data<>(month, total));
       }
 
-      XYChart.Series<String, Number> seriesPreviousYear = new XYChart.Series<>();
+      Series<String, Number> seriesPreviousYear = new Series<>();
       seriesPreviousYear.setName(String.valueOf(LocalDate.now().getYear() - 1));
       for (String month : months) {
         int total = previousYearData.getOrDefault(month, 0);
-        seriesPreviousYear.getData().add(new XYChart.Data<>(month, total));
+        seriesPreviousYear.getData().add(new Data<>(month, total));
       }
 
       areaChart.getData().clear();
@@ -765,6 +792,7 @@ public class HomeController implements MainInfo {
 
     blur.setOnMouseClicked(event -> {
       scaleDown(fullyScatter, blur);
+      fullyScatterChart = null;
     });
 
     fullyScatterChart.setOnMouseClicked(Event::consume);
@@ -793,7 +821,13 @@ public class HomeController implements MainInfo {
     scaleDown.setToY(0.0);
     scaleDown.setInterpolator(Interpolator.EASE_IN);
 
-    scaleDown.setOnFinished(e -> homePane.getChildren().remove(blur));
+    scaleDown.setOnFinished(e -> {
+      homePane.getChildren().remove(blur);
+      if (shadowTimeline != null) {
+        shadowTimeline.stop();
+        shadowTimeline = null;
+      }
+    });
 
     scaleDown.play();
   }
@@ -820,14 +854,14 @@ public class HomeController implements MainInfo {
         Color.rgb(255, 26, 148, 0.9),
     };
 
-    Timeline timeline = new Timeline();
+    shadowTimeline = new Timeline();
     int duration = 6;
     int colorChangeCount = colors.length;
     double interval = (double) duration / (colorChangeCount * 3);
 
     for (int i = 0; i < colorChangeCount; i++) {
       final int index = i;
-      timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(i * interval),
+      shadowTimeline.getKeyFrames().add(new KeyFrame(Duration.seconds(i * interval),
           e -> {
             dropShadow.setColor(colors[index]);
             dropShadow.setRadius(15 + (10 * Math.sin(Math.PI * index / (colorChangeCount - 1))));
@@ -839,7 +873,7 @@ public class HomeController implements MainInfo {
 
     for (int i = colorChangeCount - 1; i >= 0; i--) {
       final int index = i;
-      timeline.getKeyFrames()
+      shadowTimeline.getKeyFrames()
           .add(new KeyFrame(Duration.seconds((colorChangeCount + index) * interval),
               e -> {
                 dropShadow.setColor(colors[index]);
@@ -852,10 +886,10 @@ public class HomeController implements MainInfo {
           ));
     }
 
-    timeline.setCycleCount(Timeline.INDEFINITE);
-    timeline.setAutoReverse(true);
+    shadowTimeline.setCycleCount(Timeline.INDEFINITE);
+    shadowTimeline.setAutoReverse(true);
 
-    timeline.play();
+    shadowTimeline.play();
   }
 
   private void shadowEffect(Label label) {
@@ -875,14 +909,17 @@ public class HomeController implements MainInfo {
         Color.rgb(255, 77, 172, 0.9),
     };
 
-    Timeline timeline = new Timeline();
     int duration = 6;
     int colorChangeCount = colors.length;
     double interval = (double) duration / (colorChangeCount * 3);
 
+    if (shadowLabelTimeline == null) {
+      shadowLabelTimeline = new Timeline();
+    }
+
     for (int i = 0; i < colorChangeCount; i++) {
       final int index = i;
-      timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(i * interval),
+      shadowLabelTimeline.getKeyFrames().add(new KeyFrame(Duration.seconds(i * interval),
           e -> {
             dropShadow.setColor(colors[index]);
             label.setEffect(dropShadow);
@@ -892,7 +929,7 @@ public class HomeController implements MainInfo {
 
     for (int i = colorChangeCount - 1; i >= 0; i--) {
       final int index = i;
-      timeline.getKeyFrames()
+      shadowLabelTimeline.getKeyFrames()
           .add(new KeyFrame(Duration.seconds((colorChangeCount + index) * interval),
               e -> {
                 dropShadow.setColor(colors[index]);
@@ -901,10 +938,10 @@ public class HomeController implements MainInfo {
           ));
     }
 
-    timeline.setCycleCount(Timeline.INDEFINITE);
-    timeline.setAutoReverse(true);
+    shadowLabelTimeline.setCycleCount(Timeline.INDEFINITE);
+    shadowLabelTimeline.setAutoReverse(true);
 
-    timeline.play();
+    shadowLabelTimeline.play();
   }
 
   private ScatterChart<String, Number> createScatterChartCopy(
@@ -929,12 +966,12 @@ public class HomeController implements MainInfo {
     copiedScatterChart.getYAxis().setStyle("-fx-font-size: 15px;");
     copiedScatterChart.setLegendVisible(true);
 
-    for (XYChart.Series<String, Number> series : originalScatter.getData()) {
-      XYChart.Series<String, Number> newSeries = new XYChart.Series<>();
+    for (Series<String, Number> series : originalScatter.getData()) {
+      Series<String, Number> newSeries = new Series<>();
       newSeries.setName(series.getName());
 
-      for (XYChart.Data<String, Number> data : series.getData()) {
-        XYChart.Data<String, Number> newData = new XYChart.Data<>(data.getXValue(),
+      for (Data<String, Number> data : series.getData()) {
+        Data<String, Number> newData = new Data<>(data.getXValue(),
             data.getYValue());
 
         if (data.getNode() != null) {
@@ -988,15 +1025,15 @@ public class HomeController implements MainInfo {
   private void customizeCopiedScatterLegend(ScatterChart<String, Number> scatterChart) {
     for (Node legendItem : scatterChart.lookupAll(".chart-legend-item")) {
       Label label = (Label) legendItem;
-      if (label.getText().equals("Người lớn")) {
+      if (label.getText().equals("Người lớn") || label.getText().equals("Adult")) {
         Polygon triangle = new Polygon(0, 10, 10, 10, 5, 0);
         triangle.setStyle("-fx-fill: #ff6666;");
         label.setGraphic(triangle);
-      } else if (label.getText().equals("Học sinh")) {
+      } else if (label.getText().equals("Học sinh") || label.getText().equals("Student")) {
         Circle circle = new Circle(5);
         circle.setStyle("-fx-fill: #66ff66;");
         label.setGraphic(circle);
-      } else if (label.getText().equals("Người già")) {
+      } else if (label.getText().equals("Người già") || label.getText().equals("Elder")) {
         Rectangle rectangle = new Rectangle(10, 10);
         rectangle.setStyle("-fx-fill: #00ccff;");
         label.setGraphic(rectangle);
@@ -1101,6 +1138,7 @@ public class HomeController implements MainInfo {
 
       blur.setOnMouseClicked(event -> {
         scaleDown(fullyList, blur);
+        tempTable = null;
       });
 
       tempTable.setOnMouseClicked(event -> {
@@ -1148,9 +1186,9 @@ public class HomeController implements MainInfo {
 
     shadowEffect(fullyList);
 
-    shadowEffect(fullyList);
     blur.setOnMouseClicked(event -> {
       scaleDown(fullyList, blur);
+      fullyAreaChart = null;
     });
 
     fullyAreaChart.setOnMouseClicked(event -> {
@@ -1173,12 +1211,12 @@ public class HomeController implements MainInfo {
     copiedAreaChart.getXAxis().setStyle("-fx-font-size: 15px;");
     copiedAreaChart.getYAxis().setStyle("-fx-font-size: 15px;");
 
-    for (XYChart.Series<String, Number> series : originalArea.getData()) {
-      XYChart.Series<String, Number> newSeries = new XYChart.Series<>();
+    for (Series<String, Number> series : originalArea.getData()) {
+      Series<String, Number> newSeries = new Series<>();
       newSeries.setName(series.getName());
 
-      for (XYChart.Data<String, Number> data : series.getData()) {
-        XYChart.Data<String, Number> newData = new XYChart.Data<>(data.getXValue(),
+      for (Data<String, Number> data : series.getData()) {
+        Data<String, Number> newData = new Data<>(data.getXValue(),
             data.getYValue());
 
         newSeries.getData().add(newData);
@@ -1202,6 +1240,8 @@ public class HomeController implements MainInfo {
   @Override
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
       boolean isTranslate) {
+    renameSeries(scatter);
+    customizeCopiedScatterLegend(scatter);
     if (isTranslate) {
       helloTxt.setText(enLang.get(helloTxt));
       numBookTxt.setText("Books");
@@ -1265,28 +1305,29 @@ public class HomeController implements MainInfo {
     }
     if (fullyScatterChart != null) {
       renameSeries(fullyScatterChart);
+      customizeCopiedScatterLegend(fullyScatterChart);
     }
 
   }
 
   private void renameSeries(ScatterChart<String, Number> scatter) {
-    for (XYChart.Series<String, Number> series : scatter.getData()) {
+    for (Series<String, Number> series : scatter.getData()) {
       String currentName = series.getName();
 
       if (!BaseController.isTranslate) {
-        if ("Người lớn".equals(currentName) || "Adult".equals(currentName)) {
+        if (currentName.equals("Người lớn")) {
           series.setName("Adult");
-        } else if ("Học sinh".equals(currentName) || "Student".equals(currentName)) {
+        } else if (currentName.equals("Học sinh")) {
           series.setName("Student");
-        } else if ("Người già".equals(currentName) || "Elder".equals(currentName)) {
+        } else if (currentName.equals("Người già")) {
           series.setName("Elder");
         }
       } else {
-        if ("Adult".equals(currentName) || "Người lớn".equals(currentName)) {
+        if (currentName.equals("Adult")) {
           series.setName("Người lớn");
-        } else if ("Student".equals(currentName) || "Học sinh".equals(currentName)) {
+        } else if (currentName.equals("Student")) {
           series.setName("Học sinh");
-        } else if ("Elder".equals(currentName) || "Người già".equals(currentName)) {
+        } else if (currentName.equals("Elder")) {
           series.setName("Người già");
         }
       }
@@ -1305,4 +1346,34 @@ public class HomeController implements MainInfo {
         Translate.translate(tableLibTxt.getText(), Language.VIETNAMESE, Language.ENGLISH));
   }
 
+  public void clearTimeline() {
+    if (shadowTimeline != null) {
+      shadowTimeline.stop();
+      shadowTimeline = null;
+    }
+    if (progressAnimation != null) {
+      progressAnimation.stop();
+      progressAnimation = null;
+    }
+
+    if (animationTimeline != null) {
+      animationTimeline.stop();
+      animationTimeline = null;
+    }
+
+    if (shadowLabelTimeline != null) {
+      shadowLabelTimeline.stop();
+      shadowLabelTimeline = null;
+    }
+
+    if (timeTimeline != null) {
+      timeTimeline.stop();
+      timeTimeline = null;
+    }
+
+    if (colonFlashTimeline != null) {
+      colonFlashTimeline.stop();
+      colonFlashTimeline = null;
+    }
+  }
 }

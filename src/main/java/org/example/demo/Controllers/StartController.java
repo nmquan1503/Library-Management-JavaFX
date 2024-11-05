@@ -39,6 +39,7 @@ import javafx.scene.layout.StackPane;
 
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.example.demo.App;
 import org.example.demo.Database.JDBC;
 
 public class StartController {
@@ -93,6 +94,8 @@ public class StartController {
   @FXML
   private ProgressIndicator loadingIndicator;
   private Preferences prefs;
+
+  private static int id;
 
   public StartController() {
     prefs = Preferences.userNodeForPackage(StartController.class);
@@ -245,7 +248,7 @@ public class StartController {
     Task<Boolean> loginTask = new Task<>() {
       @Override
       protected Boolean call() throws Exception {
-        String query = "SELECT * FROM librarian WHERE username_account = ? AND password_account = ?";
+        String query = "SELECT id_librarian FROM librarian WHERE username_account = ? AND password_account = ?";
 
         try (Connection connection = JDBC.getConnection()) {
           PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -257,6 +260,7 @@ public class StartController {
 
           // Kiểm tra tài khoản
           if (resultSet.next()) {
+            id = resultSet.getInt("id_librarian");
             JDBC.closeConnection(connection);
             return true; // Tài khoản hợp lệ
           }
@@ -338,21 +342,51 @@ public class StartController {
   }
 
   private void loadHomeScene(ActionEvent event) {
-    try {
-      FXMLLoader loader = new FXMLLoader(
-          getClass().getResource("/org/example/demo/FXML/Base.fxml"));
-      root = loader.load();
-
-      Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-      Scene scene = new Scene(root);
-      stage.setScene(scene);
-      stage.show();
-    } catch (IOException e) {
-      e.printStackTrace();
-
+//    try {
+//      FXMLLoader loader = new FXMLLoader(
+//          getClass().getResource("/org/example/demo/FXML/Base.fxml"));
+//      root = loader.load();
+//      Scene mainScene = new Scene(root);
+//
+//      ((Node) event.getSource()).getScene().getWindow().hide();
+//      Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+//      stage.setScene(mainScene);
+//      stage.show();
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//
+//    }
+    if (StartController.getID() != BaseController.getLibId()) {
+      BaseController.setLibId(StartController.getID());
     }
-  }
 
+    if (BaseController.getBookPane() != null) {
+      BaseController.getBookPane().setVisible(false);
+    }
+
+    if (BaseController.getBorrowPane() != null) {
+      BaseController.getBorrowPane().setVisible(false);
+    }
+
+    if (BaseController.getEditPane() != null) {
+      BaseController.getEditPane().setVisible(false);
+    }
+
+    if (BaseController.getReturnPane() != null) {
+      BaseController.getReturnPane().setVisible(false);
+    }
+
+    if (BaseController.getUserPane() != null) {
+      BaseController.getUserPane().setVisible(false);
+    }
+
+    if (BaseController.getMainPane() != null) {
+      BaseController.getMainPane().setVisible(true);
+    }
+
+    App.primaryStage.setScene(App.baseScene);
+    App.primaryStage.show();
+  }
 
   @FXML
   public void initialize() {
@@ -552,5 +586,7 @@ public class StartController {
     animationTimer.start(); // Bắt đầu animation
   }
 
-
+  public static int getID() {     // lấy id người quản lý
+    return id;
+  }
 }
