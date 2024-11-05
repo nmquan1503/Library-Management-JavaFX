@@ -22,7 +22,7 @@
       <children>
         <HBox prefHeight="65.0" prefWidth="900.0">
           <children>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
+                  <HBox prefHeight="50.0" prefWidth="748.0">
                      <children>
                   <Label fx:id="helloTxt" prefHeight="50.0" text="Xin chào, " textAlignment="CENTER" wrapText="true">
                     <font>
@@ -35,7 +35,7 @@
                       <Insets left="20.0" top="20.0" />
                     </padding>
                   </Label>
-                  <Label fx:id="librarianName" prefHeight="50.0" text="Quân" textAlignment="CENTER" textFill="#e464c0" wrapText="true">
+                  <Label fx:id="librarianName" prefHeight="50.0" prefWidth="353.0" text="Quân" textAlignment="CENTER" textFill="#e464c0" wrapText="true">
                     <padding>
                       <Insets top="20.0" />
                     </padding>

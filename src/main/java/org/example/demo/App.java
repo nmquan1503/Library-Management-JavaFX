@@ -15,6 +15,8 @@ public class App extends Application {
 
   public static Scene baseScene;
 
+  public static Scene accountEditScene;
+
   @Override
   public void start(Stage stage) throws Exception {
     primaryStage = stage;
@@ -28,6 +30,13 @@ public class App extends Application {
       Parent root2 = FXMLLoader.load(
           Objects.requireNonNull(getClass().getResource("/org/example/demo/FXML/Base.fxml")));
       baseScene = new Scene(root2);
+    }
+
+    if (accountEditScene == null) {
+      Parent root3 = FXMLLoader.load(
+          Objects.requireNonNull(
+              getClass().getResource("/org/example/demo/FXML/AccountSetting.fxml")));
+      accountEditScene = new Scene(root3);
     }
 
     primaryStage.setTitle("Library Management");

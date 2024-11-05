@@ -4,10 +4,19 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import java.io.InputStream;
+import java.sql.Blob;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -24,16 +33,36 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.effect.BlendMode;
 import javafx.stage.Popup;
 import org.example.demo.API.Translate;
 import org.example.demo.App;
+import org.example.demo.Database.JDBC;
 import org.example.demo.Models.Language;
 
 public class BaseController {
+
+  private static final IntegerProperty checkState = new SimpleIntegerProperty(1);
+
+  public static int getBaseState() {
+    return checkState.get();
+  }
+
+  public static void setBaseState(int val) {
+    checkState.set(val);
+  }
+
+  private static final IntegerProperty libId = new SimpleIntegerProperty(-1);
+
+  public static int getLibId() {
+    return libId.get();
+  }
+
+  public static void setLibId(int val) {
+    libId.set(val);
+  }
 
   HashMap<Object, String> viLang = new HashMap<>();
   HashMap<Object, String> enLang = new HashMap<>();
@@ -130,7 +159,8 @@ public class BaseController {
   @FXML
   private JFXListView<String> suggestionListView;
 
-  private List<String> allSuggestions = List.of("Dashboard", "User", "Sách", "Borrowing", "Trả",
+  private final List<String> allSuggestions = List.of("Dashboard", "User", "Sách", "Borrowing",
+      "Trả",
       "Tùy chỉnh", "DarkMode", "LightMode", "Log out", "Chỉnh sửa thông tin", "Thông báo", "Dịch",
       "Màn hình chính", "Học sinh", "Book", "Mượn", "Return", "Chỉnh sửa", "Chế độ tối",
       "Chế độ sáng", "Đăng xuất", "Account Setting", "Notification", "Translate", "Home",
@@ -139,6 +169,12 @@ public class BaseController {
 
   @FXML
   public void initialize() {
+    libId.addListener((observable, oldValue, newValue) -> {
+      loadLibrarianInfo();
+    });
+    checkState.addListener((observable, oldValue, newValue) -> {
+      loadLibrarianInfo();
+    });
     setupAutocomplete();
     Thread loadMainThread = new Thread(new LoadMainTask());
     Thread loadBookThread = new Thread(new LoadBookTask());
@@ -171,15 +207,6 @@ public class BaseController {
       checkMode.setText("🌙");
     }
 
-    if (avatar != null) {
-      try {
-        Image myImage = new Image(
-            getClass().getResourceAsStream("/org/example/demo/Assets/default_avatar.jpg"));
-        avatar.setFill(new ImagePattern(myImage));
-      } catch (Exception e) {
-        System.out.println("Image loading failed: " + e.getMessage());
-      }
-    }
     avtMenuSetup();
     setUpLang();
     mainPane.setVisible(true);
@@ -188,6 +215,69 @@ public class BaseController {
     userPane.setVisible(false);
     borrowPane.setVisible(false);
     returnPane.setVisible(false);
+  }
+
+  private void loadLibrarianInfo() {
+    Connection conn = null;
+    PreparedStatement preparedStatement = null;
+    ResultSet rs = null;
+    try {
+      conn = JDBC.getConnection();
+
+      String sql = "SELECT name_librarian, avatar FROM librarian WHERE id_librarian ="
+          + BaseController.getLibId();
+      assert conn != null;
+      preparedStatement = conn.prepareStatement(sql);
+
+      rs = preparedStatement.executeQuery();
+
+      if (rs.next()) {
+        // set librarian name
+        String name = rs.getString("name_librarian");
+        homeController.setLibName(name);
+
+        // set avatar for account
+        Blob avatarBlob = rs.getBlob("avatar");
+        if (avatarBlob != null) {
+          try (InputStream avatarStream = avatarBlob.getBinaryStream()) {
+            Image avatarImage = new Image(avatarStream);
+            avatar.setFill(new ImagePattern(avatarImage));
+          } catch (Exception e) {
+            System.out.println("Failed to load avatar image: " + e.getMessage());
+            loadDefaultAvatar();
+          }
+        } else {
+          loadDefaultAvatar();
+        }
+      }
+
+      JDBC.closeConnection(conn);
+    } catch (Exception se) {
+      se.printStackTrace();
+    } finally {
+      try {
+        if (rs != null) {
+          rs.close();
+        }
+        if (preparedStatement != null) {
+          preparedStatement.close();
+        }
+      } catch (SQLException se) {
+        se.printStackTrace();
+      }
+    }
+  }
+
+  private void loadDefaultAvatar() {
+    try {
+      Image defaultImage = new Image(
+          Objects.requireNonNull(
+              getClass().getResourceAsStream("/org/example/demo/Assets/default_avatar.jpg"))
+      );
+      avatar.setFill(new ImagePattern(defaultImage));
+    } catch (Exception e) {
+      System.out.println("Default image loading failed: " + e.getMessage());
+    }
   }
 
   public void styleListViewScrollBars(JFXListView<?> listView) {
@@ -496,7 +586,7 @@ public class BaseController {
       homeController = fxmlLoader.getController();
       homeController.setUpLanguage(viLang, enLang);
     } catch (Exception e) {
-      e.printStackTrace();
+      System.out.println("loadMain error");
     }
   }
 
@@ -509,7 +599,7 @@ public class BaseController {
       booksController = fxmlLoader.getController();
       booksController.setUpLanguage(viLang, enLang);
     } catch (Exception e) {
-      e.printStackTrace();
+      System.out.println("loadBook error");
     }
   }
 
@@ -633,7 +723,10 @@ public class BaseController {
   }
 
   private void handleChangeAccountInfo() {
-
+    setBaseState(0);
+    AccountSettingController.setAccState(1);
+    App.primaryStage.setScene(App.accountEditScene);
+    App.primaryStage.show();
   }
 
   private void handleLogout() {

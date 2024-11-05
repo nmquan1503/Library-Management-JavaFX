@@ -10,6 +10,7 @@ module org.example.demo {
   requires jdk.compiler;
   requires de.jensd.fx.glyphs.fontawesome;
   requires java.prefs;
+  requires mysql.connector.j;
 
   opens org.example.demo.Controllers;
   opens org.example.demo.CustomUI to javafx.fxml;

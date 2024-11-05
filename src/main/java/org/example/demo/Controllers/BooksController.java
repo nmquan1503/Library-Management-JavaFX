@@ -46,7 +46,8 @@ import org.example.demo.Models.Trie.Trie;
 
 public class BooksController implements MainInfo {
 
-  @FXML private Label topChoicesLabel;
+  @FXML
+  private Label topChoicesLabel;
   @FXML
   private AnchorPane advertisementPane;
   @FXML
@@ -446,7 +447,8 @@ public class BooksController implements MainInfo {
       Platform.runLater(() -> {
         ListBooks.setItems(list);
         for (int i = start; i <= end; i++) {
-          list.add(new SuggestionView(listSuggestions.get(i), 80, 400,mainPane.getParent().getBlendMode()));
+          list.add(new SuggestionView(listSuggestions.get(i), 80, 400,
+              mainPane.getParent().getBlendMode()));
         }
       });
     });
@@ -535,8 +537,9 @@ public class BooksController implements MainInfo {
 
   private void showBook(int idBook) {
     Thread thread = new Thread(() -> {
-      BookView bookView=new BookView();
+      BookView bookView = new BookView();
       Platform.runLater(() -> {
+        mainPane.requestFocus();
         mainPane.getChildren().add(bookView);
         bookView.setScaleX(0);
         bookView.setScaleY(0);
@@ -544,11 +547,13 @@ public class BooksController implements MainInfo {
         transition.setToX(1);
         transition.setToY(1);
         transition.play();
-        Thread thread1=new Thread(()->{
-          Book book=Library.getInstance().getBook(idBook);
-          Platform.runLater(()->{
-            PauseTransition pauseTransition=new PauseTransition(Duration.millis(700));
-            pauseTransition.setOnFinished(e->{bookView.setBook(book);});
+        Thread thread1 = new Thread(() -> {
+          Book book = Library.getInstance().getBook(idBook);
+          Platform.runLater(() -> {
+            PauseTransition pauseTransition = new PauseTransition(Duration.millis(700));
+            pauseTransition.setOnFinished(e -> {
+              bookView.setBook(book);
+            });
             pauseTransition.play();
           });
         });
@@ -573,7 +578,8 @@ public class BooksController implements MainInfo {
       ArrayList<Suggestion> listSuggestions = Library.getInstance().getBookSuggestions(prefix);
       Platform.runLater(() -> {
         for (int i = 0; i < Math.min(10, listSuggestions.size()); i++) {
-          observableList.add(new SuggestionView(listSuggestions.get(i), 35, 230,mainPane.getParent().getBlendMode()));
+          observableList.add(new SuggestionView(listSuggestions.get(i), 35, 230,
+              mainPane.getParent().getBlendMode()));
         }
         titleListView.setVisible(true);
         int heightOfListView = Math.min(titleListView.getItems().size(), 5) * 40;
@@ -743,54 +749,52 @@ public class BooksController implements MainInfo {
   @Override
   public void applyDarkMode(boolean isDark) {
 
-        if(isDark){
-          advertisementPane.setBlendMode(BlendMode.DIFFERENCE);
-        }
-        else {
-          advertisementPane.setBlendMode(BlendMode.SRC_OVER);
-        }
+    if (isDark) {
+      advertisementPane.setBlendMode(BlendMode.DIFFERENCE);
+    } else {
+      advertisementPane.setBlendMode(BlendMode.SRC_OVER);
+    }
 
-        for(SuggestionView suggestionView:ListBooks.getItems()){
-          suggestionView.applyDarkMode(isDark);
-        }
+    for (SuggestionView suggestionView : ListBooks.getItems()) {
+      suggestionView.applyDarkMode(isDark);
+    }
 
-        for(SuggestionView suggestionView:titleListView.getItems()){
-          suggestionView.applyDarkMode(isDark);
-        }
+    for (SuggestionView suggestionView : titleListView.getItems()) {
+      suggestionView.applyDarkMode(isDark);
+    }
 
-        int id=mainPane.getChildren().size()-1;
+    int id = mainPane.getChildren().size() - 1;
 
-        if(mainPane.getChildren().get(id) instanceof BookView){
-          ((BookView) mainPane.getChildren().get(id)).applyDarkMode(isDark);
-        }
-        else if(mainPane.getChildren().get(id-1) instanceof BookView){
-          ((BookView) mainPane.getChildren().get(id-1)).applyDarkMode(isDark);
-        }
+    if (mainPane.getChildren().get(id) instanceof BookView) {
+      ((BookView) mainPane.getChildren().get(id)).applyDarkMode(isDark);
+    } else if (mainPane.getChildren().get(id - 1) instanceof BookView) {
+      ((BookView) mainPane.getChildren().get(id - 1)).applyDarkMode(isDark);
+    }
 
   }
+
   // Không gọi setUpLanguage ở đây
   @Override
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
       boolean isTranslate) {
-    if(isTranslate){
+    if (isTranslate) {
       categoryTextField.setPromptText("Category");
       titleTextField.setPromptText("Title");
       topChoicesLabel.setText("Top choices");
-    }
-    else {
+    } else {
       categoryTextField.setPromptText("Thể loại");
       titleTextField.setPromptText("Tiêu đề");
       topChoicesLabel.setText("Lựa chọn hàng đầu");
     }
 
-    int id=mainPane.getChildren().size()-1;
+    int id = mainPane.getChildren().size() - 1;
 
-    if(mainPane.getChildren().get(id) instanceof ConfirmBox){
-      ((ConfirmBox) mainPane.getChildren().getLast()).applyTranslate(null,null,isTranslate);
+    if (mainPane.getChildren().get(id) instanceof ConfirmBox) {
+      ((ConfirmBox) mainPane.getChildren().getLast()).applyTranslate(null, null, isTranslate);
       id--;
     }
-    if(mainPane.getChildren().get(id) instanceof BookView){
-      ((BookView) mainPane.getChildren().get(id)).applyTranslate(null,null,isTranslate);
+    if (mainPane.getChildren().get(id) instanceof BookView) {
+      ((BookView) mainPane.getChildren().get(id)).applyTranslate(null, null, isTranslate);
     }
   }
 

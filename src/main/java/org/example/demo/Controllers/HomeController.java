@@ -417,6 +417,10 @@ public class HomeController implements MainInfo {
     }
   }
 
+  public void setLibName(String name) {
+    librarianName.setText(name);
+  }
+
   // Display borrowed books / total books
   private void displayCirclePro() {
     Connection conn = null;
