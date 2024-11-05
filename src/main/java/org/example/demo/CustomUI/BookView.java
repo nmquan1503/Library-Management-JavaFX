@@ -21,6 +21,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Arc;
 import javafx.util.Duration;
+import org.example.demo.API.Network;
 import org.example.demo.API.TextToSpeech;
 import org.example.demo.API.Translate;
 import org.example.demo.Controllers.BaseController;
@@ -142,7 +143,7 @@ public class BookView extends ScrollPane implements MainInfo {
 
 
   private void setImageBook(Book book){
-    if(book.getImageLink()==null){
+    if(book.getImageLink()==null || !Network.isConnected()){
       imageBook.setImage(new Image(Objects.requireNonNull(
           getClass().getResourceAsStream("/org/example/demo/Assets/basic.jpg"))));
     }
@@ -332,6 +333,22 @@ public class BookView extends ScrollPane implements MainInfo {
 
   @FXML
   private void Speak(){
+    if(!Network.isConnected()){
+      Node parent=this.getParent();
+      if(parent!=null){
+        while(parent.getParent()!=null){
+          parent=parent.getParent();
+        }
+        if(parent instanceof AnchorPane){
+          ((AnchorPane) parent).getChildren().add(
+              new Warning("No interner!",
+                  "Please check your network connection and try again."
+              )
+          );
+        }
+      }
+      return;
+    }
     String oup="";
     if(titleLabel!=null) {
       if (!titleLabel.getText().isEmpty()) {

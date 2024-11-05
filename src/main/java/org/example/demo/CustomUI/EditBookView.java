@@ -29,6 +29,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Arc;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
+import org.example.demo.API.Network;
 import org.example.demo.Controllers.BaseController;
 import org.example.demo.Database.JDBC;
 import org.example.demo.Interfaces.MainInfo;
@@ -144,7 +145,7 @@ public class EditBookView extends ScrollPane implements MainInfo {
   }
 
   private void initImage(Book book){
-    if(book.getImageLink()==null){
+    if(book.getImageLink()==null || !Network.isConnected()){
       initDefaultImage();
       return;
     }

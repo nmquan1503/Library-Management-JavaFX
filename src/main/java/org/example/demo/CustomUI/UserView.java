@@ -9,6 +9,7 @@ import javafx.animation.ScaleTransition;
 import javafx.animation.Transition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.BlendMode;
@@ -20,6 +21,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Arc;
 import javafx.util.Duration;
+import org.example.demo.API.Network;
 import org.example.demo.API.TextToSpeech;
 import org.example.demo.Controllers.BaseController;
 import org.example.demo.Interfaces.MainInfo;
@@ -114,7 +116,7 @@ public class UserView extends ScrollPane implements MainInfo {
 
 
   private void setImage(User user){
-    if(user.getAvatar()==null){
+    if(user.getAvatar()==null || !Network.isConnected()){
       imageUser.setImage(new Image(Objects.requireNonNull(
           getClass().getResourceAsStream("/org/example/demo/Assets/basic.jpg"))));
     }
@@ -197,6 +199,22 @@ public class UserView extends ScrollPane implements MainInfo {
 
   @FXML
   private void Speak(){
+    if(!Network.isConnected()){
+      Node parent=this.getParent();
+      if(parent!=null){
+        while(parent.getParent()!=null){
+          parent=parent.getParent();
+        }
+        if(parent instanceof AnchorPane){
+          ((AnchorPane) parent).getChildren().add(
+              new Warning("No interner!",
+                  "Please check your network connection and try again."
+              )
+          );
+        }
+      }
+      return;
+    }
     String oup="";
     if(nameLabel!=null){
       if(!nameLabel.getText().isEmpty()){
