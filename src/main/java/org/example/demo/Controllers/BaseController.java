@@ -37,8 +37,10 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.effect.BlendMode;
 import javafx.stage.Popup;
+import org.example.demo.API.Network;
 import org.example.demo.API.Translate;
 import org.example.demo.App;
+import org.example.demo.CustomUI.Warning;
 import org.example.demo.Database.JDBC;
 import org.example.demo.Models.Language;
 
@@ -156,6 +158,8 @@ public class BaseController {
     return returnPane;
   }
 
+  private boolean isTranSetUp = false;
+
   @FXML
   private JFXListView<String> suggestionListView;
 
@@ -208,7 +212,6 @@ public class BaseController {
     }
 
     avtMenuSetup();
-    setUpLang();
     mainPane.setVisible(true);
     bookPane.setVisible(false);
     editPane.setVisible(false);
@@ -584,7 +587,6 @@ public class BaseController {
       mainPane = fxmlLoader.load();
 
       homeController = fxmlLoader.getController();
-      homeController.setUpLanguage(viLang, enLang);
     } catch (Exception e) {
       System.out.println("loadMain error");
     }
@@ -597,7 +599,6 @@ public class BaseController {
       bookPane = fxmlLoader.load();
 
       booksController = fxmlLoader.getController();
-      booksController.setUpLanguage(viLang, enLang);
     } catch (Exception e) {
       System.out.println("loadBook error");
     }
@@ -610,7 +611,6 @@ public class BaseController {
       editPane = fxmlLoader.load();
 
       editController = fxmlLoader.getController();
-      editController.setUpLanguage(viLang, enLang);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -623,7 +623,6 @@ public class BaseController {
       userPane = fxmlLoader.load();
 
       usersController = fxmlLoader.getController();
-      usersController.setUpLanguage(viLang, enLang);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -636,7 +635,6 @@ public class BaseController {
       borrowPane = fxmlLoader.load();
 
       borrowBookController = fxmlLoader.getController();
-      borrowBookController.setUpLanguage(viLang, enLang);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -649,7 +647,6 @@ public class BaseController {
       returnPane = fxmlLoader.load();
 
       returnBookController = fxmlLoader.getController();
-      returnBookController.setUpLanguage(viLang, enLang);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -746,6 +743,13 @@ public class BaseController {
       }
     }
 
+    homeController.setUpLanguage(viLang, enLang);
+    booksController.setUpLanguage(viLang, enLang);
+    borrowBookController.setUpLanguage(viLang, enLang);
+    editController.setUpLanguage(viLang, enLang);
+    usersController.setUpLanguage(viLang, enLang);
+    returnBookController.setUpLanguage(viLang, enLang);
+
     viLang.put(searchBase, searchBase.getPromptText());
     viLang.put(darkText, darkText.getText());
     viLang.put(notiText, notiText.getText());
@@ -763,6 +767,14 @@ public class BaseController {
   }
 
   private void handleTranslate() {
+    if (!Network.isConnected()) {
+      bigPane.getChildren().add(new Warning("Lỗi mạng", "Vui lòng kiểm tra kết nối"));
+      return;
+    }
+    if (!isTranSetUp) {
+      setUpLang();
+      isTranSetUp = true;
+    }
     if (isTranslate) {
       searchBase.setPromptText(viLang.get(searchBase));
       darkText.setText(viLang.get(darkText));
