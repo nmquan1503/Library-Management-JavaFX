@@ -11,8 +11,10 @@ public class Network {
 
   private static boolean connection=false;
 
+  private static Timer timer;
+
   static {
-    Timer timer=new Timer();
+    timer=new Timer();
     timer.scheduleAtFixedRate(new TimerTask() {
       @Override
       public void run() {
@@ -28,6 +30,12 @@ public class Network {
 
   private Network(){
 
+  }
+
+  public static void close(){
+    if(timer!=null){
+      timer.cancel();
+    }
   }
 
   public static boolean isConnected(){
