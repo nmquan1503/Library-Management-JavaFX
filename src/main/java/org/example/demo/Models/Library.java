@@ -167,6 +167,10 @@ public class Library {
     return bookShelf.getTop3Book();
   }
 
+  public ArrayList<Borrowing> getListBorrowingNearingDeadline(){
+    return borrowHistory.getListBorrowingNearingDeadline();
+  }
+
 
 
 

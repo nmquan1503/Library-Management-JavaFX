@@ -275,4 +275,40 @@ public class BorrowHistory {
     JDBC.closeConnection(connection);
     return history;
   }
+
+  public ArrayList<Borrowing> getListBorrowingNearingDeadline(){
+    ArrayList<Borrowing> list=new ArrayList<>();
+
+    Connection connection=JDBC.getConnection();
+    try {
+      String query ="select id_borrowing,"
+          + "id_book,"
+          + "id_user,"
+          + "borrowed_date,"
+          + "due_date,"
+          + "returned_date "
+          + "from borrowing "
+          + "where returned_date is null and datediff(now(),due_date)<=1 "
+          + "order by due_date";
+      PreparedStatement preparedStatement=connection.prepareStatement(query);
+      ResultSet resultSet=preparedStatement.executeQuery();
+      while (resultSet.next()){
+        int id_borrowing=resultSet.getInt("id_borrowing");
+        int id_book=resultSet.getInt("id_book");
+        int id_user=resultSet.getInt("id_user");
+        Date due_date=new Date(resultSet.getDate("due_date"));
+        Date returned_date=new Date(resultSet.getDate("returned_date"));
+        Date borrowed_date=new Date(resultSet.getDate("borrowed_date"));
+        list.add(new Borrowing(id_borrowing,id_book,id_user,borrowed_date,due_date,returned_date));
+      }
+    }
+    catch (Exception e){
+      e.printStackTrace();
+    }
+    finally {
+      JDBC.closeConnection(connection);
+    }
+    return list;
+  }
+
 }

@@ -434,8 +434,7 @@ public class EditController implements MainInfo {
           observableList.add(new SuggestionView(
               new Suggestion(book),
               50,
-              300,
-              mainPane.getParent().getBlendMode()
+              300
           ));
         }
       });

@@ -1,6 +1,7 @@
 package org.example.demo.Models.Users;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 
 public class Date extends java.sql.Date {
@@ -74,7 +75,17 @@ public class Date extends java.sql.Date {
     return super.toLocalDate();
   }
 
+  public static Date today(){
+    return new Date(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now()
+        .getDayOfMonth());
+  }
+
+  public long datediff(Date other){
+    return ChronoUnit.DAYS.between(other.toLocalDate(), this.toLocalDate());
+  }
+
   public static void main(String[] args) {
-    Date myDate = new Date(2024, 10, 1); // Create a date
+    Date date=new Date(2024,1,2);
+    System.out.println(date.datediff(new Date(2024,1,1)));
   }
 }

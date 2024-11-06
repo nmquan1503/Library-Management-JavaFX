@@ -122,7 +122,7 @@ public class UsersController implements MainInfo {
       Platform.runLater(() -> {
         usersListView.setItems(list);
         for (int i = start; i <= end; i++) {
-          list.add(new SuggestionView(listUser.get(i), 80, 400,mainPane.getParent().getBlendMode()));
+          list.add(new SuggestionView(listUser.get(i), 80, 400));
         }
       });
     });
@@ -246,7 +246,7 @@ public class UsersController implements MainInfo {
     Thread thread = new Thread(() -> {
       ArrayList<Suggestion> listSuggestions = Library.getInstance().getUserSuggestions(prefixName);
       for (Suggestion suggestion : listSuggestions) {
-        observableList.add(new SuggestionView(suggestion, 35, 400,mainPane.getParent().getBlendMode()));
+        observableList.add(new SuggestionView(suggestion, 35, 400));
       }
       Platform.runLater(() -> {
         userSuggestionsListView.setVisible(true);
@@ -273,7 +273,7 @@ public class UsersController implements MainInfo {
       ArrayList<Suggestion> bannedUsers = Library.getInstance().getBannedUserSuggestions("");
       Platform.runLater(() -> {
         for (Suggestion suggestion : bannedUsers) {
-          observableList.add(new SuggestionView(suggestion, 30, 200, BlendMode.SRC_OVER));
+          observableList.add(new SuggestionView(suggestion, 30, 200));
         }
       });
     });

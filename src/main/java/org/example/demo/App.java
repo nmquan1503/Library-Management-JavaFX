@@ -80,7 +80,6 @@ public class App extends Application {
 
     primaryStage.setOnCloseRequest(e->{
       Network.close();
-      System.out.println(1);
     });
 
   }
