@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.util.Objects;
 import javafx.util.Duration;
+import org.example.demo.API.Network;
 import org.example.demo.Controllers.WaitingController;
 
 public class App extends Application {
@@ -77,6 +78,10 @@ public class App extends Application {
     });
     pauseTransition.play();
 
+    primaryStage.setOnCloseRequest(e->{
+      Network.close();
+      System.out.println(1);
+    });
 
   }
 
