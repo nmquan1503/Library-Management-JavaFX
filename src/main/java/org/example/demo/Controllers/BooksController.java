@@ -39,14 +39,17 @@ import javafx.util.Duration;
 import org.example.demo.API.Network;
 import org.example.demo.CustomUI.BookView;
 import org.example.demo.CustomUI.ConfirmBox;
+import org.example.demo.CustomUI.NotificationView;
 import org.example.demo.CustomUI.SuggestionView;
 import org.example.demo.CustomUI.Warning;
 import org.example.demo.Database.JDBC;
 import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.BookShelf.Book;
+import org.example.demo.Models.Borrowing.Borrowing;
 import org.example.demo.Models.Library;
 import org.example.demo.Models.Suggestion.Suggestion;
 import org.example.demo.Models.Trie.Trie;
+import org.example.demo.Models.Users.Date;
 
 public class BooksController implements MainInfo {
 
@@ -450,8 +453,7 @@ public class BooksController implements MainInfo {
       Platform.runLater(() -> {
         ListBooks.setItems(list);
         for (int i = start; i <= end; i++) {
-          list.add(new SuggestionView(listSuggestions.get(i), 80, 400,
-              mainPane.getParent().getBlendMode()));
+          list.add(new SuggestionView(listSuggestions.get(i), 80, 400));
         }
       });
     });
@@ -604,8 +606,7 @@ public class BooksController implements MainInfo {
       ArrayList<Suggestion> listSuggestions = Library.getInstance().getBookSuggestions(prefix);
       Platform.runLater(() -> {
         for (int i = 0; i < Math.min(10, listSuggestions.size()); i++) {
-          observableList.add(new SuggestionView(listSuggestions.get(i), 35, 230,
-              mainPane.getParent().getBlendMode()));
+          observableList.add(new SuggestionView(listSuggestions.get(i), 35, 230));
         }
         titleListView.setVisible(true);
         int heightOfListView = Math.min(titleListView.getItems().size(), 5) * 40;
@@ -697,7 +698,6 @@ public class BooksController implements MainInfo {
             CreateBookSuggestions();
           }
         });
-
       });
     });
     thread.start();

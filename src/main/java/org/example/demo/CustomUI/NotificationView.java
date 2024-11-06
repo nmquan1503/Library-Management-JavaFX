@@ -2,35 +2,41 @@ package org.example.demo.CustomUI;
 
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.Stack;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.effect.BlendMode;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import org.example.demo.API.Network;
 import org.example.demo.Controllers.BaseController;
 import org.example.demo.Interfaces.MainInfo;
+import org.example.demo.Models.BookShelf.Book;
+import org.example.demo.Models.Borrowing.Borrowing;
+import org.example.demo.Models.Library;
 import org.example.demo.Models.Suggestion.Suggestion;
+import org.example.demo.Models.Users.Date;
+import org.example.demo.Models.Users.User;
 
-public class SuggestionView extends HBox implements MainInfo {
+public class NotificationView extends HBox implements MainInfo {
 
-  private final int id;
+  private boolean isSeen;
 
   private StackPane wrapper;
   private ImageView image;
   private Label content;
 
+  public NotificationView(Borrowing borrowing,int width,int height){
+    isSeen=false;
 
-  public SuggestionView(Suggestion suggestion,int height,int width){
-    this.id=suggestion.getId();
+    User user = Library.getInstance().getUser(borrowing.getIdUser());
+    Book book = Library.getInstance().getBook(borrowing.getIdBook());
 
-    initImage(suggestion,height,width);
-
-    initContent(suggestion,height,width);
+    initImage(user,height,width);
+    initContent(user,book,borrowing.getDueDate(),height,width);
 
     this.getChildren().add(wrapper);
     this.getChildren().add(content);
@@ -42,16 +48,33 @@ public class SuggestionView extends HBox implements MainInfo {
     this.setAlignment(Pos.CENTER);
     this.setSpacing(5);
 
+    markSeen();
+
   }
 
-  private void initImage(Suggestion suggestion,int height,int width){
+  public void markSeen(){
+    isSeen=true;
+    content.setId(null);
+    content.setFont(Font.font("System", FontWeight.NORMAL,16));
+  }
+
+  public boolean isSeen(){
+    return isSeen;
+  }
+
+  private void initImage(User user,int height,int width){
     wrapper = new StackPane();
     wrapper.setPrefHeight(height);
     wrapper.setPrefWidth(height/1.5);
     wrapper.setAlignment(Pos.CENTER);
     wrapper.setStyle("-fx-effect: dropshadow(gaussian, #E464C0, 20, 0, 3, 3);");
 
-    image=new ImageView(suggestion.getIcon());
+    image=new ImageView();
+    if(user.getAvatar()!=null) {
+      image.setImage(user.getAvatar());
+    }
+    else image.setImage(new Image(Objects.requireNonNull(
+        getClass().getResourceAsStream("/org/example/demo/Assets/basic.jpg"))));
     image.setPreserveRatio(true);
     image.setFitHeight(height-10);
     image.setId("IconOfContent");
@@ -60,18 +83,22 @@ public class SuggestionView extends HBox implements MainInfo {
     if(BaseController.isDark) wrapper.setBlendMode(BlendMode.DIFFERENCE);
     else wrapper.setBlendMode(BlendMode.SRC_OVER);
   }
-  
-  private void initContent(Suggestion suggestion,int height,int width){
-    content=new Label(suggestion.getContent());
+
+  private void initContent(User user,Book book, Date dueDate,int height,int width){
+
+    content=new Label();
+
+    if(dueDate.isAfter(Date.today())){
+      content.setText(user.getName()+" đã quá hạn trả sách "+book.getTitle()+" "+Math.abs(dueDate.datediff(Date.today()))+" ngày!");
+    }
+    else {
+      content.setText(user.getName()+" còn "+Math.abs(dueDate.datediff(Date.today()))+" ngày nữa phải trả sách "+book.getTitle());
+    }
     content.setPrefWidth(width - height/1.5-5);
     content.setPrefHeight(height-10);
     content.setWrapText(true);
     content.setAlignment(Pos.TOP_LEFT);
     content.setId("ContentOfSuggestion");
-  }
-
-  public int getID(){
-    return id;
   }
 
   @Override
@@ -96,5 +123,4 @@ public class SuggestionView extends HBox implements MainInfo {
   public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
 
   }
-
 }
