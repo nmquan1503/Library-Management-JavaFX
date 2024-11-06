@@ -6,8 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Objects;
+import javafx.animation.PauseTransition;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
+import javafx.util.Duration;
 import org.example.demo.Database.JDBC;
 import org.example.demo.Models.BookShelf.Book;
 import org.example.demo.Models.BookShelf.BookShelf;
@@ -22,7 +24,11 @@ public class Library {
 
   private static Library instance;
   static {
-    instance=new Library();
+    PauseTransition pauseTransition=new PauseTransition(Duration.seconds(5));
+    pauseTransition.setOnFinished(e->{
+      instance=new Library();
+    });
+    pauseTransition.play();
   }
 
   private BookShelf bookShelf;
