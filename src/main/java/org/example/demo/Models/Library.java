@@ -157,6 +157,10 @@ public class Library {
     return userList.insertUserWithID(user, idUser);
   }
 
+  public ArrayList<Book> getTop3Book(){
+    return bookShelf.getTop3Book();
+  }
+
 
 
 

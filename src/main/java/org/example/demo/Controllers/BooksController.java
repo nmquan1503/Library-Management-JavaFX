@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Objects;
 import java.util.Queue;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
@@ -29,14 +30,17 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.BlendMode;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Arc;
 import javafx.util.Duration;
+import org.example.demo.API.Network;
 import org.example.demo.CustomUI.BookView;
 import org.example.demo.CustomUI.ConfirmBox;
 import org.example.demo.CustomUI.SuggestionView;
+import org.example.demo.CustomUI.Warning;
 import org.example.demo.Database.JDBC;
 import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.BookShelf.Book;
@@ -106,7 +110,6 @@ public class BooksController implements MainInfo {
     setUpPageNumberTextField();
     setupFocusTextField();
     initView();
-
   }
 
   /**
@@ -563,6 +566,29 @@ public class BooksController implements MainInfo {
     thread.start();
   }
 
+  private void showBook(Book book){
+    Thread thread = new Thread(() -> {
+      BookView bookView = new BookView();
+      Platform.runLater(() -> {
+        mainPane.requestFocus();
+        mainPane.getChildren().add(bookView);
+        bookView.setScaleX(0);
+        bookView.setScaleY(0);
+        ScaleTransition transition = new ScaleTransition(Duration.millis(200), bookView);
+        transition.setToX(1);
+        transition.setToY(1);
+        transition.play();
+            PauseTransition pauseTransition = new PauseTransition(Duration.millis(700));
+            pauseTransition.setOnFinished(e -> {
+              bookView.setBook(book);
+            });
+            pauseTransition.play();
+
+      });
+    });
+    thread.start();
+  }
+
   private void CreateBookSuggestions() {
     String prefix = titleTextField.getText();
     if (prefix.isEmpty()) {
@@ -617,6 +643,41 @@ public class BooksController implements MainInfo {
     JDBC.closeConnection(connection);
   }
 
+  private void initTopChoicesBook(){
+    content1.setImage(new Image(Objects.requireNonNull(
+        getClass().getResourceAsStream("/org/example/demo/Assets/basic.jpg"))));
+    content2.setImage(new Image(Objects.requireNonNull(
+        getClass().getResourceAsStream("/org/example/demo/Assets/basic.jpg"))));
+    content3.setImage(new Image(Objects.requireNonNull(
+        getClass().getResourceAsStream("/org/example/demo/Assets/basic.jpg"))));
+
+    ArrayList<Book> list=Library.getInstance().getTop3Book();
+    if(!list.isEmpty()){
+      if(list.getFirst().getImageLink() != null && Network.isConnected() ){
+        content1.setImage(new Image(list.getFirst().getImageLink()));
+      }
+      content1.setOnMouseClicked(e->{
+        showBook(list.getFirst());
+      });
+    }
+    if(list.size()>1){
+      if(list.getFirst().getImageLink() != null && Network.isConnected() ){
+        content2.setImage(new Image(list.get(1).getImageLink()));
+      }
+      content2.setOnMouseClicked(e->{
+        showBook(list.get(1));
+      });
+    }
+    if(list.size()>2){
+      if(list.getFirst().getImageLink() != null && Network.isConnected() ){
+        content3.setImage(new Image(list.get(2).getImageLink()));
+      }
+      content3.setOnMouseClicked(e->{
+        showBook(list.get(2));
+      });
+    }
+  }
+
   private void initView() {
     Thread thread = new Thread(() -> {
       listSuggestions = Library.getInstance().getBookSuggestions("");
@@ -626,9 +687,7 @@ public class BooksController implements MainInfo {
         nextPageButton.setVisible(1 != (listSuggestions.size() - 1) / 20 + 1);
         prevPageButton.setVisible(false);
 
-        content1.setImage(listSuggestions.get(0).getIcon());
-        content2.setImage(listSuggestions.get(1).getIcon());
-        content3.setImage(listSuggestions.get(2).getIcon());
+        initTopChoicesBook();
 
         titleTextField.textProperty().addListener(new ChangeListener<String>() {
           @Override

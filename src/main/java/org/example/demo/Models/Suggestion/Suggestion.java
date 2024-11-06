@@ -2,6 +2,7 @@ package org.example.demo.Models.Suggestion;
 
 import java.util.Objects;
 import javafx.scene.image.Image;
+import org.example.demo.API.Network;
 import org.example.demo.Models.BookShelf.Book;
 import org.example.demo.Models.Users.User;
 
@@ -13,11 +14,11 @@ public class Suggestion {
 
   public Suggestion(Book book) {
     id = book.getId();
-    if (book.getImageLink() != null) {
-      icon = new Image(book.getImageLink());
-    } else {
+    if (book.getImageLink() == null || !Network.isConnected()) {
       icon = new Image(Objects.requireNonNull(
           getClass().getResourceAsStream("/org/example/demo/Assets/basic.jpg")));
+    } else {
+      icon = new Image(book.getImageLink());
     }
     content = book.getTitle();
   }

@@ -165,4 +165,30 @@ public class BookShelf {
     return listBook;
   }
 
+  public ArrayList<Book> getTop3Book(){
+    ArrayList<Book> list=new ArrayList<>();
+    String query = "select books.id_book "
+        + "from books "
+        + "left join borrowing on books.id_book = borrowing.id_book "
+        + "group by books.id_book "
+        + "order by count(*) desc "
+        + "limit 3;";
+    Connection connection=JDBC.getConnection();
+
+    try {
+      PreparedStatement statement=connection.prepareStatement(query);
+      ResultSet resultSet=statement.executeQuery();
+      while (resultSet.next()){
+        int id=resultSet.getInt(1);
+        list.add(getBook(id));
+      }
+    }
+    catch (Exception e){
+      e.printStackTrace();
+    }
+
+    JDBC.closeConnection(connection);
+    return list;
+  }
+
 }
