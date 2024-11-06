@@ -27,7 +27,7 @@ public class App extends Application {
   public void start(Stage stage) throws Exception {
     primaryStage = stage;
 
-    AtomicReference<FXMLLoader> waitLoader= new AtomicReference<>(
+    AtomicReference<FXMLLoader> waitLoader = new AtomicReference<>(
         new FXMLLoader(getClass().getResource("/org/example/demo/FXML/Waiting.fxml")));
     AtomicReference<Scene> waitScene = new AtomicReference<>(new Scene(waitLoader.get().load()));
 
@@ -36,7 +36,7 @@ public class App extends Application {
     primaryStage.setScene(waitScene.get());
     primaryStage.show();
 
-    Thread thread=new Thread(()->{
+    Thread thread = new Thread(() -> {
       try {
         if (startScene == null) {
           Parent root1 = FXMLLoader.load(
@@ -56,10 +56,10 @@ public class App extends Application {
                   getClass().getResource("/org/example/demo/FXML/AccountSetting.fxml")));
           accountEditScene = new Scene(root3);
         }
-        WaitingController controller= waitLoader.get().getController();
-        Platform.runLater(()->{
-          if(controller!=null){
-            controller.stopTransition(()->{
+        WaitingController controller = waitLoader.get().getController();
+        Platform.runLater(() -> {
+          if (controller != null) {
+            controller.stopTransition(() -> {
               primaryStage.setScene(startScene);
               waitScene.set(null);
               waitLoader.set(null);
@@ -67,20 +67,18 @@ public class App extends Application {
           }
         });
 
-      }
-      catch (Exception e){
+      } catch (Exception e) {
         e.printStackTrace();
       }
     });
-    PauseTransition pauseTransition=new PauseTransition(Duration.seconds(7));
-    pauseTransition.setOnFinished(e->{
+    PauseTransition pauseTransition = new PauseTransition(Duration.seconds(7));
+    pauseTransition.setOnFinished(e -> {
       thread.start();
     });
     pauseTransition.play();
 
-    primaryStage.setOnCloseRequest(e->{
+    primaryStage.setOnCloseRequest(e -> {
       Network.close();
-      System.out.println(1);
     });
 
   }
