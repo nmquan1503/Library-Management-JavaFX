@@ -83,7 +83,128 @@
 }
 
 .notification-fade {
-  -fx-background-color: #84e19a;
   -fx-background-radius: 50%;
   -fx-border-radius: 50%;
+}
+
+.success {
+  -fx-background-color: #84e19a;
+}
+
+.deny {
+ -fx-background-color: #ff9999;
+}
+
+.date-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-padding: 0px;
+}
+
+.date-field .text-field {
+    -fx-font-size: 14px;
+    -fx-background-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-text-fill: #333333;
+}
+
+.date-field:hover {
+    -fx-border-color: #888888;
+}
+
+.date-field:focused {
+    -fx-border-color: #1E90FF;
+    -fx-background-color: #f9f9f9;
+}
+
+.date-field .arrow-button {
+    -fx-background-color: #CEEFFA;
+    -fx-border-width: 0;
+}
+
+.date-field .arrow-button:hover {
+  -fx-cursor: hand;
+}
+
+.date-field .arrow {
+    -fx-background-color: #0D706E;
+}
+
+.combo-box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+}
+
+.combo-box:hover {
+    -fx-background-color: #f2f2f2;
+    -fx-border-color: #888888;
+    -fx-cursor: hand;
+}
+
+.combo-box:focused {
+    -fx-border-color: #1E90FF;
+    -fx-background-color: #f9f9f9;
+}
+
+.combo-box .list-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1px;
+    -fx-text-fill: #333333;
+}
+
+.combo-box .list-view .list-cell:hover {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #333333;
+    -fx-cursor: hand;
+}
+
+.combo-box .list-view .list-cell:selected {
+    -fx-background-color: #1E90FF;
+    -fx-text-fill: #ffffff;
+}
+
+.password {
+  -fx-border: none;
+  -fx-background-color: transparent;
+}
+
+.eye {
+  -fx-background-color: transparent;
+  -fx-border: none;
+  -fx-padding: 0;
+  -fx-graphic: null;
+}
+
+.eye .font-awesome-icon {
+  -fx-fill: rgba(0, 0, 0, 0.5);
+  -fx-font-size: 16px;
+}
+
+.eye:hover {
+  -fx-cursor: hand;
+}
+
+.password-container {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+    -fx-padding: 0;
+    -fx-spacing: 0;
+}
+
+.password-container:hover {
+    -fx-background-color: #f2f2f2;
+    -fx-border-color: #888888;
+    -fx-cursor: hand;
 }

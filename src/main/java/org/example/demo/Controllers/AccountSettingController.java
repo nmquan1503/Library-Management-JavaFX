@@ -6,28 +6,45 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.example.demo.App;
 import org.example.demo.Database.JDBC;
 
-
 public class AccountSettingController {
+
+  private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
 
   private static final IntegerProperty checkState = new SimpleIntegerProperty(0);
 
@@ -52,15 +69,59 @@ public class AccountSettingController {
   private TextField promptName;
 
   @FXML
+  private DatePicker promptBirth;
+
+  @FXML
+  private TextField promptPhone;
+
+  @FXML
+  private TextField promptEmail;
+
+  @FXML
+  private ComboBox<String> promptAddress;
+
+  @FXML
+  private PasswordField promptPassword;
+
+  @FXML
+  private TextField textField;
+
+  @FXML
+  private FontAwesomeIconView eyeIcon;
+
+  @FXML
+  private HBox passwordContainer;
+
+  @FXML
   private AnchorPane succeedPane;
 
+  @FXML
+  private AnchorPane errorPane;
+
+  private Timeline fadeOutTimeline;
+
   public void initialize() {
-    loadAvtImg();
+    loadInfo();
+    loadAddress();
     setCameraHoverEffect();
     chooseAvtFileBtn.setOnMouseClicked(this::handleChooseAvatarClick);
     cameraIcon.setOnMouseClicked(this::handleChooseAvatarClick);
     checkState.addListener((observable, oldValue, newValue) -> {
-      loadAvtImg();
+      loadInfo();
+    });
+    promptEmail.textProperty().addListener(((observableValue, oldValue, newValue) -> {
+      if (!newValue.matches(EMAIL_REGEX) && !newValue.isEmpty()) {
+        promptEmail.setStyle("-fx-border-color: red;");
+      } else {
+        promptEmail.setStyle("");
+      }
+    }));
+    promptPassword.textProperty().addListener((observable, oldValue, newValue) -> {
+      if (newValue.trim().isEmpty() || newValue.contains(" ")) {
+        passwordContainer.setStyle("-fx-border-color: red;");
+      } else {
+        passwordContainer.setStyle("");
+      }
     });
   }
 
@@ -96,17 +157,22 @@ public class AccountSettingController {
     }
   }
 
-  private void loadAvtImg() {
+  private void loadInfo() {
     Connection conn = null;
     PreparedStatement preparedStatement = null;
     ResultSet rs = null;
     try {
       conn = JDBC.getConnection();
 
-      String sql = "SELECT avatar FROM librarian WHERE id_librarian ="
-          + BaseController.getLibId();
+      String sql =
+          "SELECT li.avatar, li.birthday, li.phone_number_librarian, li.email_librarian, a.name_address "
+              +
+              "FROM librarian li " +
+              "LEFT JOIN address a ON li.id_address = a.id_address " +
+              "WHERE li.id_librarian = ?";
       assert conn != null;
       preparedStatement = conn.prepareStatement(sql);
+      preparedStatement.setInt(1, BaseController.getLibId());
 
       rs = preparedStatement.executeQuery();
 
@@ -122,6 +188,24 @@ public class AccountSettingController {
           }
         } else {
           loadDefaultAvatar();
+        }
+
+        LocalDate date = rs.getDate("birthday").toLocalDate();
+        promptBirth.setValue(date);
+
+        String phoneNum = rs.getString("phone_number_librarian");
+        promptPhone.setText(phoneNum);
+
+        if (rs.getString("email_librarian") != null) {
+          promptEmail.setPromptText(rs.getString("email_librarian"));
+        } else {
+          promptEmail.setPromptText("e.g: example@domain.com");
+        }
+
+        if (rs.getString("name_address") != null) {
+          promptAddress.setPromptText(rs.getString("name_address"));
+        } else {
+          promptAddress.setPromptText("Choose an address");
         }
       }
 
@@ -155,7 +239,7 @@ public class AccountSettingController {
 
     if (selectedFile != null) {
       updateAvatar(selectedFile.getAbsolutePath(), BaseController.getLibId());
-      loadAvtImg();
+      loadInfo();
     }
   }
 
@@ -204,7 +288,12 @@ public class AccountSettingController {
         try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
           preparedStatement.setString(1, newName);
           preparedStatement.setInt(2, BaseController.getLibId());
-          preparedStatement.executeUpdate();
+          int rowsAffected = preparedStatement.executeUpdate();
+
+          if (rowsAffected > 0) {
+            succeedNotification();
+            promptName.clear();
+          }
           succeedNotification();
           JDBC.closeConnection(conn);
         }
@@ -217,12 +306,212 @@ public class AccountSettingController {
     }
   }
 
-  private void succeedNotification() {
+  @FXML
+  private void saveBirthday() {
+    LocalDate birthday = promptBirth.getValue();
+    if (birthday != null) {
+      try (Connection conn = JDBC.getConnection()) {
+        String sql = "UPDATE librarian SET birthday = ? WHERE id_librarian = ?";
+        assert conn != null;
+        try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+          preparedStatement.setDate(1, Date.valueOf(birthday));
+          preparedStatement.setInt(2, BaseController.getLibId());
+          int rowsAffected = preparedStatement.executeUpdate();
 
+          if (rowsAffected > 0) {
+            succeedNotification();
+            promptBirth.setValue(birthday);
+          }
+          succeedNotification();
+          JDBC.closeConnection(conn);
+        }
+      } catch (Exception e) {
+        System.err.println(
+            "Some error occurred in saveBirthday function in AccountSettingController class!");
+      }
+    } else {
+      errorNotification();
+    }
+  }
+
+  @FXML
+  private void saveEmail() {
+    String email = promptEmail.getText().trim();
+    if (!email.isEmpty() && email.matches(EMAIL_REGEX)) {
+      try (Connection conn = JDBC.getConnection()) {
+        String sql = "UPDATE librarian SET email_librarian = ? WHERE id_librarian = ?";
+        assert conn != null;
+        try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+          preparedStatement.setString(1, email);
+          preparedStatement.setInt(2, BaseController.getLibId());
+          int rowsAffected = preparedStatement.executeUpdate();
+
+          if (rowsAffected > 0) {
+            promptEmail.setPromptText(email);
+            succeedNotification();
+          }
+          succeedNotification();
+          JDBC.closeConnection(conn);
+        }
+      } catch (Exception e) {
+        System.err.println(
+            "Some error occurred in saveName function in AccountSettingController class!");
+      }
+    } else {
+      errorNotification();
+    }
+  }
+
+  @FXML
+  private void saveAddress() {
+    String selectedAddress = promptAddress.getValue();
+
+    if (selectedAddress != null) {
+      try (Connection conn = JDBC.getConnection()) {
+        assert conn != null;
+
+        String sql = "UPDATE librarian SET id_address = (SELECT id_address FROM address WHERE name_address = ?) WHERE id_librarian = ?";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+          preparedStatement.setString(1, selectedAddress);
+          preparedStatement.setInt(2,
+              BaseController.getLibId());
+
+          int rowsAffected = preparedStatement.executeUpdate();
+
+          if (rowsAffected > 0) {
+            promptAddress.setPromptText(selectedAddress);
+            succeedNotification();
+          } else {
+            errorNotification();
+          }
+        }
+      } catch (Exception e) {
+        System.err.println("Error saving address: " + e.getMessage());
+      }
+    } else {
+      errorNotification();
+    }
+  }
+
+  @FXML
+  private void eyeSee() {
+    if (eyeIcon.getGlyphName().equals("EYE")) {
+      promptPassword.setVisible(false);
+      textField.setText(promptPassword.getText());
+      textField.setVisible(true);
+      eyeIcon.setGlyphName("EYE_SLASH");
+    } else {
+      textField.setVisible(false);
+      promptPassword.setText(textField.getText());
+      promptPassword.setVisible(true);
+      eyeIcon.setGlyphName("EYE");
+    }
+  }
+
+  @FXML
+  private void savePassword() {
+    Alert confirmationAlert = new Alert(AlertType.CONFIRMATION);
+    confirmationAlert.setTitle("Xác nhận đổi mật khẩu");
+    confirmationAlert.setHeaderText("Bạn chắc chứ");
+    confirmationAlert.setContentText("Điều này sẽ thay đổi mật khẩu của bạn trong hệ thống.");
+
+    Optional<ButtonType> result = confirmationAlert.showAndWait();
+
+    if (result.isPresent() && result.get() == ButtonType.OK) {
+      try {
+        String newPassword = promptPassword.getText();
+        if (!textField.getText().trim().isEmpty()) {
+          newPassword = textField.getText();
+        }
+        if (!newPassword.isEmpty() && !newPassword.contains(" ")) {
+          try (Connection conn = JDBC.getConnection()) {
+            String sql = "UPDATE librarian SET password_account = ? WHERE id_librarian = ?";
+            assert conn != null;
+            try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+              preparedStatement.setString(1, newPassword);
+              preparedStatement.setInt(2, BaseController.getLibId());
+              preparedStatement.executeUpdate();
+              succeedNotification();
+            }
+          }
+        } else {
+          errorNotification();
+        }
+      } catch (Exception e) {
+        System.err.println("Error saving password: " + e.getMessage());
+      }
+    } else {
+      System.out.println("Password save action was canceled by the user.");
+    }
+  }
+
+  private void succeedNotification() {
+    succeedPane.setVisible(true);
+    succeedPane.setOpacity(1.0);
+    if (fadeOutTimeline != null && fadeOutTimeline.getStatus() == Timeline.Status.RUNNING) {
+      fadeOutTimeline.stop();
+    }
+
+    fadeOutTimeline = new Timeline(
+        new KeyFrame(Duration.seconds(1),
+            new KeyValue(succeedPane.opacityProperty(), 1.0)
+        ),
+        new KeyFrame(Duration.seconds(2),
+            new KeyValue(succeedPane.opacityProperty(), 0)
+        )
+    );
+
+    fadeOutTimeline.setOnFinished(event -> {
+      succeedPane.setVisible(false);
+      fadeOutTimeline.stop();
+    });
+
+    fadeOutTimeline.play();
   }
 
   private void errorNotification() {
+    errorPane.setVisible(true);
+    errorPane.setOpacity(1.0);
+    if (fadeOutTimeline != null && fadeOutTimeline.getStatus() == Timeline.Status.RUNNING) {
+      fadeOutTimeline.stop();
+    }
 
+    fadeOutTimeline = new Timeline(
+        new KeyFrame(Duration.seconds(1),
+            new KeyValue(errorPane.opacityProperty(), 1.0)
+        ),
+        new KeyFrame(Duration.seconds(2),
+            new KeyValue(errorPane.opacityProperty(), 0)
+        )
+    );
+
+    fadeOutTimeline.setOnFinished(event -> {
+      errorPane.setVisible(false);
+      fadeOutTimeline.stop();
+    });
+
+    fadeOutTimeline.play();
+  }
+
+  private void loadAddress() {
+    List<String> addresses = new ArrayList<>();
+
+    try (Connection conn = JDBC.getConnection()) {
+      String sql = "SELECT name_address FROM address";
+      assert conn != null;
+      try (PreparedStatement preparedStatement = conn.prepareStatement(sql);
+          ResultSet resultSet = preparedStatement.executeQuery()) {
+
+        while (resultSet.next()) {
+          addresses.add(resultSet.getString("name_address"));
+        }
+      }
+    } catch (Exception e) {
+      System.err.println("Error loading addresses: " + e.getMessage());
+    }
+
+    promptAddress.getItems().clear();
+    promptAddress.getItems().addAll(addresses);
   }
 
   @FXML
