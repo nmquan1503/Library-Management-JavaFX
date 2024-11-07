@@ -10,8 +10,8 @@
 /* Style cho ComboBox với hiệu ứng lồi */
 /* Style cho ComboBox với hiệu ứng lồi */
 .combo-box {
-    -fx-background-color: #fff8e8; /* Màu nền */
-    -fx-border-color: #D1B588; /* Màu viền */
+    -fx-background-color: #f7ebf3; /* Màu nền */
+    -fx-border-color: #E464C0; /* Màu viền */
     -fx-border-width: 2px;
 
 
@@ -23,7 +23,7 @@
 }
 
 .combo-box:hover {
-    -fx-background-color: #F7F4E9; /* Thay đổi màu nền khi hover */
+    -fx-background-color: #f4f1f3; /* Thay đổi màu nền khi hover */
 }
 
 .combo-box .arrow-button {
@@ -71,8 +71,8 @@
     -fx-text-fill: white; /* Màu chữ trắng khi hover */
 }
 .label-sort{
-    -fx-background-color: #ebd9b4; /* Màu nền */
-    -fx-border-color: #D1B588; /* Màu viền */
+    -fx-background-color: #f9d0ee; /* Màu nền */
+    -fx-border-color: #E464C0; /* Màu viền */
     -fx-border-width: 2px;
     -fx-padding: 10px;
 
@@ -85,14 +85,15 @@
     -fx-font-size: 17px; /* Thay đổi kích thước chữ cho ComboBox */
 }
 .table-view {
-    -fx-border-color: #d5bf92; /* Màu viền của TableView */
-    -fx-border-width: 0.5px 0.5px 0px 0.5px;     /* Độ rộng viền để rõ ràng hơn */
+    -fx-border-color: #E464C0; /* Màu viền của TableView */
+    -fx-border-width: 0;    /* Độ rộng viền để rõ ràng hơn */
     -fx-background-insets: 0; /* Xóa insets để không còn khoảng trống */
      -fx-padding: 0; /* Xóa khoảng padding nếu có */
+
 }
 .table-view .column-header {
     -fx-pref-height: 50px;  /* Điều chỉnh chiều cao của header */
-    -fx-background-color: #ede1ca;
+    -fx-background-color: #f9d0ee;
     -fx-text-fill: black; /* Màu chữ */
     -fx-font-size: 17px;
     -fx-border-color: transparent; /* Màu viền giữa các ô */
@@ -102,9 +103,9 @@
 }
 
 .table-view .table-row-cell {
-    -fx-border-color: #d5bf92; /* Màu sắc vách ngăn giữa các cột */
+    -fx-border-color: #E464C0; /* Màu sắc vách ngăn giữa các cột */
     -fx-border-width: 0 0 0 0; /* Thêm vách ngăn bên phải */
-    -fx-background-color: #f6f1e7;
+    -fx-background-color: #f7ebf3;
 }
 .table-row-cell {
     -fx-cell-size: 55px; /* Điều chỉnh chiều cao dòng ở đây */
@@ -114,33 +115,33 @@
 
 .table-cell {
     -fx-alignment: CENTER; /* Tùy chỉnh canh giữa nội dung */
-    -fx-border-color: #d5bf92; /* Màu viền giữa các ô */
+    -fx-border-color: #E464C0; /* Màu viền giữa các ô */
     -fx-border-width: 0.5px;     /* Độ rộng viền để rõ ràng hơn */
     -fx-text-fill: #8e8e8e;
 }
 .table-view .column-header .label {
-    -fx-border-color: #d5bf92; /* Viền riêng cho header */
-     -fx-border-width: 0.5px;
+    -fx-border-width: 0.5px;
+    -fx-border-color: #E464C0;
 }
 
 .button-rightButton {
   -fx-shape: "M 350 200 A 50 50 0 1 1 350 400 A 50 50 0 1 1 350 200";
-  -fx-background-color: #ede8e0;
-  -fx-border-color: #d5bf92;
+  -fx-background-color: #f9d0ee;
+  -fx-border-color: #E464C0;
 }
 
 .button-rightButton:hover {
-  -fx-background-color: #eeeae6; /* Thay đổi màu nền khi hover */
+  -fx-background-color: #f9e1f2; /* Thay đổi màu nền khi hover */
 }
 
 .button-rightButton:pressed {
-  -fx-background-color: #d5d1cd; /* Thay đổi màu nền khi nhấn */
+  -fx-background-color: #bba0b4; /* Thay đổi màu nền khi nhấn */
 }
 
 .button-muonSach{
-    -fx-background-color: #ede8e0; /* Màu nền */
-    -fx-border-color: #D1B588; /* Màu viền */
-    -fx-border-width: 2px;
+    -fx-background-color: #f9d0ee; /* Màu nền */
+    -fx-border-color: #E464C0; /* Màu viền */
+    -fx-border-width: 1px;
       /* Tạo phần lồi ra bằng cách giả lập hai đoạn vuông góc ở trên và dưới */
       -fx-shape: "M 50 175 L 50 150 L 750 150 L 750 175 A 40 75 0 1 1 750 350 L 750 375 L 50 375 L 50 350 A 40 75 0 1 1 50 175 Z";
       /* Tạo hiệu ứng hai đoạn kéo vuông góc */
@@ -148,8 +149,8 @@
       -fx-font-size: 17px; /* Thay đổi kích thước chữ cho ComboBox */
 }
 .button-muonSach:hover {
-  -fx-background-color: #eeeae6; /* Thay đổi màu nền khi hover */
+  -fx-background-color: #f9e1f2; /* Thay đổi màu nền khi hover */
 }
 .button-muonSach:pressed {
-  -fx-background-color: #d5d1cd; /* Thay đổi màu nền khi hover */
+  -fx-background-color: #bba0b4; /* Thay đổi màu nền khi hover */
 }

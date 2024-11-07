@@ -11,7 +11,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import javafx.animation.PauseTransition;
@@ -23,10 +23,15 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import javafx.collections.ObservableListBase;
 import javafx.fxml.FXML;
 
 import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 
 import javafx.scene.control.DatePicker;
@@ -38,6 +43,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -45,21 +53,26 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import javafx.util.StringConverter;
 import org.example.demo.CustomUI.SuggestionView;
 import org.example.demo.Database.JDBC;
 import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.BookShelf.Book;
 import org.example.demo.Models.BookShelf.BookShelf;
+import org.example.demo.Models.Borrowing.BorrowHistory;
+import org.example.demo.Models.Borrowing.Borrowing;
 import org.example.demo.Models.Library;
 import org.example.demo.Models.Suggestion.Suggestion;
 import org.example.demo.Models.Trie.Trie;
 import org.example.demo.Models.Users.User;
 import org.example.demo.Models.Users.UserList;
+import org.example.demo.Models.Users.Date;
+import javafx.scene.layout.HBox;
 
 
 public class BorrowBookController implements MainInfo {
 
-    private ObservableList<TableData> dataList;
+    private ObservableList<TableData> dataList = FXCollections.observableArrayList();
     private int pageNow;
 
     @FXML
@@ -106,8 +119,6 @@ public class BorrowBookController implements MainInfo {
 
     @FXML
     private TextField userSearchBox;
-
-    private Trie userNameTrie;
 
     @FXML
     private TextField userIdBox;
@@ -166,7 +177,51 @@ public class BorrowBookController implements MainInfo {
     private Label QuantityLeftLabel;
 
     @FXML
-    public void rightController() {
+    private Button searchButton1;
+
+    @FXML
+    private Button CancelButton;
+
+    @FXML
+    private Button CreateButton;
+
+    @FXML
+    private VBox alert;
+
+    @FXML
+    private Label confirmTitle;
+
+    @FXML
+    private Label confirmMessage;
+
+    @FXML
+    private Button confirmButton;
+
+    @FXML
+    private Button declineButton;
+
+    @FXML
+    private Button closeButton;
+
+    private User npc;
+
+    private Book book;
+
+    @FXML
+    private Pane successPane;
+
+    @FXML
+    private ImageView gifView;
+
+    @FXML
+    private Button backButton;
+
+    @FXML
+    private ObservableList<SuggestionView> suggestions;
+    private ObservableList<SuggestionView> suggestions1;
+
+    @FXML
+    private void rightController() {
         pageNow++;
         left.setDisable(false);
         pageNumber.setText(String.valueOf(pageNow));
@@ -182,7 +237,7 @@ public class BorrowBookController implements MainInfo {
     }
 
     @FXML
-    public void leftController() {
+    private void leftController() {
         pageNow--;
         pageNumber.setText(String.valueOf(pageNow));
         right.setDisable(false);
@@ -196,68 +251,87 @@ public class BorrowBookController implements MainInfo {
                 FXCollections.observableArrayList(dataList.subList(5 * (pageNow - 1), x)));
     }
 
-    private ObservableList<SuggestionView> suggestions;
-    private ObservableList<SuggestionView> suggestions1;
-
     @FXML
-    public void muonSachController() {
+    private void muonSachController() {
         secondPane.setDisable(false);
         secondPane.setVisible(true);
         mainPane.setVisible(false);
         mainPane.setDisable(true);
     }
 
-    public void addBox() {
+    private void addBox() {
         sortBox.getItems().addAll(
-                "Hành Động Mượn Sách",
-                "Hành Động Trả Sách",
+                "Sách Chưa Trả",
+                "Sách Đã Trả",
                 "Toàn Bộ Lịch Sử"
         );
-        sortBox.setValue("Hành Động Mượn Sách");
+        sortBox.setValue("Sách Chưa Trả");
+    }
+
+    private void resetUserSearch() {
+        userIdBox.setText("");
+        userSearchBox.setText(""); // Đặt giá trị của TextField thành gợi ý đã chọn
+        BirthdayLabel.setText("");
+        PhoneLabel.setText("");
+        EmailLabel.setText("");
+        AddressLabel.setText("");
+        isBanLabel.setText("");
+    }
+
+    private void resetBookSearch() {
+        bookIdBox.setText("");
+        bookSearchBox.setText("");
+        PublishedDateLabel.setText("");
+        BorrowedDateLabel.setText("");
+        DueDatePicker.setValue(null);
+        QuantityLeftLabel.setText("");
+        PublisherLabel.setText("");
+    }
+
+    private void createErrorText(String content) {
+        if ( wrongNotification.isVisible() ) return;
+        wrongNotification.setVisible(true);
+        ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(0.2),
+                wrongNotification);
+        wrongNotification.setText(content);
+        scaleTransition.setFromX(0);  // Bắt đầu từ kích thước 0 (nhỏ tí)
+        scaleTransition.setFromY(0);
+        scaleTransition.setToX(1);    // Kết thúc ở kích thước gốc
+        scaleTransition.setToY(1);
+        PauseTransition pause1 = new PauseTransition(Duration.seconds(1.5));
+        ScaleTransition scaleDown = new ScaleTransition(Duration.seconds(0.2),
+                wrongNotification);
+        scaleDown.setFromX(1);  // Bắt đầu từ kích thước gốc
+        scaleDown.setFromY(1);
+        scaleDown.setToX(0);    // Thu nhỏ lại về kích thước 0
+        scaleDown.setToY(0);
+
+        // Tạo SequentialTransition để nối hai animation lại với nhau
+        SequentialTransition sequentialTransition = new SequentialTransition(scaleTransition,
+                pause1, scaleDown);
+        sequentialTransition.setOnFinished(event -> wrongNotification.setVisible(false));
+        sequentialTransition.play();
     }
 
     @FXML
-    public void searchButtonController() {
+    private void searchButtonController() {
 
         String s = userIdBox.getText();
+        if (s.isEmpty()) return;
         int x = Integer.parseInt(s);
-        User npc = userList.getUser(x);
+        npc = userList.getUser(x);
         if (npc == null) {
             if ( wrongNotification.isVisible() ) {
                 return;
             }
-            wrongNotification.setVisible(true);
-            ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(0.2),
-                    wrongNotification);
-            scaleTransition.setFromX(0);  // Bắt đầu từ kích thước 0 (nhỏ tí)
-            scaleTransition.setFromY(0);
-            scaleTransition.setToX(1);    // Kết thúc ở kích thước gốc
-            scaleTransition.setToY(1);
-            PauseTransition pause1 = new PauseTransition(Duration.seconds(2.0));
-            ScaleTransition scaleDown = new ScaleTransition(Duration.seconds(0.2),
-                    wrongNotification);
-            scaleDown.setFromX(1);  // Bắt đầu từ kích thước gốc
-            scaleDown.setFromY(1);
-            scaleDown.setToX(0);    // Thu nhỏ lại về kích thước 0
-            scaleDown.setToY(0);
-
-            // Tạo SequentialTransition để nối hai animation lại với nhau
-            SequentialTransition sequentialTransition = new SequentialTransition(scaleTransition,
-                    pause1, scaleDown);
-            sequentialTransition.setOnFinished(event -> wrongNotification.setVisible(false));
-            sequentialTransition.play();
-            userSearchBox.setText(""); // Đặt giá trị của TextField thành gợi ý đã chọn
-            BirthdayLabel.setText("");
-            PhoneLabel.setText("");
-            EmailLabel.setText("");
-            AddressLabel.setText("");
-            isBanLabel.setText("");
+            createErrorText("User ID không tồn tại !!!");
+            resetUserSearch();
 
         } else {
             userSearchBox.setText(npc.getName()); // Đặt giá trị của TextField thành gợi ý đã chọn
 
             userIdBox.setText(String.valueOf(x));
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
             String dateString = formatter.format(npc.getBirthday());
             BirthdayLabel.setText(dateString);
 
@@ -273,9 +347,221 @@ public class BorrowBookController implements MainInfo {
     }
 
     @FXML
-    public void initialize() {
+    private void searchButtonController1() {
+        String s = bookIdBox.getText();
+        if ( s.isEmpty() ) return;
+        int x = Integer.parseInt(s);
+        book = bookList.getBook(x);
+        if (book == null) {
+            if ( wrongNotification.isVisible() ) {
+                return;
+            }
+            createErrorText("Book ID không tồn tại !!!");
+            resetBookSearch();
+
+        } else {
+            bookSearchBox.setText(book.getTitle()); // Đặt giá trị của TextField thành gợi ý đã chọn
+
+            //userIdBox.setText(String.valueOf(x));
+            Date today = new Date(new java.sql.Date(System.currentTimeMillis()));
+
+            BorrowedDateLabel.setText(today.toString());
+            LocalDate localDatePlus10Days = today.add(10).toLocalDate();
+            DueDatePicker.setValue(localDatePlus10Days);
+            QuantityLeftLabel.setText(""+book.getQuantity()+ " quyển" );
+            PublisherLabel.setText(book.getPublisher());
+            PublishedDateLabel.setText(""+book.getPublishedDate());
+        }
+    }
+
+    @FXML
+    private void CancelAction() {
+        alert.setVisible(true);
+        ColorAdjust darkenEffect = new ColorAdjust();
+        darkenEffect.setBrightness(-0.4);
+        secondPane.setEffect(darkenEffect);
+        secondPane.getChildren().forEach(node -> {
+            node.setDisable(true);
+
+        });
+        alert.setDisable(false);
+
+        confirmTitle.setText("Hủy Yêu Cầu Mượn Sách");
+        confirmMessage.setText("Xác Nhận Hủy Chứ?");
+        confirmButton.setText("YES");
+        declineButton.setText("Cancel");
+        closeButton.setVisible(true);
+        closeButton.setDisable(false);
+    }
+
+    @FXML
+    private void DeclineButtonAction() {
+        secondPane.getChildren().forEach(node -> {
+            node.setDisable(false);
+        });
+        secondPane.setEffect(null);
+        alert.setVisible(false);
+        alert.setDisable(true);
+        closeButton.setVisible(false);
+        closeButton.setDisable(true);
+    }
+
+    @FXML
+    private void confirmButtonAction() {
+        if ( declineButton.getText().equals("Cancel")) {
+            secondPane.setDisable(true);
+            secondPane.setVisible(false);
+            mainPane.setVisible(true);
+            mainPane.setDisable(false);
+            successPane.setDisable(true);
+            successPane.setVisible(false);
+            resetUserSearch();
+            resetBookSearch();
+            DeclineButtonAction();
+        }
+        else {
+            Date today = new Date(new java.sql.Date(System.currentTimeMillis()));
+            LocalDate localDate = today.toLocalDate();
+            if ( npc == null ) {
+                createErrorText("Thiếu thông tin người mượn!!!");
+            }
+            else if ( book == null ) {
+                createErrorText("Thiếu thông tin sách!!!");
+            }
+            else if ( Integer.parseInt(userIdBox.getText()) != npc.getId() || !userSearchBox.getText().equals(npc.getName())) {
+                createErrorText("Thông tin người mượn không chính xác!!!");
+            }
+            else if ( Integer.parseInt(bookIdBox.getText()) != book.getId() || !bookSearchBox.getText().equals(book.getTitle())) {
+                createErrorText("Thông tin sách không chính xác!!!");
+            }
+            else if ( isBanLabel.getText().equals("Yes") ) {
+                createErrorText("Người mượn đang bị cấm!!!");
+            }
+            else if ( book.getQuantity() == 0 ) {
+                createErrorText("Số lượng sách không đủ!!!");
+            }
+            else if ( DueDatePicker.getValue().isBefore(localDate) ) {
+                createErrorText("Ngày trả không được sớm hơn ngày mượn!!!");
+            }
+            else {
+                successPane.setDisable(false);
+                successPane.setVisible(true);
+                alert.setVisible(false);
+                alert.setDisable(true);
+                closeButton.setDisable(true);
+                closeButton.setVisible(false);
+                gifView.setVisible(true);
+                backButton.setDisable(true);
+                backButton.setStyle("-fx-background-color: #d5e6f9;");
+                gifView.setImage(new Image(getClass().getResource("/images/success.gif").toExternalForm()));
+                PauseTransition delay = new PauseTransition(Duration.seconds(2)); // Thời gian delay bằng với thời lượng GIF
+                delay.setOnFinished(e -> {
+                    backButton.setDisable(false);
+                    gifView.setImage(new Image(getClass().getResource("/images/sucessimage.png").toExternalForm()));
+                    backButton.setStyle("-fx-background-color: #4899f7;-fx-font-size:13px;");
+
+                });
+                delay.play();
+
+
+            }
+
+            DeclineButtonAction();
+
+        }
+    }
+
+    @FXML
+    private void backButtonAction() {
+        Date today = new Date(new java.sql.Date(System.currentTimeMillis()));
+        LocalDate x = DueDatePicker.getValue();
+        Date due = new Date(x.getYear(),x.getMonthValue(),x.getDayOfMonth());
+        Library.getInstance().borrowBook(book,npc,today,due);
+        updateHistory(""+sortBox.getValue());
+        secondPane.setDisable(true);
+        secondPane.setVisible(false);
+        mainPane.setVisible(true);
+        mainPane.setDisable(false);
+        successPane.setVisible(false);
+        successPane.setDisable(true);
+        resetUserSearch();
+        resetBookSearch();
+    }
+
+    @FXML
+    private void CreateAction() {
+        alert.setVisible(true);
+        ColorAdjust darkenEffect = new ColorAdjust();
+        darkenEffect.setBrightness(-0.4);
+        secondPane.setEffect(darkenEffect);
+        secondPane.getChildren().forEach(node -> {
+            node.setDisable(true);
+        });
+        alert.setDisable(false);
+
+        confirmTitle.setText("Thêm Yêu Cầu Mượn Sách");
+        confirmMessage.setText("Xác Nhận Thêm Chứ?");
+        confirmButton.setText("YES");
+        declineButton.setText("NO");
+        closeButton.setVisible(true);
+        closeButton.setDisable(false);
+    }
+
+    private void updateHistory(String type) {
+
+        while ( pageNow > 1 ) {
+            leftController();
+        }
+        dataList.clear();
+        ArrayList<Borrowing> allBorrowing;
+        if ( type.equals("Toàn Bộ Lịch Sử") ) allBorrowing= Library.getInstance().getAllHistory();
+        else if ( type.equals("Sách Chưa Trả") ) allBorrowing = Library.getInstance().getAllBorrowing();
+        else allBorrowing=Library.getInstance().getAllReturning();
+        for ( Borrowing x : allBorrowing) {
+            String action = "";
+            if ( x.getReturnedDate() == null ) action = "Mượn";
+            else action = "Trả";
+            String user = userList.getUser(x.getIdUser()).getName();
+            String nameBook = bookList.getBook(x.getIdBook()).getTitle();
+            LocalDate now ;
+            if (x.getReturnedDate() == null ) now= x.getBorrowedDate().toLocalDate();
+            else now = x.getReturnedDate().toLocalDate();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            String Today = now.format(formatter);
+            dataList.add(new TableData(action,user,nameBook,Today));
+        }
+
+        for (TableData x : dataList) {
+            String s = x.getBook();
+            if (s.length() >= 20) {
+                String t = "";
+                boolean check = false;
+                for (int i = 0; i < s.length(); i++) {
+                    t = t + s.charAt(i);
+                    if (i >= 20 && s.charAt(i) == ' ' && check == false) {
+                        check = true;
+                        t = t + "\n";
+                    }
+                }
+                x.setBook(t);
+            }
+        }
+        if ( dataList.size() > pageNow*5 ) right.setDisable(false);
+        int x = Math.min(dataList.size(),pageNow*5);
+        tableView.setItems(
+                FXCollections.observableArrayList(dataList.subList(5 * (pageNow - 1), x)));
+        if ( dataList.size() > 5 ) right.setDisable(false);
+        else right.setDisable(true);
+    }
+
+    @FXML
+    private void initialize() {
         addBox();
         setupTooltip();
+        alert.setVisible(false);
+        alert.setDisable(true);
+        closeButton.setVisible(false);
+        closeButton.setDisable(true);
         userList = new UserList();
         bookList = new BookShelf();
         suggestionUser.setMinHeight(0);
@@ -286,6 +572,33 @@ public class BorrowBookController implements MainInfo {
         suggestions1 = FXCollections.observableArrayList();
         suggestionUser.setItems(suggestions);
         suggestionBook.setItems(suggestions1);
+        successPane.setVisible(false);
+        successPane.setDisable(true);
+
+        sortBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            updateHistory(""+newValue);
+            // Xử lý logic khi giá trị thay đổi
+        });
+
+        DueDatePicker.setConverter(new StringConverter<LocalDate>() {
+            String pattern = "dd/MM/yyyy";
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
+            @Override public String toString(LocalDate date) {
+                if (date != null) {
+                    return dateFormatter.format(date);
+                } else {
+                    return "";
+                }
+            }
+            @Override public LocalDate fromString(String string) {
+                if (string != null && !string.isEmpty()) {
+                    return LocalDate.parse(string, dateFormatter);
+                } else {
+                    return null;
+                }
+            }
+        });
+
         userSearchBox.focusedProperty().addListener( new ChangeListener<Boolean>() {
 
             @Override
@@ -343,15 +656,15 @@ public class BorrowBookController implements MainInfo {
                                 newValue.getContent()); // Đặt giá trị của TextField thành gợi ý đã chọn
 
                         userIdBox.setText(String.valueOf(newValue.getID()));
-                        User x = userList.getUser(newValue.getID());
+                        npc = userList.getUser(newValue.getID());
                         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-                        String dateString = formatter.format(x.getBirthday());
+                        String dateString = formatter.format(npc.getBirthday());
                         BirthdayLabel.setText(dateString);
 
-                        PhoneLabel.setText(x.getPhoneNumber());
-                        EmailLabel.setText(x.getEmail());
-                        AddressLabel.setText(x.getAddress());
-                        if (!x.isBan()) {
+                        PhoneLabel.setText(npc.getPhoneNumber());
+                        EmailLabel.setText(npc.getEmail());
+                        AddressLabel.setText(npc.getAddress());
+                        if (!npc.isBan()) {
                             isBanLabel.setText("No");
                         } else {
                             isBanLabel.setText("Yes");
@@ -378,19 +691,18 @@ public class BorrowBookController implements MainInfo {
                                 newValue.getContent()); // Đặt giá trị của TextField thành gợi ý đã chọn
 
                         bookIdBox.setText(String.valueOf(newValue.getID()));
-                        Book x = bookList.getBook(newValue.getID());
+                        book = bookList.getBook(newValue.getID());
                         bookSearchBox.positionCaret(bookSearchBox.getText().length());
-                        PublisherLabel.setText(x.getPublisher());
-                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-                        String dateString = formatter.format(x.getPublishedDate());
-                        PublishedDateLabel.setText(dateString);
-                        Date today = new Date(System.currentTimeMillis());
-                        dateString = formatter.format(today);
-                        BorrowedDateLabel.setText(dateString);
-                        Date datePlus10Days = new Date(today.getTime() + 10L * 24 * 60 * 60 * 1000);
-                        LocalDate localDatePlus10Days = datePlus10Days.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        PublisherLabel.setText(book.getPublisher());
+
+                        PublishedDateLabel.setText(""+book.getPublishedDate());
+                        Date today = new Date(new java.sql.Date(System.currentTimeMillis()));
+
+                        BorrowedDateLabel.setText(today.toString());
+
+                        LocalDate localDatePlus10Days = today.add(10).toLocalDate();
                         DueDatePicker.setValue(localDatePlus10Days);
-                        QuantityLeftLabel.setText(""+x.getQuantity());
+                        QuantityLeftLabel.setText(""+book.getQuantity()+" quyển");
 
                         CreateBookSuggestions();
                         suggestionBook.getItems().clear();
@@ -409,39 +721,9 @@ public class BorrowBookController implements MainInfo {
         tableView.setSelectionModel(null);
         pageNow = 1;
         left.setDisable(true);
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String Today = now.format(formatter);
-        dataList = FXCollections.observableArrayList(
-                new TableData("Mượn", "THAO", "Harry Potter và Phòng Chứa Bí Mật", Today),
-                new TableData("Trả", "THAO", "Harry Potter và Bảo Bối Tử Thần", Today),
-                new TableData("Mượn", "THAO", "Harry Potter và tên tù nhân ngục Azkaban", Today),
-                new TableData("Mượn", "THAO", "Harry Potter Va Bao Boi Tu Than", Today),
-                new TableData("Mượn", "THAO", "Harry Potter và bảo bối tử thần", Today),
-                new TableData("Trả", "THAO", "Harry Potter và phòng chứa bí mật", Today),
-                new TableData("Mượn", "THAO", "Harry Potter & hội phượng hoàng", Today),
-                new TableData("Mượn", "THAO", "Harry Potter and the Deathly Hallows", Today),
-                new TableData("Mượn", "THAO", "Harry Potter and the Chamber of Secrets", Today),
-                new TableData("Trả", "THAO", "\u200Fهيرى پوٹر اور رازوں کا کمره :\u200F", Today),
-                new TableData("Trả", "THAO", "Marsupilami", Today),
-                new TableData("Mượn", "THAO", "Doraemon", Today)
+        updateHistory(""+sortBox.getValue());
 
-        );
-        for (TableData x : dataList) {
-            String s = x.getBook();
-            if (s.length() >= 20) {
-                String t = "";
-                boolean check = false;
-                for (int i = 0; i < s.length(); i++) {
-                    t = t + s.charAt(i);
-                    if (i >= 20 && s.charAt(i) == ' ' && check == false) {
-                        check = true;
-                        t = t + "\n";
-                    }
-                }
-                x.setBook(t);
-            }
-        }
+
         if (dataList.size() <= 5) {
             right.setDisable(true);
         }
@@ -475,9 +757,30 @@ public class BorrowBookController implements MainInfo {
                 }
             };
         });
+        userColumn.setCellFactory(tc -> {
+            return new javafx.scene.control.TableCell<TableData, String>() {
+                private final Text text = new Text();
 
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setGraphic(null);
+                    } else {
+                        text.setText(item);
+                        text.wrappingWidthProperty()
+                                .bind(getTableColumn().widthProperty()); // Đặt wrappingWidth để tự động xuống dòng
+                        text.setStyle(
+                                "-fx-font-family: 'HYWenHei-85W'; -fx-fill: #8e8e8e;-fx-font-size: 17px;");
+                        text.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+                        setAlignment(javafx.geometry.Pos.CENTER); // Căn giữa nội dung trong ô
+                        setGraphic(text);
+                    }
+                }
+            };
+        });
         tableView.setPrefHeight(5 * 55 + 51);
-        tableView.setItems(FXCollections.observableArrayList(dataList.subList(0, 5)));
+        tableView.setItems(FXCollections.observableArrayList(dataList.subList(0, Math.min(5,dataList.size()))));
 
     }
 
@@ -581,6 +884,7 @@ public class BorrowBookController implements MainInfo {
 
         // Gắn Tooltip vào FontAwesomeIconView searchIcon
         Tooltip.install(searchButton, tooltip);
+        Tooltip.install(searchButton1, tooltip);
     }
 
     @Override

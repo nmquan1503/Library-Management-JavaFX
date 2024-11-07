@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXListView?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Button?>
@@ -12,15 +13,17 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane id="BackgroundPane" layoutX="60.0" layoutY="60.0" prefHeight="540.0" prefWidth="900.0" stylesheets="@../CSS/Base.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo.Controllers.BorrowBookController">
 
   <AnchorPane id="mainPane" fx:id="mainPane" prefHeight="540.0" prefWidth="900.0" stylesheets="@../CSS/BorrowBook.css">
     <children>
-      <Label alignment="CENTER" layoutX="55.0" layoutY="57.0" prefHeight="18.0" prefWidth="216.0" styleClass="label-sort" text="Loại Sắp Xếp" />
+      <Label alignment="CENTER" layoutX="55.0" layoutY="57.0" prefHeight="18.0" prefWidth="216.0" styleClass="label-sort" text="Sắp Xếp Theo" />
       <Label layoutX="93.0" layoutY="7.0" prefHeight="34.0" prefWidth="241.0" text="Lịch Sử Mượn Sách" textFill="#584f58">
         <font>
           <Font name="HYWenHei 85W" size="22.0" />
@@ -33,17 +36,6 @@
       </ImageView>
       <ComboBox fx:id="sortBox" layoutX="257.0" layoutY="57.0" prefHeight="48.0" prefWidth="559.0" promptText="Sách Chưa Trả" styleClass="custom-combo-box" stylesheets="@../CSS/BorrowBook.css" />
       <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="459.0" layoutY="172.0" pickOnBounds="true" preserveRatio="true" />
-      <TableView fx:id="tableView" layoutX="51.0" layoutY="122.0" prefHeight="348.0" prefWidth="774.0">
-        <columns>
-          <TableColumn fx:id="typeColumn" editable="false" prefWidth="119.20001220703125" resizable="false" sortable="false" text="Hành Động" />
-          <TableColumn fx:id="userColumn" editable="false" prefWidth="175.2000274658203" resizable="false" sortable="false" text="User" />
-          <TableColumn fx:id="bookColumn" editable="false" prefWidth="271.20001220703125" resizable="false" sortable="false" text="Book" />
-          <TableColumn fx:id="timeColumn" editable="false" prefWidth="211.20001220703125" resizable="false" sortable="false" text="Thời Gian" />
-        </columns>
-        <columnResizePolicy>
-          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-        </columnResizePolicy>
-      </TableView>
       <Label fx:id="pageNumber" alignment="CENTER" layoutX="350.0" layoutY="488.0" prefHeight="31.0" prefWidth="132.0" text="1">
         <font>
           <Font size="21.0" />
@@ -68,41 +60,55 @@
         </graphic>
       </Button>
       <Button layoutX="55.0" layoutY="485.0" mnemonicParsing="false" onAction="#muonSachController" prefHeight="40.0" prefWidth="155.0" styleClass="button-muonSach" text="Tạo Yêu Cầu" />
+      <TableView fx:id="tableView" layoutX="51.0" layoutY="122.0" prefHeight="327.0" prefWidth="774.0">
+        <columns>
+          <TableColumn fx:id="typeColumn" editable="false" prefWidth="119.20001220703125" resizable="false" sortable="false" text="Hành Động" />
+          <TableColumn fx:id="userColumn" editable="false" prefWidth="195.2000274658203" resizable="false" sortable="false" text="User" />
+          <TableColumn fx:id="bookColumn" editable="false" prefWidth="280.0" resizable="false" sortable="false" text="Book" />
+          <TableColumn fx:id="timeColumn" editable="false" prefWidth="185.60003662109375" resizable="false" sortable="false" text="Thời Gian" />
+        </columns>
+            <columnResizePolicy>
+               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+      </TableView>
+         <Line endX="40.39996337890625" endY="327.0" layoutX="785.0" layoutY="121.0" startX="40.39996337890625" startY="0.9999847412109375" stroke="#e464c0" />
     </children>
   </AnchorPane>
-  <AnchorPane fx:id="secondPane" prefHeight="540.0" prefWidth="900.0" styleClass="Anchor-Pane-mainPane" stylesheets="@../CSS/BorrowBookProcessing.css">
+  <AnchorPane fx:id="secondPane" disable="true" prefHeight="540.0" prefWidth="900.0" styleClass="Anchor-Pane-mainPane" stylesheets="@../CSS/BorrowBookProcessing.css" visible="false">
     <children>
-      <Button layoutX="699.0" layoutY="489.0" mnemonicParsing="false" text="test" />
+      <Button id="CreateButton" fx:id="CreateButton" layoutX="450.0" layoutY="460.0" mnemonicParsing="false" onAction="#CreateAction" prefHeight="40.0" prefWidth="146.0" text="Tạo" />
       <ImageView fitHeight="44.0" fitWidth="41.0" layoutX="42.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
         <image>
           <Image url="@../../../../images/Screenshot_2024-10-19_143451-removebg-preview.png" />
         </image>
       </ImageView>
-         <Label id="InstanceLabel" alignment="CENTER" layoutX="29.0" layoutY="176.0" prefHeight="48.0" prefWidth="132.0" text="Birthday" textFill="#bc1818" />
-         <Label id="InstanceLabel1" fx:id="BirthdayLabel" layoutX="155.0" layoutY="176.0" prefHeight="48.0" prefWidth="206.0" />
-         <Label id="InstanceLabel" alignment="CENTER" layoutX="29.0" layoutY="222.0" prefHeight="48.0" prefWidth="132.0" text="Phone Number" textFill="#bc1818" />
-         <Label id="InstanceLabel1" fx:id="PhoneLabel" layoutX="155.0" layoutY="222.0" prefHeight="48.0" prefWidth="206.0" />
-         <Label id="InstanceLabel" alignment="CENTER" layoutX="29.0" layoutY="268.0" prefHeight="48.0" prefWidth="132.0" text="Email" textFill="#bc1818" />
-         <Label id="InstanceLabel1" fx:id="EmailLabel" layoutX="155.0" layoutY="268.0" prefHeight="48.0" prefWidth="206.0" />
-         <Label id="InstanceLabel" alignment="CENTER" layoutX="29.0" layoutY="314.0" prefHeight="48.0" prefWidth="132.0" text="Address" textFill="#bc1818" />
-         <Label id="InstanceLabel1" fx:id="AddressLabel" layoutX="155.0" layoutY="314.0" prefHeight="48.0" prefWidth="206.0" />
-         <Label id="InstanceLabel" alignment="CENTER" layoutX="29.0" layoutY="360.0" prefHeight="48.0" prefWidth="132.0" text="Is Banned?" textFill="#bc1818" />
-         <Label id="InstanceLabel1" fx:id="isBanLabel" layoutX="155.0" layoutY="360.0" prefHeight="48.0" prefWidth="206.0" />
-         <Label id="InstanceLabel" alignment="CENTER" layoutX="442.0" layoutY="360.0" prefHeight="48.0" prefWidth="132.0" text="Quantity Left" textFill="#bc1818" />
-         <Label id="InstanceLabel" alignment="CENTER" layoutX="442.0" layoutY="176.0" prefHeight="48.0" prefWidth="132.0" text="Publisher" textFill="#bc1818" />
-         <Label id="InstanceLabel1" fx:id="PublisherLabel" layoutX="569.0" layoutY="176.0" prefHeight="48.0" prefWidth="290.0" />
-         <Label id="InstanceLabel" alignment="CENTER" layoutX="442.0" layoutY="268.0" prefHeight="48.0" prefWidth="132.0" text="Borrowed Date" textFill="#bc1818" />
-         <Label id="InstanceLabel1" fx:id="BorrowedDateLabel" layoutX="569.0" layoutY="268.0" prefHeight="48.0" prefWidth="290.0" />
-         <Label id="InstanceLabel" alignment="CENTER" layoutX="442.0" layoutY="314.0" prefHeight="48.0" prefWidth="132.0" text="Due Date" textFill="#bc1818" />
-         <Label id="InstanceLabel" alignment="CENTER" layoutX="442.0" layoutY="222.0" prefHeight="48.0" prefWidth="132.0" text="Published Date" textFill="#bc1818" />
+         <Pane id="pinkPane" layoutX="441.0" layoutY="175.0" prefHeight="234.0" prefWidth="419.0" />
+         <Label id="Label4" alignment="CENTER" layoutX="29.0" layoutY="176.0" prefHeight="48.0" prefWidth="127.0" text="Sinh Nhật" textFill="#bc1818" />
+         <Label id="Label3" fx:id="BirthdayLabel" layoutX="155.0" layoutY="176.0" prefHeight="48.0" prefWidth="250.0" />
+         <Label id="InstanceLabel" alignment="CENTER" layoutX="29.0" layoutY="222.0" prefHeight="48.0" prefWidth="129.0" text="Số điện thoại" textFill="#bc1818" />
+         <Label id="InstanceLabel1" fx:id="PhoneLabel" layoutX="155.0" layoutY="222.0" prefHeight="48.0" prefWidth="250.0" />
+         <Label id="InstanceLabel" alignment="CENTER" layoutX="29.0" layoutY="268.0" prefHeight="48.0" prefWidth="127.0" text="Email" textFill="#bc1818" />
+         <Label id="InstanceLabel1" fx:id="EmailLabel" layoutX="155.0" layoutY="268.0" prefHeight="48.0" prefWidth="250.0" />
+         <Label id="InstanceLabel" alignment="CENTER" layoutX="29.0" layoutY="314.0" prefHeight="48.0" prefWidth="127.0" text="Địa Chỉ" textFill="#bc1818" />
+         <Label id="InstanceLabel1" fx:id="AddressLabel" layoutX="155.0" layoutY="314.0" prefHeight="48.0" prefWidth="250.0" />
+         <Label id="Label5" alignment="CENTER" layoutX="29.0" layoutY="360.0" prefHeight="48.0" prefWidth="127.0" text="Bị Cấm?" textFill="#bc1818" />
+         <Label id="Label6" fx:id="isBanLabel" layoutX="155.0" layoutY="360.0" prefHeight="48.0" prefWidth="250.0" />
+         <Label id="Label4" alignment="CENTER" layoutX="442.0" layoutY="176.0" prefHeight="48.0" prefWidth="128.0" text="Nhà Xuất Bản" textFill="#bc1818" />
+         <Label id="Label3" fx:id="PublisherLabel" layoutX="569.0" layoutY="176.0" prefHeight="48.0" prefWidth="290.0" />
+         <Label id="InstanceLabel" alignment="CENTER" layoutX="442.0" layoutY="222.0" prefHeight="48.0" prefWidth="130.0" text="Ngày Xuất Bản" textFill="#bc1818" />
+         <Label id="InstanceLabel" alignment="CENTER" layoutX="442.0" layoutY="268.0" prefHeight="48.0" prefWidth="132.0" text="Ngày Mượn" textFill="#bc1818" />
+         <Label id="InstanceLabel" alignment="CENTER" layoutX="442.0" layoutY="314.0" prefHeight="48.0" prefWidth="128.0" text="Hạn Trả" textFill="#bc1818" />
          <Label id="InstanceLabel1" fx:id="PublishedDateLabel" layoutX="569.0" layoutY="222.0" prefHeight="48.0" prefWidth="290.0" />
+         <Label id="InstanceLabel1" fx:id="BorrowedDateLabel" layoutX="569.0" layoutY="268.0" prefHeight="48.0" prefWidth="290.0" />
          <DatePicker fx:id="DueDatePicker" layoutX="569.0" layoutY="314.0" prefHeight="48.0" prefWidth="290.0" />
-         <Label id="InstanceLabel1" fx:id="QuantityLeftLabel" layoutX="569.0" layoutY="361.0" prefHeight="47.0" prefWidth="291.0" />
-         <Pane id="SearchBar1" layoutX="29.0" layoutY="71.0" prefHeight="40.0" prefWidth="331.0">
+         <Label id="Label5" alignment="CENTER" layoutX="442.0" layoutY="360.0" prefHeight="48.0" prefWidth="128.0" text="Còn Lại" textFill="#bc1818" />
+         <Label id="Label6" fx:id="QuantityLeftLabel" layoutX="569.0" layoutY="360.0" prefHeight="48.0" prefWidth="290.0" />
+         <Pane id="pinkPane" layoutX="29.0" layoutY="176.0" prefHeight="232.0" prefWidth="377.0" />
+         <Pane id="SearchBar1" layoutX="29.0" layoutY="71.0" prefHeight="40.0" prefWidth="277.0">
             <children>
           <VBox id="Basic" layoutX="8.0" layoutY="3.0" prefHeight="35.0" prefWidth="93.0">
             <children>
-              <TextField id="SearchText" fx:id="userIdBox" prefHeight="35.0" prefWidth="99.0" promptText="User ID" />
+              <TextField id="SearchText" fx:id="userIdBox" prefHeight="35.0" prefWidth="99.0" promptText="ID Người" />
             </children>
           </VBox>
             </children>
@@ -112,11 +118,11 @@
           <Font size="22.0" />
         </font>
       </Label>
-      <Pane id="SearchBar" fx:id="Pane1" layoutX="159.0" layoutY="71.0" prefHeight="40.0" prefWidth="206.0">
+      <Pane id="SearchBar" fx:id="Pane1" layoutX="159.0" layoutY="71.0" prefHeight="40.0" prefWidth="247.0">
         <children>
-          <VBox id="Basic" fx:id="VBox1" layoutX="-1.0" layoutY="3.0" prefHeight="35.0" prefWidth="208.0">
+          <VBox id="Basic" fx:id="VBox1" layoutX="-1.0" layoutY="3.0" prefHeight="35.0" prefWidth="248.0">
             <children>
-              <TextField id="SearchText" fx:id="userSearchBox" prefHeight="34.0" prefWidth="306.0" promptText="User Name" />
+              <TextField id="SearchText" fx:id="userSearchBox" prefHeight="34.0" prefWidth="240.0" promptText="Tên Người Dùng" />
               <JFXListView id="ListView" fx:id="suggestionUser" prefHeight="0.0" prefWidth="208.0" />
             </children>
           </VBox>
@@ -127,11 +133,11 @@
                <FontAwesomeIconView glyphName="SEARCH" />
             </graphic>
          </Button>
-         <Pane id="SearchBar1" layoutX="443.0" layoutY="71.0" prefHeight="40.0" prefWidth="415.0">
+         <Pane id="SearchBar1" layoutX="443.0" layoutY="71.0" prefHeight="40.0" prefWidth="290.0">
             <children>
                <VBox id="Basic" layoutX="8.0" layoutY="3.0" prefHeight="35.0" prefWidth="93.0">
                   <children>
-                     <TextField id="SearchText" fx:id="bookIdBox" prefHeight="35.0" prefWidth="99.0" promptText="Book ID" />
+                     <TextField id="SearchText" fx:id="bookIdBox" prefHeight="35.0" prefWidth="99.0" promptText="ID Sách" />
                   </children>
                </VBox>
             </children>
@@ -140,14 +146,82 @@
             <children>
                <VBox id="Basic" fx:id="VBox2" layoutX="-1.0" layoutY="3.0" prefHeight="35.0" prefWidth="291.0">
                   <children>
-                     <TextField id="SearchText" fx:id="bookSearchBox" prefHeight="34.0" prefWidth="306.0" promptText="Book Name" />
+                     <TextField id="SearchText" fx:id="bookSearchBox" prefHeight="34.0" prefWidth="306.0" promptText="Tên Sách" />
                      <JFXListView id="ListView" fx:id="suggestionBook" prefHeight="0.0" prefWidth="208.0" />
                   </children>
                </VBox>
             </children>
          </Pane>
-         <Label id="ErrorText" fx:id="wrongNotification" alignment="CENTER" layoutX="289.0" layoutY="235.0" prefHeight="22.0" prefWidth="216.0" text="User ID không tồn tại !!!" visible="false" />
+         <Label id="ErrorText" fx:id="wrongNotification" alignment="CENTER" layoutX="300.0" layoutY="235.0" text="User ID không tồn tại !!!" visible="false" />
+         <Button id="SearchIcon" fx:id="searchButton1" layoutX="546.0" layoutY="80.0" mnemonicParsing="false" onAction="#searchButtonController1" prefHeight="2.0" prefWidth="0.0">
+            <graphic>
+               <FontAwesomeIconView glyphName="SEARCH" />
+            </graphic>
+         </Button>
+         <Button id="CreateButton" fx:id="CancelButton" layoutX="215.0" layoutY="460.0" mnemonicParsing="false" onAction="#CancelAction" prefHeight="40.0" prefWidth="146.0" text="Hủy" />
     </children>
   </AnchorPane>
+   <VBox id="alert" fx:id="alert" disable="true" layoutX="286.0" layoutY="92.0" prefHeight="300.0" prefWidth="250.0" stylesheets="@../CSS/BorrowBookProcessing.css" visible="false">
+      <children>
+         <HBox id="hbox" alignment="CENTER" prefHeight="142.0" prefWidth="250.0">
+            <children>
+               <ImageView fitHeight="76.0" fitWidth="79.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../../../../images/hoicham.png" />
+                  </image>
+               </ImageView>
+            </children>
+         </HBox>
+         <Label id="customLabel1" fx:id="confirmTitle" alignment="CENTER" prefHeight="48.0" prefWidth="247.0" text="Confirm Title">
+            <font>
+               <Font size="17.0" />
+            </font>
+         </Label>
+         <Label id="customLabel2" fx:id="confirmMessage" alignment="CENTER" prefHeight="48.0" prefWidth="241.0" text="Confirm Message" textFill="#ba8c6f">
+            <font>
+               <Font size="15.0" />
+            </font>
+         </Label>
+         <HBox id="hbox1" alignment="CENTER" prefHeight="42.0" prefWidth="250.0">
+            <children>
+               <Button id="buttonokay" fx:id="confirmButton" mnemonicParsing="false" onAction="#confirmButtonAction" prefHeight="30.0" prefWidth="86.0" text="YES" textFill="#f7fcf9">
+                  <font>
+                     <Font size="13.0" />
+                  </font>
+               </Button>
+               <Button id="buttoncancel" fx:id="declineButton" mnemonicParsing="false" onAction="#DeclineButtonAction" prefHeight="31.0" prefWidth="86.0" text="Cancel">
+                  <font>
+                     <Font size="13.0" />
+                  </font>
+               </Button>
+            </children>
+         </HBox>
+      </children>
+   </VBox>
+   <Pane id="PaneSuccess" fx:id="successPane" disable="true" layoutX="228.0" layoutY="92.0" prefHeight="262.0" prefWidth="431.0" stylesheets="@../CSS/BorrowBookProcessing.css" visible="false">
+      <children>
+         <ImageView fx:id="gifView" fitHeight="72.0" fitWidth="71.0" layoutX="180.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@../../../../images/success.gif" />
+            </image>
+         </ImageView>
+         <Label id="Label1" layoutX="153.0" layoutY="110.0" text="Thành công!" />
+         <Label id="Label2" layoutX="104.0" layoutY="153.0" text="Giao dịch thực hiện thành công" />
+         <JFXButton id="BackButton" fx:id="backButton" layoutX="176.0" layoutY="199.0" onAction="#backButtonAction" prefHeight="35.0" prefWidth="79.0" text="Quay Về">
+            <font>
+               <Font size="13.0" />
+            </font>
+         </JFXButton>
+      </children>
+   </Pane>
+   <Button id="SearchIcon" fx:id="closeButton" disable="true" layoutX="512.0" layoutY="93.0" mnemonicParsing="false" onAction="#DeclineButtonAction" prefHeight="23.0" prefWidth="6.0" stylesheets="@../CSS/BorrowBookProcessing.css" visible="false">
+      <graphic>
+         <FontAwesomeIconView id="iconview" glyphName="CLOSE" selectionFill="#9c2525">
+            <font>
+               <Font size="14.0" />
+            </font>
+         </FontAwesomeIconView>
+      </graphic>
+   </Button>
 
 </AnchorPane>

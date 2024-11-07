@@ -2,6 +2,7 @@ package org.example.demo.Models.Users;
 
 import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class Date extends java.sql.Date {
 
@@ -47,6 +48,7 @@ public class Date extends java.sql.Date {
     return this.getDay()+"/ "+this.getMonth()+"/ "+this.getYear();
   }
 
+
   public boolean isAfter(Date date){
     if(this.getYear()>date.getYear())return true;
     else if(this.getYear()<date.getYear())return false;
@@ -71,11 +73,11 @@ public class Date extends java.sql.Date {
 
   @Override
   public LocalDate toLocalDate(){
-    return super.toLocalDate();
+    LocalDate res = LocalDate.of(this.getYear(),this.getMonth(),this.getDay());
+    return res;
   }
 
   public static void main(String[] args) {
     Date myDate = new Date(2024, 10, 1); // Create a date
-
   }
 }
