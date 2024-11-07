@@ -23,10 +23,11 @@ import org.example.demo.Models.Users.UserList;
 public class Library {
 
   private static Library instance;
+
   static {
-    PauseTransition pauseTransition=new PauseTransition(Duration.seconds(5));
-    pauseTransition.setOnFinished(e->{
-      instance=new Library();
+    PauseTransition pauseTransition = new PauseTransition(Duration.seconds(5));
+    pauseTransition.setOnFinished(e -> {
+      instance = new Library();
     });
     pauseTransition.play();
   }
@@ -41,9 +42,9 @@ public class Library {
     borrowHistory = new BorrowHistory();
   }
 
-  public static Library getInstance(){
-    if(instance==null){
-      instance=new Library();
+  public static Library getInstance() {
+    if (instance == null) {
+      instance = new Library();
     }
     return instance;
   }
@@ -163,16 +164,13 @@ public class Library {
     return userList.insertUserWithID(user, idUser);
   }
 
-  public ArrayList<Book> getTop3Book(){
+  public ArrayList<Book> getTop3Book() {
     return bookShelf.getTop3Book();
   }
 
-  public ArrayList<Borrowing> getListBorrowingNearingDeadline(){
+  public ArrayList<Borrowing> getListBorrowingNearingDeadline() {
     return borrowHistory.getListBorrowingNearingDeadline();
   }
-
-
-
 
   public static void main(String[] args) {
     Library library = new Library();
@@ -186,9 +184,8 @@ public class Library {
         image,
         new Date(2000, 0, 0));
     library.insertUser(user);
-
+    
   }
-
 
 
 }

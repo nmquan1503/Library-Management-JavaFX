@@ -61,7 +61,7 @@
             <Font size="20.0" />
           </font>
         </JFXButton>
-        <JFXButton contentDisplay="CENTER" ellipsisString="" prefHeight="63.0" prefWidth="59.0" styleClass="btn-top">
+        <JFXButton fx:id="bell" contentDisplay="CENTER" ellipsisString="" onAction="#notificationClick" prefHeight="63.0" prefWidth="59.0" styleClass="btn-top">
           <graphic>
             <FontAwesomeIconView glyphName="BELL" size="25" styleClass="icon_top" wrappingWidth="25.0" />
           </graphic>

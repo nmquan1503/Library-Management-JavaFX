@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -25,6 +26,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextField;
@@ -33,16 +35,21 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.effect.BlendMode;
 import javafx.stage.Popup;
+import javafx.stage.Window;
 import org.example.demo.API.Network;
 import org.example.demo.API.Translate;
 import org.example.demo.App;
+import org.example.demo.CustomUI.NotificationView;
 import org.example.demo.CustomUI.Warning;
 import org.example.demo.Database.JDBC;
+import org.example.demo.Models.Borrowing.Borrowing;
 import org.example.demo.Models.Language;
+import org.example.demo.Models.Library;
 
 public class BaseController {
 
@@ -121,6 +128,9 @@ public class BaseController {
 
   @FXML
   private Button deleteSearchBtn;
+
+  @FXML
+  private JFXButton bell;
 
   private HomeController homeController;
 
@@ -915,6 +925,49 @@ public class BaseController {
     userPane.setVisible(false);
     borrowPane.setVisible(false);
     returnPane.setVisible(true);
+  }
+
+  private Popup notificationPopup = new Popup();
+
+  @FXML
+  private void notificationClick() {
+    ArrayList<Borrowing> history = Library.getInstance().getListBorrowingNearingDeadline();
+    ArrayList<NotificationView> notificationList = new ArrayList<>();
+    for (Borrowing borrowing : history) {
+      System.out.println(borrowing.getIdUser() + " " + borrowing.getIdBook());
+      notificationList.add(new NotificationView(borrowing, 300, 40));
+    }
+    JFXListView<NotificationView> listView = new JFXListView();
+    listView.getItems().addAll(notificationList);
+
+    listView.setCellFactory(param -> new ListCell<NotificationView>() {
+      @Override
+      protected void updateItem(NotificationView item, boolean empty) {
+        super.updateItem(item, empty);
+        if (empty || item == null) {
+          setGraphic(null);
+        } else {
+          setGraphic(item);
+        }
+      }
+    });
+
+    VBox container = new VBox(listView);
+    container.setStyle(
+        "-fx-background-color: lightgray; -fx-padding: 10;");
+    notificationPopup.getContent().add(container);
+    notificationPopup.setAutoHide(true);
+
+    Window window = bell.getScene().getWindow();
+    Bounds bellBounds = bell.localToScreen(bell.getBoundsInLocal());
+
+    double menuX = bellBounds.getMinX() - 100;
+    double menuY = bellBounds.getMaxY() - 10;
+
+    notificationPopup.setX(menuX);
+    notificationPopup.setY(menuY);
+
+    notificationPopup.show(window);
   }
 
 }
