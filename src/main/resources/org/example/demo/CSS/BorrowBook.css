@@ -6,7 +6,9 @@
     -fx-font-family: 'HYWenHei-85W';
     -fx-text-fill: #584f58;
 }
-
+.button:hover{
+    -fx-cursor: hand;
+}
 /* Style cho ComboBox với hiệu ứng lồi */
 /* Style cho ComboBox với hiệu ứng lồi */
 .combo-box {

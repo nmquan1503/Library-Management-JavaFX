@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'HYWenHei-85W';
+}
+
+* {
+    -fx-font-family: 'HYWenHei-85W';
+    -fx-text-fill: #584f58;
+}

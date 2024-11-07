@@ -24,7 +24,7 @@
   <AnchorPane id="mainPane" fx:id="mainPane" prefHeight="540.0" prefWidth="900.0" stylesheets="@../CSS/BorrowBook.css">
     <children>
       <Label alignment="CENTER" layoutX="55.0" layoutY="57.0" prefHeight="18.0" prefWidth="216.0" styleClass="label-sort" text="Sắp Xếp Theo" />
-      <Label layoutX="93.0" layoutY="7.0" prefHeight="34.0" prefWidth="241.0" text="Lịch Sử Mượn Sách" textFill="#584f58">
+      <Label layoutX="93.0" layoutY="7.0" prefHeight="34.0" prefWidth="419.0" text="Lịch Sử Mượn Sách" textFill="#584f58">
         <font>
           <Font name="HYWenHei 85W" size="22.0" />
         </font>
@@ -74,10 +74,10 @@
          <Line endX="40.39996337890625" endY="327.0" layoutX="785.0" layoutY="121.0" startX="40.39996337890625" startY="0.9999847412109375" stroke="#e464c0" />
     </children>
   </AnchorPane>
-  <AnchorPane fx:id="secondPane" disable="true" prefHeight="540.0" prefWidth="900.0" styleClass="Anchor-Pane-mainPane" stylesheets="@../CSS/BorrowBookProcessing.css" visible="false">
+  <AnchorPane id="mainPane" fx:id="secondPane" disable="true" prefHeight="540.0" prefWidth="900.0" styleClass="Anchor-Pane-mainPane" stylesheets="@../CSS/BorrowBookProcessing.css" visible="false">
     <children>
       <Button id="CreateButton" fx:id="CreateButton" layoutX="450.0" layoutY="460.0" mnemonicParsing="false" onAction="#CreateAction" prefHeight="40.0" prefWidth="146.0" text="Tạo" />
-      <ImageView fitHeight="44.0" fitWidth="41.0" layoutX="42.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="44.0" fitWidth="41.0" layoutX="43.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
         <image>
           <Image url="@../../../../images/Screenshot_2024-10-19_143451-removebg-preview.png" />
         </image>

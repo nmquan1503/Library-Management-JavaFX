@@ -404,6 +404,8 @@ public class BorrowBookController implements MainInfo {
         alert.setDisable(true);
         closeButton.setVisible(false);
         closeButton.setDisable(true);
+        book = null;
+        npc = null;
     }
 
     @FXML
@@ -462,12 +464,9 @@ public class BorrowBookController implements MainInfo {
 
                 });
                 delay.play();
-
-
+                return;
             }
-
             DeclineButtonAction();
-
         }
     }
 
@@ -486,6 +485,7 @@ public class BorrowBookController implements MainInfo {
         successPane.setDisable(true);
         resetUserSearch();
         resetBookSearch();
+        DeclineButtonAction();
     }
 
     @FXML
