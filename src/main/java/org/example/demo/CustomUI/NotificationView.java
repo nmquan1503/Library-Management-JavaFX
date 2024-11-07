@@ -48,8 +48,6 @@ public class NotificationView extends HBox implements MainInfo {
     this.setAlignment(Pos.CENTER);
     this.setSpacing(5);
 
-    markSeen();
-
   }
 
   public void markSeen(){

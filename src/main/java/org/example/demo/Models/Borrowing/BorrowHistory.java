@@ -296,9 +296,12 @@ public class BorrowHistory {
         int id_borrowing=resultSet.getInt("id_borrowing");
         int id_book=resultSet.getInt("id_book");
         int id_user=resultSet.getInt("id_user");
-        Date due_date=new Date(resultSet.getDate("due_date"));
-        Date returned_date=new Date(resultSet.getDate("returned_date"));
-        Date borrowed_date=new Date(resultSet.getDate("borrowed_date"));
+        Date due_date=null;
+        if(resultSet.getDate("due_date")!=null)due_date=new Date(resultSet.getDate("due_date"));
+        Date returned_date=null;
+        if(resultSet.getDate("returned_date")!=null)returned_date=new Date(resultSet.getDate("returned_date"));
+        Date borrowed_date=null;
+        if(resultSet.getDate("borrowed_date")!=null)borrowed_date=new Date(resultSet.getDate("borrowed_date"));
         list.add(new Borrowing(id_borrowing,id_book,id_user,borrowed_date,due_date,returned_date));
       }
     }
