@@ -1,3 +1,4 @@
+
 package org.example.demo.CustomUI;
 
 import java.util.HashMap;
@@ -29,86 +30,85 @@ public class NotificationView extends HBox implements MainInfo {
   private ImageView image;
   private Label content;
 
-  public NotificationView(Borrowing borrowing,int width,int height){
-    isSeen=false;
+  public NotificationView(Borrowing borrowing, int width, int height) {
+    isSeen = false;
 
     User user = Library.getInstance().getUser(borrowing.getIdUser());
     Book book = Library.getInstance().getBook(borrowing.getIdBook());
 
-    initImage(user,height,width);
-    initContent(user,book,borrowing.getDueDate(),height,width);
+    initImage(user, height, width);
+    initContent(user, book, borrowing.getDueDate(), height, width);
 
     this.getChildren().add(wrapper);
     this.getChildren().add(content);
 
     this.getStylesheets().add(
-        Objects.requireNonNull(getClass().getResource("/org/example/demo/CSS/Pagination.css")).toExternalForm());
+        Objects.requireNonNull(getClass().getResource("/org/example/demo/CSS/Pagination.css"))
+            .toExternalForm());
     this.setPrefHeight(height);
     this.setPrefWidth(width);
     this.setAlignment(Pos.CENTER);
-    this.setSpacing(5);
-
-    markSeen();
+    this.setSpacing(3);
 
   }
 
-  public void markSeen(){
-    isSeen=true;
+  public void markSeen() {
+    isSeen = true;
     content.setId(null);
-    content.setFont(Font.font("System", FontWeight.NORMAL,16));
+    content.setFont(Font.font("System", FontWeight.NORMAL, 14));
   }
 
-  public boolean isSeen(){
+  public boolean isSeen() {
     return isSeen;
   }
 
-  private void initImage(User user,int height,int width){
+  private void initImage(User user, int height, int width) {
     wrapper = new StackPane();
     wrapper.setPrefHeight(height);
-    wrapper.setPrefWidth(height/1.5);
+    wrapper.setPrefWidth(height / 1.5);
     wrapper.setAlignment(Pos.CENTER);
-    wrapper.setStyle("-fx-effect: dropshadow(gaussian, #E464C0, 20, 0, 3, 3);");
 
-    image=new ImageView();
-    if(user.getAvatar()!=null) {
+    image = new ImageView();
+    if (user.getAvatar() != null) {
       image.setImage(user.getAvatar());
+    } else {
+      image.setImage(new Image(Objects.requireNonNull(
+          getClass().getResourceAsStream("/org/example/demo/Assets/default_avt_user.png"))));
     }
-    else image.setImage(new Image(Objects.requireNonNull(
-        getClass().getResourceAsStream("/org/example/demo/Assets/basic.jpg"))));
     image.setPreserveRatio(true);
-    image.setFitHeight(height-10);
-    image.setId("IconOfContent");
+    image.setFitHeight(height - 30);
 
     wrapper.getChildren().add(image);
-    if(BaseController.isDark) wrapper.setBlendMode(BlendMode.DIFFERENCE);
-    else wrapper.setBlendMode(BlendMode.SRC_OVER);
+    if (BaseController.isDark) {
+      wrapper.setBlendMode(BlendMode.DIFFERENCE);
+    } else {
+      wrapper.setBlendMode(BlendMode.SRC_OVER);
+    }
   }
 
-  private void initContent(User user,Book book, Date dueDate,int height,int width){
+  private void initContent(User user, Book book, Date dueDate, int height, int width) {
 
-    content=new Label();
+    content = new Label();
 
-    if(dueDate.isAfter(Date.today())){
-      content.setText(user.getName()+" đã quá hạn trả sách "+book.getTitle()+" "+Math.abs(dueDate.datediff(Date.today()))+" ngày!");
+    if (dueDate.isAfter(Date.today())) {
+      content.setText(user.getName() + " đã quá hạn trả sách " + book.getTitle() + " " + Math.abs(
+          dueDate.datediff(Date.today())) + " ngày!");
+    } else {
+      content.setText(user.getName() + " còn " + Math.abs(dueDate.datediff(Date.today()))
+          + " ngày nữa phải trả sách " + book.getTitle());
     }
-    else {
-      content.setText(user.getName()+" còn "+Math.abs(dueDate.datediff(Date.today()))+" ngày nữa phải trả sách "+book.getTitle());
-    }
-    content.setPrefWidth(width - height/1.5-5);
-    content.setPrefHeight(height-10);
+    content.setPrefWidth(width - height / 1.5 - 5);
+    content.setPrefHeight(height - 7);
     content.setWrapText(true);
-    content.setAlignment(Pos.TOP_LEFT);
-    content.setId("ContentOfSuggestion");
+    content.setAlignment(Pos.CENTER);
+    content.setId("notification-suggestion");
   }
 
   @Override
   public void applyDarkMode(boolean isDark) {
-    if(isDark){
+    if (isDark) {
       wrapper.setBlendMode(BlendMode.DIFFERENCE);
-      wrapper.setStyle("-fx-effect: dropshadow(gaussian, #1B9B3F, 20, 0, 3, 3);");
-    }
-    else{
-      wrapper.setStyle("-fx-effect: dropshadow(gaussian, #E464C0, 20, 0, 3, 3);");
+    } else {
       wrapper.setBlendMode(BlendMode.SRC_OVER);
     }
   }

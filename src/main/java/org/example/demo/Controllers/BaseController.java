@@ -25,8 +25,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextField;
@@ -40,7 +40,6 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.effect.BlendMode;
 import javafx.stage.Popup;
-import javafx.stage.Window;
 import org.example.demo.API.Network;
 import org.example.demo.API.Translate;
 import org.example.demo.App;
@@ -927,20 +926,34 @@ public class BaseController {
     returnPane.setVisible(true);
   }
 
-  private Popup notificationPopup = new Popup();
+  private Popup popup;
 
   @FXML
   private void notificationClick() {
+
+    if (popup == null) {
+      popup = new Popup();
+      popup.setAutoHide(true);
+    }
+
+    if (popup.isShowing()) {
+      popup.hide();
+      return;
+    }
+
     ArrayList<Borrowing> history = Library.getInstance().getListBorrowingNearingDeadline();
     ArrayList<NotificationView> notificationList = new ArrayList<>();
     for (Borrowing borrowing : history) {
-      System.out.println(borrowing.getIdUser() + " " + borrowing.getIdBook());
-      notificationList.add(new NotificationView(borrowing, 300, 40));
+      notificationList.add(new NotificationView(borrowing, 330, 70));
     }
-    JFXListView<NotificationView> listView = new JFXListView();
+
+    JFXListView<NotificationView> listView = new JFXListView<>();
     listView.getItems().addAll(notificationList);
 
-    listView.setCellFactory(param -> new ListCell<NotificationView>() {
+    listView.setPrefWidth(360);
+    listView.setMaxWidth(360);
+    listView.setPrefHeight(270);
+    listView.setCellFactory(param -> new ListCell<>() {
       @Override
       protected void updateItem(NotificationView item, boolean empty) {
         super.updateItem(item, empty);
@@ -948,26 +961,39 @@ public class BaseController {
           setGraphic(null);
         } else {
           setGraphic(item);
+
+          if (isDark) {
+            setStyle("-fx-background-color: BLACK;");
+          } else {
+            setStyle("");
+
+          }
+
+          setOnMouseClicked(event -> {
+            item.markSeen();
+          });
+
+          setOnMouseEntered(event -> {
+            setStyle(
+                "-fx-background-color: lightgray; -fx-cursor: hand;");
+          });
+
+          setOnMouseExited(event -> {
+            setStyle("");
+          });
         }
       }
     });
 
-    VBox container = new VBox(listView);
-    container.setStyle(
-        "-fx-background-color: lightgray; -fx-padding: 10;");
-    notificationPopup.getContent().add(container);
-    notificationPopup.setAutoHide(true);
+    popup = new Popup();
+    popup.getContent().add(listView);
+    popup.setAutoHide(true);
 
-    Window window = bell.getScene().getWindow();
     Bounds bellBounds = bell.localToScreen(bell.getBoundsInLocal());
+    double popupX = bellBounds.getMinX() - 280;
+    double popupY = bellBounds.getMaxY() - 5;
 
-    double menuX = bellBounds.getMinX() - 100;
-    double menuY = bellBounds.getMaxY() - 10;
-
-    notificationPopup.setX(menuX);
-    notificationPopup.setY(menuY);
-
-    notificationPopup.show(window);
+    popup.show(bell, popupX, popupY);
   }
 
 }

@@ -1,3 +1,4 @@
+
 package org.example.demo.Models;
 
 import java.sql.Array;
@@ -29,7 +30,7 @@ public class Library {
     pauseTransition.setOnFinished(e -> {
       instance = new Library();
     });
-    pauseTransition.play();
+//    pauseTransition.play();
   }
 
   private BookShelf bookShelf;
@@ -172,19 +173,11 @@ public class Library {
     return borrowHistory.getListBorrowingNearingDeadline();
   }
 
+
   public static void main(String[] args) {
-    Library library = new Library();
-    Image image = new Image(Objects.requireNonNull(
-        Library.class.getResourceAsStream("/org/example/demo/Assets/basic.jpg")));
-    User user = new User("Nguyễn Minh Quân",
-        new Date(2005, 3, 15),
-        "Thái Bình",
-        "minhquan15032005@gmail.com",
-        "0346399421",
-        image,
-        new Date(2000, 0, 0));
-    library.insertUser(user);
-    
+
+    ArrayList<Borrowing> list = Library.getInstance().getListBorrowingNearingDeadline();
+
   }
 
 

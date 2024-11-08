@@ -109,17 +109,30 @@ public class AccountSettingController {
     checkState.addListener((observable, oldValue, newValue) -> {
       loadInfo();
     });
-    promptEmail.textProperty().addListener(((observableValue, oldValue, newValue) -> {
+    promptEmail.textProperty().addListener((observableValue, oldValue, newValue) -> {
       if (!newValue.matches(EMAIL_REGEX) && !newValue.isEmpty()) {
         promptEmail.setStyle("-fx-border-color: red;");
       } else {
         promptEmail.setStyle("");
       }
-    }));
+    });
+
     promptPassword.textProperty().addListener((observable, oldValue, newValue) -> {
-      if (newValue.trim().isEmpty() || newValue.contains(" ")) {
+      if (newValue.contains(" ")) {
         passwordContainer.setStyle("-fx-border-color: red;");
       } else {
+        passwordContainer.setStyle("");
+      }
+    });
+
+    promptEmail.focusedProperty().addListener((observable, oldValue, newValue) -> {
+      if (!newValue && promptEmail.getText().isEmpty()) {
+        promptEmail.setStyle("");
+      }
+    });
+
+    promptPassword.focusedProperty().addListener((observable, oldValue, newValue) -> {
+      if (!newValue && promptPassword.getText().isEmpty()) {
         passwordContainer.setStyle("");
       }
     });
@@ -240,6 +253,7 @@ public class AccountSettingController {
     if (selectedFile != null) {
       updateAvatar(selectedFile.getAbsolutePath(), BaseController.getLibId());
       loadInfo();
+      succeedNotification();
     }
   }
 
@@ -248,6 +262,7 @@ public class AccountSettingController {
             getClass().getResource("/org/example/demo/Assets/default_avatar.jpg")).getPath(),
         BaseController.getLibId());
     loadDefaultAvatar();
+    succeedNotification();
   }
 
   private void setCameraHoverEffect() {
@@ -431,6 +446,8 @@ public class AccountSettingController {
               preparedStatement.setString(1, newPassword);
               preparedStatement.setInt(2, BaseController.getLibId());
               preparedStatement.executeUpdate();
+              textField.clear();
+              promptPassword.clear();
               succeedNotification();
             }
           }
