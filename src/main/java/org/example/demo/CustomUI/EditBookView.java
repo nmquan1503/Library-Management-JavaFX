@@ -325,6 +325,15 @@ public class EditBookView extends ScrollPane implements MainInfo {
         "Xác nhận Lưu?",
         "Nếu bạn chọn \"Hủy\", bạn sẽ được tiếp tục thay đổi nội dung sách muốn thêm.",
         ()->{
+          Node parent=mainPane.getParent();
+          if(parent!=null){
+            if(parent instanceof AnchorPane){
+              ((AnchorPane) parent).getChildren().add(new Warning(
+                  "Thành công!",
+                  "Sách đã được thêm thành công."
+              ));
+            }
+          }
           mainPane.getChildren().removeLast();
           Thread thread=new Thread(()->{
             if(oldBook!=null){

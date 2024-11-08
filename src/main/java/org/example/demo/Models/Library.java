@@ -30,7 +30,7 @@ public class Library {
     pauseTransition.setOnFinished(e -> {
       instance = new Library();
     });
-//    pauseTransition.play();
+    pauseTransition.play();
   }
 
   private BookShelf bookShelf;
