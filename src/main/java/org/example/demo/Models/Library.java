@@ -1,3 +1,4 @@
+
 package org.example.demo.Models;
 
 import java.sql.Array;
@@ -6,8 +7,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Objects;
+import javafx.animation.PauseTransition;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
+import javafx.util.Duration;
 import org.example.demo.Database.JDBC;
 import org.example.demo.Models.BookShelf.Book;
 import org.example.demo.Models.BookShelf.BookShelf;
@@ -21,8 +24,13 @@ import org.example.demo.Models.Users.UserList;
 public class Library {
 
   private static Library instance;
+
   static {
-    instance=new Library();
+    PauseTransition pauseTransition = new PauseTransition(Duration.seconds(5));
+    pauseTransition.setOnFinished(e -> {
+      instance = new Library();
+    });
+//    pauseTransition.play();
   }
 
   private BookShelf bookShelf;
@@ -35,9 +43,9 @@ public class Library {
     borrowHistory = new BorrowHistory();
   }
 
-  public static Library getInstance(){
-    if(instance==null){
-      instance=new Library();
+  public static Library getInstance() {
+    if (instance == null) {
+      instance = new Library();
     }
     return instance;
   }
@@ -165,24 +173,20 @@ public class Library {
     return userList.insertUserWithID(user, idUser);
   }
 
+  public ArrayList<Book> getTop3Book() {
+    return bookShelf.getTop3Book();
+  }
 
+  public ArrayList<Borrowing> getListBorrowingNearingDeadline() {
+    return borrowHistory.getListBorrowingNearingDeadline();
+  }
 
 
   public static void main(String[] args) {
-    Library library = new Library();
-    Image image = new Image(Objects.requireNonNull(
-        Library.class.getResourceAsStream("/org/example/demo/Assets/basic.jpg")));
-    User user = new User("Nguyễn Minh Quân",
-        new Date(2005, 3, 15),
-        "Thái Bình",
-        "minhquan15032005@gmail.com",
-        "0346399421",
-        image,
-        new Date(2000, 0, 0));
-    library.insertUser(user);
+
+    ArrayList<Borrowing> list = Library.getInstance().getListBorrowingNearingDeadline();
 
   }
-
 
 
 }

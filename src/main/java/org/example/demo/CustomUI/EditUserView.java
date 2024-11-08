@@ -25,6 +25,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Arc;
 import javafx.util.Duration;
+import org.example.demo.API.Network;
 import org.example.demo.Controllers.BaseController;
 import org.example.demo.Database.JDBC;
 import org.example.demo.Interfaces.MainInfo;
@@ -215,7 +216,7 @@ public class EditUserView extends ScrollPane implements MainInfo {
 
 
   private void initImage(User user){
-    if(user.getAvatar()==null) {
+    if(user.getAvatar()==null || !Network.isConnected()) {
       initDefaultImage();
       return;
     }

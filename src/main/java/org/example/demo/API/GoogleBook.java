@@ -21,6 +21,9 @@ public class GoogleBook {
    */
   public static ArrayList<Book> getBooks(String prefix) {
     ArrayList<Book> listBooks = new ArrayList<>();
+    if(!Network.isConnected()){
+      return listBooks;
+    }
     try {
       String api =
           "https://www.googleapis.com/books/v1/volumes?q=" + URLEncoder.encode(prefix, "UTF-8");

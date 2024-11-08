@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Arc?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Ellipse?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="960.0" styleClass="background" stylesheets="@../CSS/AccountSetting.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo.Controllers.AccountSettingController">
+  <children>
+    <JFXButton prefHeight="0.0" prefWidth="13.0" text="Select" />
+    <Ellipse fill="#37edb95a" layoutX="480.0" layoutY="6.0" radiusX="574.0" radiusY="155.0" stroke="BLACK" strokeType="INSIDE" styleClass="decorElipse" />
+    <Label alignment="CENTER" layoutX="345.0" layoutY="17.0" prefHeight="63.0" prefWidth="282.0" styleClass="title" text="Account Setting" textAlignment="CENTER" textFill="#f2f2f2" wrapText="true">
+      <font>
+        <Font name=".VnArial" size="25.0" />
+      </font>
+    </Label>
+    <JFXButton layoutX="92.0" layoutY="17.0" onAction="#moveToBase" prefHeight="46.0" prefWidth="144.0" styleClass="edit-account-btn" text="⬅  Return" />
+    <Circle fx:id="avatarCircle" fill="#bdd5eb" layoutX="480.0" layoutY="181.0" radius="101.0" stroke="BLACK" strokeType="INSIDE" />
+    <JFXButton layoutX="430.0" layoutY="284.0" onAction="#resetDefaultAvt" prefWidth="100.0" styleClass="select-avatar-btn" text="Reset" />
+    <StackPane layoutX="391.0" layoutY="231.0">
+      <Arc fx:id="chooseAvtFileBtn" centerX="480.0" centerY="199.0" length="120" radiusX="101.0" radiusY="101.0" startAngle="210" styleClass="select-avatar-arc" />
+      <FontAwesomeIconView fx:id="cameraIcon" fill="#f2f2f2" glyphName="CAMERA" opacity="0.6" size="25" styleClass="camera-icon">
+        <font>
+          <Font size="30.0" />
+        </font>
+      </FontAwesomeIconView>
+    </StackPane>
+    <HBox layoutX="24.0" layoutY="344.0" prefHeight="32.0" prefWidth="345.0">
+      <children>
+        <Label contentDisplay="CENTER" prefHeight="32.0" prefWidth="86.0" text="Tên (Name):" textAlignment="CENTER" textFill="#333333">
+          <HBox.margin>
+            <Insets />
+          </HBox.margin>
+          <font>
+            <Font size="14.0" />
+          </font>
+        </Label>
+        <TextField fx:id="promptName" prefHeight="32.0" prefWidth="220.0" styleClass="promptField">
+          <padding>
+            <Insets right="10.0" />
+          </padding>
+          <HBox.margin>
+            <Insets />
+          </HBox.margin>
+          <opaqueInsets>
+            <Insets />
+          </opaqueInsets>
+        </TextField>
+        <JFXButton onAction="#saveName" prefHeight="32.0" prefWidth="38.0" styleClass="save-btn">
+          <HBox.margin>
+            <Insets left="7.0" />
+          </HBox.margin>
+          <graphic>
+            <FontAwesomeIconView fill="#0d706e" glyphName="SAVE" size="17" />
+          </graphic>
+        </JFXButton>
+      </children>
+    </HBox>
+    <AnchorPane fx:id="succeedPane" layoutX="414.0" layoutY="238.0" opacity="0.0" prefHeight="125.0" prefWidth="133.0" visible="false">
+      <children>
+        <FontAwesomeIconView fill="#f2f2f2" glyphName="CHECK" layoutX="11.0" layoutY="98.0" size="100" textAlignment="CENTER" wrappingWidth="112.0" />
+      </children>
+      <styleClass>
+        <String fx:value="notification-fade" />
+        <String fx:value="success" />
+      </styleClass>
+    </AnchorPane>
+    <AnchorPane fx:id="errorPane" layoutX="414.0" layoutY="238.0" opacity="0.0" prefHeight="125.0" prefWidth="133.0" visible="false">
+      <children>
+        <FontAwesomeIconView fill="#f2f2f2" glyphName="TIMES" layoutX="11.0" layoutY="98.0" size="100" textAlignment="CENTER" wrappingWidth="112.0" />
+      </children>
+      <styleClass>
+        <String fx:value="notification-fade" />
+        <String fx:value="deny" />
+      </styleClass>
+    </AnchorPane>
+    <HBox layoutX="24.0" layoutY="420.0" prefHeight="32.0" prefWidth="345.0">
+      <children>
+        <Label contentDisplay="CENTER" prefHeight="32.0" prefWidth="250.0" text="Ngày sinh (Date of birth):" textAlignment="CENTER" textFill="#333333">
+          <HBox.margin>
+            <Insets />
+          </HBox.margin>
+          <font>
+            <Font size="14.0" />
+          </font>
+        </Label>
+        <DatePicker fx:id="promptBirth" prefHeight="32.0" prefWidth="220.0" styleClass="date-field" />
+        <JFXButton onAction="#saveBirthday" prefHeight="32.0" prefWidth="110.0" styleClass="save-btn">
+          <HBox.margin>
+            <Insets left="7.0" />
+          </HBox.margin>
+          <graphic>
+            <FontAwesomeIconView fill="#0d706e" glyphName="SAVE" size="17" />
+          </graphic>
+        </JFXButton>
+      </children>
+    </HBox>
+    <HBox layoutX="24.0" layoutY="496.0" prefHeight="32.0" prefWidth="345.0">
+      <children>
+        <Label contentDisplay="CENTER" prefHeight="32.0" prefWidth="143.0" text="SĐT (Phone number):" textAlignment="CENTER" textFill="#333333">
+          <HBox.margin>
+            <Insets />
+          </HBox.margin>
+          <font>
+            <Font size="14.0" />
+          </font>
+        </Label>
+        <TextField fx:id="promptPhone" editable="false" prefHeight="32.0" prefWidth="216.0" styleClass="promptField">
+          <padding>
+            <Insets right="10.0" />
+          </padding>
+          <HBox.margin>
+            <Insets />
+          </HBox.margin>
+          <opaqueInsets>
+            <Insets />
+          </opaqueInsets>
+          <tooltip>
+            <Tooltip text="This field cannot be changed!">
+              <font>
+                <Font size="15.0" />
+              </font>
+            </Tooltip>
+          </tooltip>
+        </TextField>
+      </children>
+    </HBox>
+    <HBox layoutX="581.0" layoutY="344.0" prefHeight="32.0" prefWidth="345.0">
+      <children>
+        <Label contentDisplay="CENTER" prefHeight="32.0" prefWidth="43.0" text="Email:" textAlignment="CENTER" textFill="#333333">
+          <HBox.margin>
+            <Insets />
+          </HBox.margin>
+          <font>
+            <Font size="14.0" />
+          </font>
+        </Label>
+        <TextField fx:id="promptEmail" prefHeight="32.0" prefWidth="256.0" styleClass="promptField">
+          <padding>
+            <Insets right="10.0" />
+          </padding>
+          <HBox.margin>
+            <Insets />
+          </HBox.margin>
+          <opaqueInsets>
+            <Insets />
+          </opaqueInsets>
+        </TextField>
+        <JFXButton onAction="#saveEmail" prefHeight="32.0" prefWidth="38.0" styleClass="save-btn">
+          <HBox.margin>
+            <Insets left="7.0" />
+          </HBox.margin>
+          <graphic>
+            <FontAwesomeIconView fill="#0d706e" glyphName="SAVE" size="17" />
+          </graphic>
+        </JFXButton>
+      </children>
+    </HBox>
+    <HBox layoutX="581.0" layoutY="420.0" prefHeight="15.0" prefWidth="345.0">
+      <children>
+        <Label contentDisplay="CENTER" prefHeight="32.0" prefWidth="149.0" text="Địa chỉ (Address):" textAlignment="CENTER" textFill="#333333">
+          <HBox.margin>
+            <Insets />
+          </HBox.margin>
+          <font>
+            <Font size="14.0" />
+          </font>
+        </Label>
+        <ComboBox fx:id="promptAddress" prefHeight="32.0" prefWidth="217.0" styleClass="combo-box" />
+        <JFXButton onAction="#saveAddress" prefHeight="32.0" prefWidth="38.0" styleClass="save-btn">
+          <HBox.margin>
+            <Insets left="7.0" />
+          </HBox.margin>
+          <graphic>
+            <FontAwesomeIconView fill="#0d706e" glyphName="SAVE" size="17" />
+          </graphic>
+        </JFXButton>
+      </children>
+    </HBox>
+    <HBox layoutX="581.0" layoutY="496.0" prefHeight="32.0" prefWidth="345.0">
+      <children>
+        <Label contentDisplay="CENTER" prefHeight="32.0" prefWidth="203.0" text="Mật khẩu (Password):" textAlignment="CENTER" textFill="#333333">
+          <HBox.margin>
+            <Insets />
+          </HBox.margin>
+          <font>
+            <Font size="14.0" />
+          </font>
+        </Label>
+        <HBox fx:id="passwordContainer" prefHeight="100.0" prefWidth="200.0" styleClass="password-container">
+          <children>
+                  <StackPane prefHeight="30.0" prefWidth="149.0">
+                     <children>
+                  <PasswordField fx:id="promptPassword" prefHeight="30.0" prefWidth="84.0" styleClass="password" />
+                  <TextField fx:id="textField" prefHeight="30.0" prefWidth="157.0" styleClass="password" visible="false" />
+                     </children>
+                  </StackPane>
+            <JFXButton ellipsisString="" onAction="#eyeSee" prefHeight="30.0" prefWidth="54.0" styleClass="eye">
+              <graphic>
+                <FontAwesomeIconView fx:id="eyeIcon" glyphName="EYE" size="12" />
+              </graphic>
+            </JFXButton>
+          </children>
+        </HBox>
+        <JFXButton onAction="#savePassword" prefHeight="32.0" prefWidth="38.0" styleClass="save-btn">
+          <HBox.margin>
+            <Insets left="7.0" />
+          </HBox.margin>
+          <graphic>
+            <FontAwesomeIconView fill="#0d706e" glyphName="SAVE" size="17" />
+          </graphic>
+        </JFXButton>
+      </children>
+    </HBox>
+  </children>
+</AnchorPane>

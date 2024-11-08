@@ -3,6 +3,11 @@
   -fx-font-weight: bold;
 }
 
+#notification-suggestion {
+  -fx-font-size:14;
+  -fx-font-weight: bold;
+}
+
 #IconOfContent{
   -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 20, 0, 3, 3);
 }

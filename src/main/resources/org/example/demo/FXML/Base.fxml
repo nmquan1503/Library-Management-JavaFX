@@ -17,124 +17,146 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="bigPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo.Controllers.BaseController">
+<AnchorPane fx:id="bigPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+  minWidth="-Infinity" prefHeight="600.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/22"
+  xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo.Controllers.BaseController">
   <children>
-    <HBox alignment="TOP_RIGHT" layoutX="60.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="900.0" stylesheets="@../CSS/Base.css">
+    <HBox alignment="TOP_RIGHT" layoutX="60.0" maxHeight="-Infinity" maxWidth="-Infinity"
+      minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="900.0"
+      stylesheets="@../CSS/Base.css">
       <children>
         <AnchorPane prefHeight="60.0" prefWidth="524.0">
           <children>
-            <VBox id="autoCompleteTxtField" layoutX="28.0" layoutY="12.0" prefHeight="29.0" prefWidth="340.0" AnchorPane.leftAnchor="28.0">
+            <VBox id="autoCompleteTxtField" layoutX="28.0" layoutY="12.0" prefHeight="29.0"
+              prefWidth="340.0" AnchorPane.leftAnchor="28.0">
               <children>
                 <HBox id="searchHbox" prefHeight="32.0" prefWidth="419.0">
                   <children>
-                    <FontAwesomeIconView fill="#7c7a7a" glyphName="SEARCH" size="15" wrappingWidth="18.0">
-                      <HBox.margin>
-                        <Insets bottom="8.0" left="8.0" top="8.0" />
-                      </HBox.margin>
-                    </FontAwesomeIconView>
-                    <TextField id="searchBar" fx:id="searchBase" prefHeight="36.0" prefWidth="308.0" promptText="Tìm kiếm">
+                    <Button fx:id="searchBtn" mnemonicParsing="false" prefHeight="32.0"
+                      prefWidth="24.0" styleClass="btn-search">
+                      <graphic>
+                        <FontAwesomeIconView fill="#7c7a7a" glyphName="SEARCH" size="15"
+                          styleClass="icon-search" wrappingWidth="18.0"/>
+                      </graphic>
+                    </Button>
+                    <TextField id="searchBar" fx:id="searchBase" prefHeight="36.0" prefWidth="308.0"
+                      promptText="Tìm kiếm">
                       <font>
-                        <Font size="14.0" />
+                        <Font size="14.0"/>
                       </font>
                     </TextField>
-                    <Button id="removeSearch" mnemonicParsing="false" prefHeight="40.0" prefWidth="33.0">
+                    <Button id="removeSearch" fx:id="deleteSearchBtn" mnemonicParsing="false"
+                      prefHeight="40.0" prefWidth="33.0">
                       <graphic>
-                        <FontAwesomeIconView glyphName="REMOVE" />
+                        <FontAwesomeIconView glyphName="REMOVE" styleClass="icon-search"/>
                       </graphic>
                     </Button>
                   </children>
                 </HBox>
-                <JFXListView prefHeight="0.0" visible="false" />
+                <JFXListView fx:id="suggestionListView" styleClass="suggestion-list-view"
+                  visible="false"/>
               </children>
             </VBox>
           </children>
         </AnchorPane>
-        <JFXButton fx:id="checkMode" contentDisplay="CENTER" ellipsisString="" onAction="#darkMode" prefHeight="60.0" prefWidth="60.0" styleClass="btn-top" textAlignment="CENTER">
+        <JFXButton fx:id="checkMode" contentDisplay="CENTER" ellipsisString="" onAction="#darkMode"
+          prefHeight="60.0" prefWidth="60.0" styleClass="btn-top" textAlignment="CENTER">
           <tooltip>
             <Tooltip fx:id="darkText" text="sáng-tối" textAlignment="CENTER">
               <font>
-                <Font size="15.0" />
+                <Font size="15.0"/>
               </font>
             </Tooltip>
           </tooltip>
           <font>
-            <Font size="20.0" />
+            <Font size="20.0"/>
           </font>
         </JFXButton>
-        <JFXButton contentDisplay="CENTER" ellipsisString="" prefHeight="63.0" prefWidth="59.0" styleClass="btn-top">
+        <JFXButton fx:id="bell" contentDisplay="CENTER" ellipsisString=""
+          onAction="#notificationClick" prefHeight="63.0" prefWidth="59.0" styleClass="btn-top">
           <graphic>
-            <FontAwesomeIconView glyphName="BELL" size="25" styleClass="icon_top" wrappingWidth="25.0" />
+            <FontAwesomeIconView glyphName="BELL" size="25" styleClass="icon_top"
+              wrappingWidth="25.0"/>
           </graphic>
           <tooltip>
             <Tooltip fx:id="notiText" text="Thông báo">
               <font>
-                <Font size="15.0" />
+                <Font size="15.0"/>
               </font>
             </Tooltip>
           </tooltip>
         </JFXButton>
-        <JFXButton contentDisplay="CENTER" ellipsisString="" onAction="#avatarClicked" prefHeight="60.0" prefWidth="64.0" styleClass="btn-top">
+        <JFXButton contentDisplay="CENTER" ellipsisString="" onAction="#avatarClicked"
+          prefHeight="60.0" prefWidth="64.0" styleClass="btn-top">
           <tooltip>
             <Tooltip fx:id="avtText" text="Tài khoản" textAlignment="CENTER">
               <font>
-                <Font size="15.0" />
+                <Font size="15.0"/>
               </font>
             </Tooltip>
           </tooltip>
           <graphic>
-            <Circle fx:id="avatar" fill="#dee3e8" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
+            <Circle fx:id="avatar" fill="#dee3e8" radius="17.0" stroke="BLACK" strokeType="INSIDE"/>
           </graphic>
           <HBox.margin>
-            <Insets />
+            <Insets/>
           </HBox.margin>
           <contextMenu>
             <ContextMenu fx:id="avatarMenu">
               <items>
-                <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                <MenuItem mnemonicParsing="false" text="Unspecified Action"/>
               </items>
             </ContextMenu>
           </contextMenu>
         </JFXButton>
       </children>
     </HBox>
-    <VBox id="left-menu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="60.0" stylesheets="@../CSS/Base.css">
+    <VBox id="left-menu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+      minWidth="-Infinity" prefHeight="600.0" prefWidth="60.0" stylesheets="@../CSS/Base.css">
       <children>
-        <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-        <JFXButton contentDisplay="CENTER" ellipsisString="" onAction="#moveDashboard" prefHeight="60.0" prefWidth="60.0" styleClass="btn-left">
+        <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true"/>
+        <JFXButton contentDisplay="CENTER" ellipsisString="" onAction="#moveDashboard"
+          prefHeight="60.0" prefWidth="60.0" styleClass="btn-left">
           <graphic>
-            <FontAwesomeIconView fill="#a8a7a7" glyphName="BAR_CHART" size="20" styleClass="icon_left" />
+            <FontAwesomeIconView fill="#a8a7a7" glyphName="BAR_CHART" size="20"
+              styleClass="icon_left"/>
           </graphic>
         </JFXButton>
-        <JFXButton contentDisplay="CENTER" ellipsisString="" onAction="#moveBooks" prefHeight="60.0" prefWidth="60.0" styleClass="btn-left">
+        <JFXButton contentDisplay="CENTER" ellipsisString="" onAction="#moveBooks" prefHeight="60.0"
+          prefWidth="60.0" styleClass="btn-left">
           <graphic>
-            <FontAwesomeIconView glyphName="BOOK" size="20" styleClass="icon_left" />
+            <FontAwesomeIconView glyphName="BOOK" size="20" styleClass="icon_left"/>
           </graphic>
         </JFXButton>
-        <JFXButton contentDisplay="CENTER" ellipsisString="" onAction="#moveUser" prefHeight="60.0" prefWidth="60.0" styleClass="btn-left">
+        <JFXButton contentDisplay="CENTER" ellipsisString="" onAction="#moveUser" prefHeight="60.0"
+          prefWidth="60.0" styleClass="btn-left">
           <graphic>
-            <FontAwesomeIconView glyphName="USERS" size="20" styleClass="icon_left" />
+            <FontAwesomeIconView glyphName="USERS" size="20" styleClass="icon_left"/>
           </graphic>
         </JFXButton>
-        <JFXButton contentDisplay="CENTER" ellipsisString="" onAction="#moveBorrowBook" prefHeight="60.0" prefWidth="60.0" styleClass="btn-left">
+        <JFXButton contentDisplay="CENTER" ellipsisString="" onAction="#moveBorrowBook"
+          prefHeight="60.0" prefWidth="60.0" styleClass="btn-left">
           <graphic>
-            <FontAwesomeIconView glyphName="HANDSHAKE_ALT" size="20" styleClass="icon_left" />
+            <FontAwesomeIconView glyphName="HANDSHAKE_ALT" size="20" styleClass="icon_left"/>
           </graphic>
         </JFXButton>
-        <JFXButton contentDisplay="CENTER" ellipsisString="" onAction="#moveReturnBook" prefHeight="60.0" prefWidth="60.0" styleClass="btn-left">
+        <JFXButton contentDisplay="CENTER" ellipsisString="" onAction="#moveReturnBook"
+          prefHeight="60.0" prefWidth="60.0" styleClass="btn-left">
           <graphic>
-            <FontAwesomeIconView glyphName="MAIL_REPLY_ALL" size="20" styleClass="icon_left" />
+            <FontAwesomeIconView glyphName="MAIL_REPLY_ALL" size="20" styleClass="icon_left"/>
           </graphic>
         </JFXButton>
-        <JFXButton contentDisplay="CENTER" ellipsisString="" onAction="#moveEdit" prefHeight="60.0" prefWidth="60.0" styleClass="btn-left">
+        <JFXButton contentDisplay="CENTER" ellipsisString="" onAction="#moveEdit" prefHeight="60.0"
+          prefWidth="60.0" styleClass="btn-left">
           <graphic>
-            <FontAwesomeIconView glyphName="EDIT" size="20" styleClass="icon_left" />
+            <FontAwesomeIconView glyphName="EDIT" size="20" styleClass="icon_left"/>
           </graphic>
         </JFXButton>
       </children>
     </VBox>
   </children>
   <stylesheets>
-    <URL value="@../CSS/Base.css" />
+    <URL value="@../CSS/Base.css"/>
   </stylesheets>
 
 </AnchorPane>

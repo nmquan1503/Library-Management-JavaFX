@@ -356,6 +356,34 @@ public class StartController {
 //      e.printStackTrace();
 //
 //    }
+    if (StartController.getID() != BaseController.getLibId()) {
+      BaseController.setLibId(StartController.getID());
+    }
+
+    if (BaseController.getBookPane() != null) {
+      BaseController.getBookPane().setVisible(false);
+    }
+
+    if (BaseController.getBorrowPane() != null) {
+      BaseController.getBorrowPane().setVisible(false);
+    }
+
+    if (BaseController.getEditPane() != null) {
+      BaseController.getEditPane().setVisible(false);
+    }
+
+    if (BaseController.getReturnPane() != null) {
+      BaseController.getReturnPane().setVisible(false);
+    }
+
+    if (BaseController.getUserPane() != null) {
+      BaseController.getUserPane().setVisible(false);
+    }
+
+    if (BaseController.getMainPane() != null) {
+      BaseController.getMainPane().setVisible(true);
+    }
+
     App.primaryStage.setScene(App.baseScene);
     App.primaryStage.show();
   }
@@ -557,6 +585,7 @@ public class StartController {
     };
     animationTimer.start(); // Bắt đầu animation
   }
+
   public static int getID() {     // lấy id người quản lý
     return id;
   }

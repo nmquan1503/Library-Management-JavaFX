@@ -41,6 +41,7 @@
   -fx-border-radius: 30px;
   -fx-background-radius: 30px;
   -fx-background-color: #d9d9d9;
+  -fx-cursor: text;
 }
 
 .icon_top {
@@ -104,4 +105,20 @@
 
 .dropdown-menu-dark .menu-item:focused {
     -fx-background-color: #1C1C1C;
+}
+
+.btn-search:hover {
+  -fx-cursor: hand;
+}
+
+.btn-search {
+  -fx-background-color: transparent;
+}
+
+.icon-search {
+  -fx-fill: BLACK;
+}
+
+.icon-search:hover {
+  -fx-fill: #7c7a7a;
 }

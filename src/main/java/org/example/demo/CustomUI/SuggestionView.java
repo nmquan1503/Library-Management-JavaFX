@@ -12,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import org.example.demo.Controllers.BaseController;
 import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.Suggestion.Suggestion;
 
@@ -24,10 +25,10 @@ public class SuggestionView extends HBox implements MainInfo {
   private Label content;
 
 
-  public SuggestionView(Suggestion suggestion,int height,int width, BlendMode blendMode){
+  public SuggestionView(Suggestion suggestion,int height,int width){
     this.id=suggestion.getId();
 
-    initImage(suggestion,height,width,blendMode);
+    initImage(suggestion,height,width);
 
     initContent(suggestion,height,width);
 
@@ -43,7 +44,7 @@ public class SuggestionView extends HBox implements MainInfo {
 
   }
 
-  private void initImage(Suggestion suggestion,int height,int width, BlendMode blendMode){
+  private void initImage(Suggestion suggestion,int height,int width){
     wrapper = new StackPane();
     wrapper.setPrefHeight(height);
     wrapper.setPrefWidth(height/1.5);
@@ -56,8 +57,8 @@ public class SuggestionView extends HBox implements MainInfo {
     image.setId("IconOfContent");
 
     wrapper.getChildren().add(image);
-    if(blendMode==null) wrapper.setBlendMode(BlendMode.SRC_OVER);
-    else wrapper.setBlendMode(blendMode);
+    if(BaseController.isDark) wrapper.setBlendMode(BlendMode.DIFFERENCE);
+    else wrapper.setBlendMode(BlendMode.SRC_OVER);
   }
   
   private void initContent(Suggestion suggestion,int height,int width){
