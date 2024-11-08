@@ -6,3 +6,133 @@
     -fx-font-family: 'HYWenHei-85W';
     -fx-text-fill: #584f58;
 }
+.table-view {
+    -fx-border-color: #E464C0; /* Màu viền của TableView */
+    -fx-border-width: 0;    /* Độ rộng viền để rõ ràng hơn */
+    -fx-background-insets: 0; /* Xóa insets để không còn khoảng trống */
+     -fx-padding: 0; /* Xóa khoảng padding nếu có */
+
+}
+.table-view .column-header {
+    -fx-pref-height: 50px;  /* Điều chỉnh chiều cao của header */
+    -fx-background-color: #f9d0ee;
+    -fx-text-fill: black; /* Màu chữ */
+    -fx-font-size: 17px;
+    -fx-border-color: transparent; /* Màu viền giữa các ô */
+    -fx-border-width: 0; /* Chỉ giữ viền dưới cho header */
+    -fx-padding: 0; /* Xóa khoảng padding nếu có */
+
+}
+
+.table-view .table-row-cell {
+    -fx-border-color: #E464C0; /* Màu sắc vách ngăn giữa các cột */
+    -fx-border-width: 0 0 0 0; /* Thêm vách ngăn bên phải */
+    -fx-background-color: #f7ebf3;
+}
+.table-row-cell {
+    -fx-cell-size: 55px; /* Điều chỉnh chiều cao dòng ở đây */
+    -fx-font-size: 17px;
+
+}
+
+.table-cell {
+    -fx-alignment: CENTER; /* Tùy chỉnh canh giữa nội dung */
+    -fx-border-color: #E464C0; /* Màu viền giữa các ô */
+    -fx-border-width: 0.5px;     /* Độ rộng viền để rõ ràng hơn */
+    -fx-text-fill: #8e8e8e;
+}
+.table-view .column-header .label {
+    -fx-border-width: 0.5px;
+    -fx-border-color: #E464C0;
+}
+.combo-box {
+    -fx-background-color: #f7ebf3; /* Màu nền */
+    -fx-border-color: #E464C0; /* Màu viền */
+    -fx-border-width: 2px;
+
+    -fx-shape: "M 100 100 L 700 100 L 700 350 L 100 350 A 10 50 0 1 1 100 100 ";
+    -fx-background-insets: 0;
+
+}
+
+.combo-box:hover {
+    -fx-background-color: #f4f1f3; /* Thay đổi màu nền khi hover */
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: transparent; /* Mũi tên trong suốt */
+    -fx-padding: 0 10 0 0;
+}
+
+.combo-box .arrow {
+    -fx-shape: "M 0 0 L 4 4 L 8 0"; /* Tam giác cho mũi tên */
+    -fx-background-color: #8E7D4B; /* Màu mũi tên */
+
+}
+
+.custom-combo-box {
+    -fx-font-size: 17px; /* Thay đổi kích thước chữ cho ComboBox */
+
+}
+
+/* Tùy chỉnh cho các mục trong danh sách (ListCell) */
+.combo-box-popup .list-view {
+    -fx-background-color: rgba(0, 0, 0, 0.8); /* Màu nền đen với độ trong suốt 70% */
+    -fx-background-radius: 15; /* Bo góc cho toàn bộ nền */
+    -fx-border-color: transparent; /* Xóa viền của popup */
+}
+
+
+.combo-box-popup .list-cell {
+    -fx-background-color: rgba(0, 0, 0, 0.0); /* Màu nền */
+    -fx-text-fill: white; /* Màu chữ */
+    -fx-background-radius: 15 15 15 15; /* Bo góc tròn đều cho các mục */
+    -fx-border-radius: 30 30 30 30;
+
+    -fx-padding: 10px;
+}
+
+/* Hiệu ứng hover khi di chuột qua các mục trong danh sách */
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: rgba(113, 120, 135, 1.0); /* Màu đen nhạt khi hover */
+    -fx-text-fill: white; /* Màu chữ trắng khi hover */
+}
+
+/* Khi mục được chọn */
+.combo-box-popup .list-cell:selected {
+    -fx-background-color: rgba(113, 120, 135, 1.0); /* Màu đen nhạt khi hover */
+    -fx-text-fill: white; /* Màu chữ trắng khi hover */
+}
+
+#SearchText{
+  -fx-background-color:transparent;
+   -fx-prompt-text-fill: #8e8e8e;
+   -fx-border-width:0;
+}
+#SearchBar {
+-fx-border-width: 1px;
+    -fx-border-color: #E464C0;
+    -fx-background-color: #f7ebf3;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-font-size: 14;
+    -fx-shape: "M 100 150 L 700 150 A 15 50 0 1 1 700 350 L 100 350 Z";
+}
+#SearchBar1 {
+-fx-border-width: 1px;
+    -fx-border-color: #E464C0;
+    -fx-background-color: #f9d0ee;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-font-size: 14;
+    -fx-shape: "M 100 150 L 700 150 A 15 50 0 1 1 700 350 L 100 350 A 15 50 0 0 1 100 150";
+}
+/* Hình dạng thay đổi */
+#SearchBar.newShape {
+    -fx-background-color: #f7ebf3;
+        -fx-background-radius: 8;
+        -fx-border-radius: 8;
+        -fx-font-size: 14;
+        -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 1, 1);
+    -fx-shape: "M 100 150 L 700 150 Q 739 150 739 250 L 739 350 L 100 350 Z ";
+}

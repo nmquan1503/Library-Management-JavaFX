@@ -1,10 +1,22 @@
 package org.example.demo.Controllers;
 
 import java.util.HashMap;
+import javafx.event.ActionEvent;
 import org.example.demo.Interfaces.MainInfo;
 
 public class ReturnBookController implements MainInfo {
 
+
+
+
+  public void confirmButtonAction(ActionEvent event) {
+  }
+
+  public void DeclineButtonAction(ActionEvent event) {
+  }
+
+  public void backButtonAction(ActionEvent event) {
+  }
   @Override
   public void applyDarkMode(boolean isDark) {
 
@@ -22,4 +34,6 @@ public class ReturnBookController implements MainInfo {
   public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
 
   }
+
+
 }
