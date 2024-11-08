@@ -29,6 +29,8 @@ import javafx.scene.shape.Arc;
 import javafx.util.Duration;
 import org.example.demo.API.Network;
 import org.example.demo.Controllers.BaseController;
+import org.example.demo.Controllers.EditController;
+import org.example.demo.Controllers.UsersController;
 import org.example.demo.Database.JDBC;
 import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.Library;
@@ -66,43 +68,17 @@ public class EditUserView extends ScrollPane implements MainInfo {
   @FXML private Pane loadingPane;
   private Transition loadingTransition;
 
-  private ArrayList<Suggestion> listUsers;
-  private Runnable laterAction;
   private User oldUser;
 
   private HashMap<Object,String >viLang;
   private HashMap<Object,String > enLang;
 
-  public EditUserView(){
+  private EditController editController;
+
+  public EditUserView(EditController editController){
     initView();
     initLoadingTransition();
-  }
-
-  public EditUserView(ArrayList<Suggestion> listUsers,Runnable laterAction){
-    initView();
-    initDefaultImage();
-    initDefaultId();
-    initDefaultAddress();
-    setupPhoneNumberTextField();
-    setupDateTextField(endBanDateTextField);
-    setupDateTextField(birthdayTextField);
-    this.listUsers=listUsers;
-    this.laterAction=laterAction;
-    this.oldUser=null;
-    viLang=new HashMap<>();
-    enLang=new HashMap<>();
-    setUpLanguage(viLang,enLang);
-    if(BaseController.isTranslate){
-      applyTranslate(null,null,true);
-    }
-    viewPane.getChildren().remove(loadingPane);
-    loadingPane=null;
-    loadingTransition=null;
-  }
-
-  public void setLaterAction(ArrayList<Suggestion> listUsers, Runnable laterAction){
-    this.listUsers=listUsers;
-    this.laterAction=laterAction;
+    this.editController=editController;
   }
 
   public void setUser(User user){
@@ -380,10 +356,18 @@ public class EditUserView extends ScrollPane implements MainInfo {
           Node parent=mainPane.getParent();
           if(parent!=null){
             if(parent instanceof AnchorPane){
-              ((AnchorPane) parent).getChildren().add(new Warning(
-                  "Thành công!",
-                  "Người dùng đã được thêm thành công."
-              ));
+              if(oldUser!=null){
+                ((AnchorPane) parent).getChildren().add(new Warning(
+                    "Thành công!",
+                    "Đã thay đổi thông tin người dùng."
+                ));
+              }
+              else {
+                ((AnchorPane) parent).getChildren().add(new Warning(
+                    "Thành công!",
+                    "Người dùng đã được thêm thành công."
+                ));
+              }
             }
           }
           mainPane.getChildren().removeLast();
@@ -394,18 +378,15 @@ public class EditUserView extends ScrollPane implements MainInfo {
               Library.getInstance().insertUserWithID(newUser, newUser.getId());
 
               if (oldUser == null) {
-                listUsers.add(new Suggestion(newUser));
+                Platform.runLater(()->{
+                  editController.addUserSuggestion(new Suggestion(newUser));
+                });
               } else {
-                for (int i = 0; i < listUsers.size(); i++) {
-                  if (listUsers.get(i).getId() == newUser.getId()) {
-                    listUsers.set(i, new Suggestion(newUser));
-                    break;
-                  }
-                }
+                Platform.runLater(()->{
+                  editController.fixUserSuggestion(new Suggestion(newUser));
+                });
               }
             }
-
-            Platform.runLater(laterAction);
 
           });
           thread.start();
