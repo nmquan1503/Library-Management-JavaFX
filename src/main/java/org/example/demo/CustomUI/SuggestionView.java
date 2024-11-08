@@ -73,7 +73,9 @@ public class SuggestionView extends HBox implements MainInfo {
   public int getID(){
     return id;
   }
-
+  public String getContent() {
+    return content.getText();
+  }
   @Override
   public void applyDarkMode(boolean isDark) {
     if(isDark){

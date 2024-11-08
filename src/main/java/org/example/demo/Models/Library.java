@@ -65,6 +65,13 @@ public class Library {
         new Borrowing(-1, book.getId(), user.getId(), borrowedDate, borrowedDate.add(10), null));
 
   }
+  public int borrowBook(Book book, User user, Date borrowedDate, Date dueDate) {
+    return borrowHistory.addBorrowing(
+
+            new Borrowing(-1, book.getId(), user.getId(), borrowedDate, dueDate, null));
+
+  }
+
 
   /**
    * save the returnDate in database.
@@ -125,10 +132,11 @@ public class Library {
     return userList.getUser(idUser);
   }
 
-  public ArrayList<Borrowing> getAllBorrowing() {
-    return borrowHistory.getAllBorrowing();
+  public ArrayList<Borrowing> getAllHistory() {
+    return borrowHistory.getAllHistory();
   }
-
+  public ArrayList<Borrowing> getAllReturning() { return borrowHistory.getAllReturning(); }
+  public ArrayList<Borrowing> getAllBorrowing() { return borrowHistory.getAllBorrowing(); }
   public ArrayList<Borrowing> getListBorrowingFromBook(int idBook) {
     return borrowHistory.getListBorrowingFromBook(idBook);
   }
