@@ -229,6 +229,7 @@ public class BaseController {
     returnPane.setVisible(false);
     editController.setBooksController(booksController);
     editController.setUsersController(usersController);
+    borrowBookController.setReturnBookController(returnBookController);
   }
 
   private void loadLibrarianInfo() {

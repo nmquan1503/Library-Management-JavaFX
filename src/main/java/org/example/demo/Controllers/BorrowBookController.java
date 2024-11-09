@@ -1,42 +1,30 @@
 package org.example.demo.Controllers;
 
 import com.jfoenix.controls.JFXListView;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import javafx.collections.ObservableListBase;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 
-import javafx.geometry.Insets;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
@@ -48,30 +36,25 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 import org.example.demo.CustomUI.SuggestionView;
-import org.example.demo.Database.JDBC;
 import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.BookShelf.Book;
 import org.example.demo.Models.BookShelf.BookShelf;
-import org.example.demo.Models.Borrowing.BorrowHistory;
 import org.example.demo.Models.Borrowing.Borrowing;
 import org.example.demo.Models.Library;
 import org.example.demo.Models.Suggestion.Suggestion;
-import org.example.demo.Models.Trie.Trie;
 import org.example.demo.Models.Users.User;
 import org.example.demo.Models.Users.UserList;
 import org.example.demo.Models.Users.Date;
-import javafx.scene.layout.HBox;
 
 
 public class BorrowBookController implements MainInfo {
 
+  private ReturnBookController returnBookController = new ReturnBookController();
   private ObservableList<TableData> dataList = FXCollections.observableArrayList();
   private int pageNow;
 
@@ -216,9 +199,16 @@ public class BorrowBookController implements MainInfo {
   @FXML
   private Button backButton;
 
+  public static BooleanProperty listenUpdate = new SimpleBooleanProperty(false);
+
   @FXML
   private ObservableList<SuggestionView> suggestions;
   private ObservableList<SuggestionView> suggestions1;
+
+  public void setReturnBookController(
+          ReturnBookController returnBookController) {
+    this.returnBookController = returnBookController;
+  }
 
   @FXML
   private void rightController() {
@@ -479,6 +469,22 @@ public class BorrowBookController implements MainInfo {
     Date due = new Date(x.getYear(), x.getMonthValue(), x.getDayOfMonth());
     Library.getInstance().borrowBook(book, npc, today, due);
     updateHistory("" + sortBox.getValue());
+
+    Task<Void> task = new Task<Void>() {
+      @Override
+      protected Void call() throws Exception {
+        returnBookController.updateHistory();
+        return null;
+      }
+      @Override
+      protected void succeeded() {
+        super.succeeded();
+        Platform.runLater(() -> {
+        });
+      }
+    };
+    new Thread(task).start();
+
     secondPane.setDisable(true);
     secondPane.setVisible(false);
     mainPane.setVisible(true);

@@ -164,3 +164,26 @@
     -fx-background-radius: 25px;
     -fx-background-color:#F4F4F4;
 }
+#SearchIcon{
+    -fx-background-color: transparent;
+
+}
+#SearchIcon:hover {
+    -fx-cursor: hand; /* Chuyển đổi con trỏ thành hình bàn tay */
+}
+#SearchIcon:pressed {
+    -fx-cursor: hand; /* Con trỏ vẫn là hình bàn tay khi nhấn */
+}
+.button-rightButton {
+  -fx-shape: "M 350 200 A 50 50 0 1 1 350 400 A 50 50 0 1 1 350 200";
+  -fx-background-color: #f9d0ee;
+  -fx-border-color: #E464C0;
+}
+
+.button-rightButton:hover {
+  -fx-background-color: #f9e1f2; /* Thay đổi màu nền khi hover */
+}
+
+.button-rightButton:pressed {
+  -fx-background-color: #bba0b4; /* Thay đổi màu nền khi nhấn */
+}

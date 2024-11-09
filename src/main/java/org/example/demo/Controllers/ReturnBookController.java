@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -51,6 +52,19 @@ public class ReturnBookController implements MainInfo {
   private int pageNow = 1;
 
   @FXML
+  private ComboBox sortBox;
+
+  @FXML
+  private Button searchButton;
+  private void addBox() {
+    sortBox.getItems().addAll(
+            "Tìm Kiếm Theo Người Mượn",
+            "Tìm Kiếm Theo Sách"
+    );
+    sortBox.setValue("Tìm Kiếm Theo Người Mượn");
+  }
+
+  @FXML
   private void rightController() {
     pageNow++;
     left.setDisable(false);
@@ -81,7 +95,7 @@ public class ReturnBookController implements MainInfo {
             FXCollections.observableArrayList(dataList.subList(5 * (pageNow - 1), x)));
   }
 
-  private void updateHistory() {
+  public void updateHistory() {
 
     while (pageNow > 1) {
       leftController();
@@ -138,7 +152,13 @@ public class ReturnBookController implements MainInfo {
   }
 
   @FXML
+  private void searchButtonController() {
+
+  }
+
+  @FXML
   private void initialize() {
+    addBox();
     left.setDisable(true);
     borrowedDateColumn.setReorderable(false);
     userColumn.setReorderable(false);
@@ -147,6 +167,7 @@ public class ReturnBookController implements MainInfo {
     userColumn.setCellValueFactory(new PropertyValueFactory<returnTableData, String>("user"));
     bookColumn.setCellValueFactory(new PropertyValueFactory<returnTableData, String>("book"));
     dueDateColumn.setCellValueFactory(new PropertyValueFactory<returnTableData, String>("dueDate"));
+
     bookColumn.setCellFactory(tc -> {
       return new javafx.scene.control.TableCell<returnTableData, String>() {
         private final Text text = new Text();
