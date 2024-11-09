@@ -11,11 +11,12 @@
     -fx-border-width: 0;    /* Độ rộng viền để rõ ràng hơn */
     -fx-background-insets: 0; /* Xóa insets để không còn khoảng trống */
      -fx-padding: 0; /* Xóa khoảng padding nếu có */
+     -fx-background-color: #F4F4F4;
 
 }
 .table-view .column-header {
     -fx-pref-height: 50px;  /* Điều chỉnh chiều cao của header */
-    -fx-background-color: #f9d0ee;
+    -fx-background-color: #F4F4F4;
     -fx-text-fill: black; /* Màu chữ */
     -fx-font-size: 17px;
     -fx-border-color: transparent; /* Màu viền giữa các ô */
@@ -25,9 +26,10 @@
 }
 
 .table-view .table-row-cell {
-    -fx-border-color: #E464C0; /* Màu sắc vách ngăn giữa các cột */
-    -fx-border-width: 0 0 0 0; /* Thêm vách ngăn bên phải */
-    -fx-background-color: #f7ebf3;
+    -fx-border-color: #d7bacf; /* Màu viền */
+        -fx-border-width: 1 0 0 0;
+    -fx-background-color:#F4F4F4;
+    -fx-border-style: dashed;
 }
 .table-row-cell {
     -fx-cell-size: 55px; /* Điều chỉnh chiều cao dòng ở đây */
@@ -38,19 +40,20 @@
 .table-cell {
     -fx-alignment: CENTER; /* Tùy chỉnh canh giữa nội dung */
     -fx-border-color: #E464C0; /* Màu viền giữa các ô */
-    -fx-border-width: 0.5px;     /* Độ rộng viền để rõ ràng hơn */
+    -fx-border-width: 0px;     /* Độ rộng viền để rõ ràng hơn */
     -fx-text-fill: #8e8e8e;
 }
 .table-view .column-header .label {
-    -fx-border-width: 0.5px;
+    -fx-border-width: 0px;
     -fx-border-color: #E464C0;
+    -fx-alignment: center;
 }
 .combo-box {
     -fx-background-color: #f7ebf3; /* Màu nền */
     -fx-border-color: #E464C0; /* Màu viền */
-    -fx-border-width: 2px;
+    -fx-border-width: 1px;
 
-    -fx-shape: "M 100 100 L 700 100 L 700 350 L 100 350 A 10 50 0 1 1 100 100 ";
+    -fx-shape: "M 100 100 L 700 100 L 700 350 L 100 350 A 17 50 0 1 1 100 100 ";
     -fx-background-insets: 0;
 
 }
@@ -71,7 +74,7 @@
 }
 
 .custom-combo-box {
-    -fx-font-size: 17px; /* Thay đổi kích thước chữ cho ComboBox */
+    -fx-font-size: 16px; /* Thay đổi kích thước chữ cho ComboBox */
 
 }
 
@@ -108,6 +111,7 @@
   -fx-background-color:transparent;
    -fx-prompt-text-fill: #8e8e8e;
    -fx-border-width:0;
+   -fx-border-color: transparent;
 }
 #SearchBar {
 -fx-border-width: 1px;
@@ -122,10 +126,7 @@
 -fx-border-width: 1px;
     -fx-border-color: #E464C0;
     -fx-background-color: #f9d0ee;
-    -fx-background-radius: 8;
-    -fx-border-radius: 8;
     -fx-font-size: 14;
-    -fx-shape: "M 100 150 L 700 150 A 15 50 0 1 1 700 350 L 100 350 A 15 50 0 0 1 100 150";
 }
 /* Hình dạng thay đổi */
 #SearchBar.newShape {
@@ -135,4 +136,31 @@
         -fx-font-size: 14;
         -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 1, 1);
     -fx-shape: "M 100 150 L 700 150 Q 739 150 739 250 L 739 350 L 100 350 Z ";
+}
+#ListView {
+
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+
+}
+#ListView .scroll-bar:horizontal,
+#ListView .scroll-bar:vertical {
+    -fx-opacity: 0;
+    -fx-pref-width: 0;
+    -fx-pref-height: 0;
+}
+#ListView .list-cell{
+    -fx-background-color: #f9a0e0;
+
+    -fx-font-size: 14;
+}
+#ListView .list-cell:hover {
+    -fx-background-color: #f9dff2; /* Màu nền khi hover */
+}
+#pinkPane{
+    -fx-border-width: 1px;
+    -fx-border-color: #E464C0;
+    -fx-border-radius: 25px;
+    -fx-background-radius: 25px;
+    -fx-background-color:#F4F4F4;
 }
