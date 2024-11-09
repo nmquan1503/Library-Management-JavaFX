@@ -329,6 +329,92 @@ public class UsersController implements MainInfo {
     thread.start();
   }
 
+  public void deleteUserSuggestion(Suggestion suggestion){
+    if(userSuggestionsListView!=null){
+      for(int i=0;i<userSuggestionsListView.getItems().size();i++){
+        if(userSuggestionsListView.getItems().get(i).getID()==suggestion.getId()){
+          userSuggestionsListView.getItems().remove(i);
+          break;
+        }
+      }
+    }
+
+    if(BanList !=null){
+      for(int i=0;i<BanList.getItems().size();i++){
+        if(BanList.getItems().get(i).getID()==suggestion.getId()){
+          BanList.getItems().remove(i);
+          break;
+        }
+      }
+    }
+
+    int pageNumber = Integer.parseInt(pageNumberTextField.getText());
+    for(int i=0;i<listUser.size();i++){
+      if(listUser.get(i).getId()==suggestion.getId()){
+        listUser.remove(i);
+        if(i+1>=pageNumber*20-19 && i+1<=pageNumber*20){
+          usersListView.getItems().remove(i%20);
+        }
+        else if(i+1<pageNumber*20-19){
+          usersListView.getItems().removeFirst();
+        }
+        if(20*pageNumber<listUser.size()){
+          usersListView.getItems().add(new SuggestionView(listUser.get(pageNumber*20),80,400));
+        }
+        if(usersListView.getItems().isEmpty()){
+          if(pageNumber-1>=1){
+            setListUsers(pageNumber-1);
+          }
+        }
+        return;
+      }
+    }
+  }
+
+  public void fixUserSuggestion(Suggestion suggestion){
+    if(userSuggestionsListView!=null){
+      for(int i=0;i<userSuggestionsListView.getItems().size();i++){
+        if(userSuggestionsListView.getItems().get(i).getID()==suggestion.getId()){
+          userSuggestionsListView.getItems().set(i,new SuggestionView(suggestion,35,230));
+          break;
+        }
+      }
+    }
+    if(BanList!=null){
+      for(int i=0;i<BanList.getItems().size();i++){
+        if(BanList.getItems().get(i).getID()==suggestion.getId()){
+          BanList.getItems().remove(i);
+          break;
+        }
+      }
+    }
+    int pageNumber = Integer.parseInt(pageNumberTextField.getText());
+    for(int i=0;i<listUser.size();i++){
+      if(listUser.get(i).getId()==suggestion.getId()){
+        listUser.set(i,suggestion);
+        if(i+1>=pageNumber*20-19 && i+1<=pageNumber*20){
+          usersListView.getItems().set(i%20,new SuggestionView(suggestion,80,400));
+        }
+        return;
+      }
+    }
+  }
+
+  public void addUserSuggestion(Suggestion suggestion){
+    if(userSuggestionsListView!=null){
+      if(suggestion.getContent().startsWith(nameTextField.getText())){
+        userSuggestionsListView.getItems().add(new SuggestionView(suggestion,35,230));
+      }
+    }
+    if(Library.getInstance().getUser(suggestion.getId()).isBan()){
+      BanList.getItems().add(new SuggestionView(suggestion,35,230));
+    }
+    listUser.add(suggestion);
+    if(usersListView.getItems().size()<20){
+      usersListView.getItems().add(new SuggestionView(suggestion,80,400));
+    }
+  }
+
   // set BlendMode của các ImageView là DIFFERENCE nếu isDark = true và SRC_OVER trong th còn lại
   @Override
   public void applyDarkMode(boolean isDark) {
