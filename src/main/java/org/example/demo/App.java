@@ -26,7 +26,7 @@ public class App extends Application {
 
   @Override
   public void start(Stage stage) throws Exception {
-    Class.forName("org.example.demo.API.Network");id
+    Class.forName("org.example.demo.API.Network");
     Class.forName("org.example.demo.Models.Library");
 
     primaryStage = stage;
