@@ -149,7 +149,7 @@ public class UsersController implements MainInfo {
     });
 
     nameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-      deleteButton.setVisible(!newValue.isEmpty());
+      deleteButton.setVisible(!nameTextField.getText().isEmpty());
       CreateUserSuggestions();
     });
   }
@@ -245,10 +245,10 @@ public class UsersController implements MainInfo {
 
     Thread thread = new Thread(() -> {
       ArrayList<Suggestion> listSuggestions = Library.getInstance().getUserSuggestions(prefixName);
-      for (Suggestion suggestion : listSuggestions) {
-        observableList.add(new SuggestionView(suggestion, 35, 400));
-      }
       Platform.runLater(() -> {
+        for (Suggestion suggestion : listSuggestions) {
+          observableList.add(new SuggestionView(suggestion, 35, 400));
+        }
         userSuggestionsListView.setVisible(true);
         int heightOfListView = Math.min(userSuggestionsListView.getItems().size(), 5) * 55;
         userSuggestionsListView.setMinHeight(heightOfListView);
@@ -323,7 +323,7 @@ public class UsersController implements MainInfo {
         prevPageButton.setVisible(false);
         initLoadingTransition();
         initBannedUsersList();
-
+        mainPane.setOnMouseClicked(e->{mainPane.requestFocus();});
       });
     });
     thread.start();
@@ -334,6 +334,12 @@ public class UsersController implements MainInfo {
       for(int i=0;i<userSuggestionsListView.getItems().size();i++){
         if(userSuggestionsListView.getItems().get(i).getID()==suggestion.getId()){
           userSuggestionsListView.getItems().remove(i);
+          int heightOfListView = Math.min(userSuggestionsListView.getItems().size(), 5) * 55;
+          userSuggestionsListView.setMinHeight(heightOfListView);
+          userSuggestionsListView.setMaxHeight(heightOfListView);
+          if(userSuggestionsListView.getItems().isEmpty()){
+            userSuggestionsListView.setVisible(false);
+          }
           break;
         }
       }
@@ -375,7 +381,7 @@ public class UsersController implements MainInfo {
     if(userSuggestionsListView!=null){
       for(int i=0;i<userSuggestionsListView.getItems().size();i++){
         if(userSuggestionsListView.getItems().get(i).getID()==suggestion.getId()){
-          userSuggestionsListView.getItems().set(i,new SuggestionView(suggestion,35,230));
+          userSuggestionsListView.getItems().set(i,new SuggestionView(suggestion,35,400));
           break;
         }
       }
@@ -402,12 +408,15 @@ public class UsersController implements MainInfo {
 
   public void addUserSuggestion(Suggestion suggestion){
     if(userSuggestionsListView!=null){
-      if(suggestion.getContent().startsWith(nameTextField.getText())){
-        userSuggestionsListView.getItems().add(new SuggestionView(suggestion,35,230));
+      if(suggestion.getContent().startsWith(nameTextField.getText()) && !nameTextField.getText().isEmpty()){
+        userSuggestionsListView.getItems().add(new SuggestionView(suggestion,35,400));
+        int heightOfListView = Math.min(userSuggestionsListView.getItems().size(), 5) * 55;
+        userSuggestionsListView.setMinHeight(heightOfListView);
+        userSuggestionsListView.setMaxHeight(heightOfListView);
       }
     }
     if(Library.getInstance().getUser(suggestion.getId()).isBan()){
-      BanList.getItems().add(new SuggestionView(suggestion,35,230));
+      BanList.getItems().add(new SuggestionView(suggestion,30,200));
     }
     listUser.add(suggestion);
     if(usersListView.getItems().size()<20){
