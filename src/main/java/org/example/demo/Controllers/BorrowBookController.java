@@ -466,6 +466,7 @@ public class BorrowBookController implements MainInfo {
 
         });
         delay.play();
+        BaseController.setIsBorrowingChanged(1 - BaseController.getIsBorrowingChanged());
         return;
       }
       DeclineButtonAction();
