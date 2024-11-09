@@ -12,6 +12,7 @@ import java.util.Objects;
 import javafx.util.Duration;
 import org.example.demo.API.Network;
 import org.example.demo.Controllers.WaitingController;
+import org.example.demo.Models.Library;
 
 public class App extends Application {
 
@@ -25,6 +26,9 @@ public class App extends Application {
 
   @Override
   public void start(Stage stage) throws Exception {
+    Class.forName("org.example.demo.API.Network");
+    Class.forName("org.example.demo.Models.Library");
+
     primaryStage = stage;
 
     AtomicReference<FXMLLoader> waitLoader = new AtomicReference<>(

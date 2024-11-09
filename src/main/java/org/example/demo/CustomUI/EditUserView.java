@@ -1,6 +1,7 @@
 package org.example.demo.CustomUI;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXComboBox;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,6 +16,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -27,6 +29,8 @@ import javafx.scene.shape.Arc;
 import javafx.util.Duration;
 import org.example.demo.API.Network;
 import org.example.demo.Controllers.BaseController;
+import org.example.demo.Controllers.EditController;
+import org.example.demo.Controllers.UsersController;
 import org.example.demo.Database.JDBC;
 import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.Library;
@@ -48,7 +52,7 @@ public class EditUserView extends ScrollPane implements MainInfo {
   @FXML private TextField birthdayTextField;
 
   @FXML private Label addressTag;
-  @FXML private TextField addressTextField;
+  @FXML private JFXComboBox<String > addressComboBox;
 
   @FXML private Label phoneNumberTag;
   @FXML private TextField phoneNumberTextField;
@@ -64,45 +68,24 @@ public class EditUserView extends ScrollPane implements MainInfo {
   @FXML private Pane loadingPane;
   private Transition loadingTransition;
 
-  private ArrayList<Suggestion> listUsers;
-  private Runnable laterAction;
   private User oldUser;
 
   private HashMap<Object,String >viLang;
   private HashMap<Object,String > enLang;
 
-  public EditUserView(){
+  private EditController editController;
+
+  public EditUserView(EditController editController){
     initView();
     initLoadingTransition();
-  }
-
-  public EditUserView(ArrayList<Suggestion> listUsers,Runnable laterAction){
-    initView();
-    initDefaultImage();
-    initDefaultId();
-    setupPhoneNumberTextField();
-    setupDateTextField(endBanDateTextField);
-    setupDateTextField(birthdayTextField);
-    viLang=new HashMap<>();
-    enLang=new HashMap<>();
-    setUpLanguage(viLang,enLang);
-    if(BaseController.isTranslate){
-      applyTranslate(null,null,true);
-    }
-    viewPane.getChildren().remove(loadingPane);
-    loadingPane=null;
-    loadingTransition=null;
-  }
-
-  public void setLaterAction(ArrayList<Suggestion> listUsers, Runnable laterAction){
-    this.listUsers=listUsers;
-    this.laterAction=laterAction;
+    this.editController=editController;
   }
 
   public void setUser(User user){
     if(user==null){
       initDefaultImage();
       initDefaultId();
+      initDefaultAddress();
     }
     else {
       initImage(user);
@@ -168,9 +151,27 @@ public class EditUserView extends ScrollPane implements MainInfo {
   }
   
   private void initAddress(User user){
+      initDefaultAddress();
       if(user.getAddress()!=null){
-        addressTextField.setText(user.getAddress());
+        addressComboBox.setValue(user.getAddress());
       }
+  }
+  
+  private void initDefaultAddress(){
+    Connection connection=JDBC.getConnection();
+    try {
+      String query = "select name_address from address";
+      PreparedStatement preparedStatement=connection.prepareStatement(query);
+      ResultSet resultSet=preparedStatement.executeQuery();
+      while(resultSet.next()){
+        String address=resultSet.getString(1);
+        addressComboBox.getItems().add(address);
+      }
+    }
+    catch (Exception e){
+      e.printStackTrace();
+    }
+    JDBC.closeConnection(connection);
   }
 
   private void initBirthday(User user){
@@ -199,8 +200,8 @@ public class EditUserView extends ScrollPane implements MainInfo {
     int id=-1;
     Connection connection= JDBC.getConnection();
     try{
-      String query="select max(id_book) as id "+
-          "from books ";
+      String query="select max(id_user) as id "+
+          "from user ";
       PreparedStatement statement=connection.prepareStatement(query);
       ResultSet resultSet=statement.executeQuery();
       if(resultSet.next()){
@@ -288,22 +289,62 @@ public class EditUserView extends ScrollPane implements MainInfo {
   private void SaveUser(){
     if(nameTextField.getText().isEmpty()){
       nameTextField.requestFocus();
+      Node parent=this;
+      while(parent.getParent()!=null)parent=parent.getParent();
+      if(parent instanceof AnchorPane){
+        ((AnchorPane) parent).getChildren().add(new Warning(
+            "Lỗi thông tin!",
+            "Tên không được để trống."
+        ));
+      }
       return;
     }
     if(createDateFromString(birthdayTextField.getText())==null){
       birthdayTextField.requestFocus();
+      Node parent=this;
+      while(parent.getParent()!=null)parent=parent.getParent();
+      if(parent instanceof AnchorPane){
+        ((AnchorPane) parent).getChildren().add(new Warning(
+            "Lỗi thông tin!",
+            "Hãy nhập lại ngày sinh."
+        ));
+      }
       return;
     }
     if(phoneNumberTextField.getText().isEmpty()){
       phoneNumberTextField.requestFocus();
+      Node parent=this;
+      while(parent.getParent()!=null)parent=parent.getParent();
+      if(parent instanceof AnchorPane){
+        ((AnchorPane) parent).getChildren().add(new Warning(
+            "Lỗi thông tin!",
+            "Số điện thoại không được để trống."
+        ));
+      }
       return;
     }
-    if(addressTextField.getText().isEmpty()){
-      addressTextField.requestFocus();
+    if(addressComboBox.getValue()==null){
+      addressComboBox.requestFocus();
+      Node parent=this;
+      while(parent.getParent()!=null)parent=parent.getParent();
+      if(parent instanceof AnchorPane){
+        ((AnchorPane) parent).getChildren().add(new Warning(
+            "Lỗi thông tin!",
+            "Địa chỉ không được để trống."
+        ));
+      }
       return;
     }
     if(createDateFromString(endBanDateTextField.getText())==null && !endBanDateTextField.getText().isEmpty()){
       endBanDateTextField.requestFocus();
+      Node parent=this;
+      while(parent.getParent()!=null)parent=parent.getParent();
+      if(parent instanceof AnchorPane){
+        ((AnchorPane) parent).getChildren().add(new Warning(
+            "Lỗi thông tin!",
+            "Hãy nhập lại ngày hết hạn cấm."
+        ));
+      }
       return;
     }
 
@@ -312,6 +353,23 @@ public class EditUserView extends ScrollPane implements MainInfo {
         "Xác nhận Lưu?",
         "Nếu bạn chọn \"Hủy\", bạn sẽ được tiếp tục thay đổi thông tin người mượn.",
         ()->{
+          Node parent=mainPane.getParent();
+          if(parent!=null){
+            if(parent instanceof AnchorPane){
+              if(oldUser!=null){
+                ((AnchorPane) parent).getChildren().add(new Warning(
+                    "Thành công!",
+                    "Đã thay đổi thông tin người dùng."
+                ));
+              }
+              else {
+                ((AnchorPane) parent).getChildren().add(new Warning(
+                    "Thành công!",
+                    "Người dùng đã được thêm thành công."
+                ));
+              }
+            }
+          }
           mainPane.getChildren().removeLast();
           Thread thread=new Thread(()->{
             if(oldUser!=null)Library.getInstance().deleteUser(oldUser);
@@ -320,18 +378,15 @@ public class EditUserView extends ScrollPane implements MainInfo {
               Library.getInstance().insertUserWithID(newUser, newUser.getId());
 
               if (oldUser == null) {
-                listUsers.add(new Suggestion(newUser));
+                Platform.runLater(()->{
+                  editController.addUserSuggestion(new Suggestion(newUser));
+                });
               } else {
-                for (int i = 0; i < listUsers.size(); i++) {
-                  if (listUsers.get(i).getId() == newUser.getId()) {
-                    listUsers.set(i, new Suggestion(newUser));
-                    break;
-                  }
-                }
+                Platform.runLater(()->{
+                  editController.fixUserSuggestion(new Suggestion(newUser));
+                });
               }
             }
-
-            Platform.runLater(laterAction);
 
           });
           thread.start();
@@ -354,7 +409,7 @@ public class EditUserView extends ScrollPane implements MainInfo {
     Date birthDay=createDateFromString(birthdayTextField.getText());
     if(birthDay==null && !birthdayTextField.getText().isEmpty())return null;
 
-    String address=addressTextField.getText();
+    String address=addressComboBox.getValue();
 
     String phoneNumber=phoneNumberTextField.getText();
 
@@ -370,7 +425,7 @@ public class EditUserView extends ScrollPane implements MainInfo {
     int index1=s.indexOf('/');
     if(index1==-1)return null;
     int index2=s.substring(index1+1).indexOf('/')+index1+1;
-    if(index2==-1)return null;
+    if(index2==index1)return null;
     String stringDay=s.substring(0,index1);
     String stringMonth=s.substring(index1+1,index2);
     String stringYear=s.substring(index2+1);
@@ -429,7 +484,7 @@ public class EditUserView extends ScrollPane implements MainInfo {
       birthdayTextField.setPromptText("Birthday");
 
       addressTag.setText("Address: ");
-      addressTextField.setPromptText("Address");
+      addressComboBox.setPromptText(" Address");
 
       phoneNumberTag.setText("Phone number: ");
       phoneNumberTextField.setPromptText("Phone number");
@@ -446,7 +501,7 @@ public class EditUserView extends ScrollPane implements MainInfo {
       birthdayTextField.setPromptText("Ngày sinh");
 
       addressTag.setText("Địa chỉ: ");
-      addressTextField.setPromptText("Địa chỉ");
+      addressComboBox.setPromptText(" Địa chỉ");
 
       phoneNumberTag.setText("Số điện thoại: ");
       phoneNumberTextField.setPromptText("Số điện thoại");

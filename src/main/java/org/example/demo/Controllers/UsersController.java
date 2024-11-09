@@ -149,7 +149,7 @@ public class UsersController implements MainInfo {
     });
 
     nameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-      deleteButton.setVisible(!newValue.isEmpty());
+      deleteButton.setVisible(!nameTextField.getText().isEmpty());
       CreateUserSuggestions();
     });
   }
@@ -245,10 +245,10 @@ public class UsersController implements MainInfo {
 
     Thread thread = new Thread(() -> {
       ArrayList<Suggestion> listSuggestions = Library.getInstance().getUserSuggestions(prefixName);
-      for (Suggestion suggestion : listSuggestions) {
-        observableList.add(new SuggestionView(suggestion, 35, 400));
-      }
       Platform.runLater(() -> {
+        for (Suggestion suggestion : listSuggestions) {
+          observableList.add(new SuggestionView(suggestion, 35, 400));
+        }
         userSuggestionsListView.setVisible(true);
         int heightOfListView = Math.min(userSuggestionsListView.getItems().size(), 5) * 55;
         userSuggestionsListView.setMinHeight(heightOfListView);
@@ -323,10 +323,105 @@ public class UsersController implements MainInfo {
         prevPageButton.setVisible(false);
         initLoadingTransition();
         initBannedUsersList();
-
+        mainPane.setOnMouseClicked(e->{mainPane.requestFocus();});
       });
     });
     thread.start();
+  }
+
+  public void deleteUserSuggestion(Suggestion suggestion){
+    if(userSuggestionsListView!=null){
+      for(int i=0;i<userSuggestionsListView.getItems().size();i++){
+        if(userSuggestionsListView.getItems().get(i).getID()==suggestion.getId()){
+          userSuggestionsListView.getItems().remove(i);
+          int heightOfListView = Math.min(userSuggestionsListView.getItems().size(), 5) * 55;
+          userSuggestionsListView.setMinHeight(heightOfListView);
+          userSuggestionsListView.setMaxHeight(heightOfListView);
+          if(userSuggestionsListView.getItems().isEmpty()){
+            userSuggestionsListView.setVisible(false);
+          }
+          break;
+        }
+      }
+    }
+
+    if(BanList !=null){
+      for(int i=0;i<BanList.getItems().size();i++){
+        if(BanList.getItems().get(i).getID()==suggestion.getId()){
+          BanList.getItems().remove(i);
+          break;
+        }
+      }
+    }
+
+    int pageNumber = Integer.parseInt(pageNumberTextField.getText());
+    for(int i=0;i<listUser.size();i++){
+      if(listUser.get(i).getId()==suggestion.getId()){
+        listUser.remove(i);
+        if(i+1>=pageNumber*20-19 && i+1<=pageNumber*20){
+          usersListView.getItems().remove(i%20);
+        }
+        else if(i+1<pageNumber*20-19){
+          usersListView.getItems().removeFirst();
+        }
+        if(20*pageNumber<listUser.size()){
+          usersListView.getItems().add(new SuggestionView(listUser.get(pageNumber*20),80,400));
+        }
+        if(usersListView.getItems().isEmpty()){
+          if(pageNumber-1>=1){
+            setListUsers(pageNumber-1);
+          }
+        }
+        return;
+      }
+    }
+  }
+
+  public void fixUserSuggestion(Suggestion suggestion){
+    if(userSuggestionsListView!=null){
+      for(int i=0;i<userSuggestionsListView.getItems().size();i++){
+        if(userSuggestionsListView.getItems().get(i).getID()==suggestion.getId()){
+          userSuggestionsListView.getItems().set(i,new SuggestionView(suggestion,35,400));
+          break;
+        }
+      }
+    }
+    if(BanList!=null){
+      for(int i=0;i<BanList.getItems().size();i++){
+        if(BanList.getItems().get(i).getID()==suggestion.getId()){
+          BanList.getItems().remove(i);
+          break;
+        }
+      }
+    }
+    int pageNumber = Integer.parseInt(pageNumberTextField.getText());
+    for(int i=0;i<listUser.size();i++){
+      if(listUser.get(i).getId()==suggestion.getId()){
+        listUser.set(i,suggestion);
+        if(i+1>=pageNumber*20-19 && i+1<=pageNumber*20){
+          usersListView.getItems().set(i%20,new SuggestionView(suggestion,80,400));
+        }
+        return;
+      }
+    }
+  }
+
+  public void addUserSuggestion(Suggestion suggestion){
+    if(userSuggestionsListView!=null){
+      if(suggestion.getContent().startsWith(nameTextField.getText()) && !nameTextField.getText().isEmpty()){
+        userSuggestionsListView.getItems().add(new SuggestionView(suggestion,35,400));
+        int heightOfListView = Math.min(userSuggestionsListView.getItems().size(), 5) * 55;
+        userSuggestionsListView.setMinHeight(heightOfListView);
+        userSuggestionsListView.setMaxHeight(heightOfListView);
+      }
+    }
+    if(Library.getInstance().getUser(suggestion.getId()).isBan()){
+      BanList.getItems().add(new SuggestionView(suggestion,30,200));
+    }
+    listUser.add(suggestion);
+    if(usersListView.getItems().size()<20){
+      usersListView.getItems().add(new SuggestionView(suggestion,80,400));
+    }
   }
 
   // set BlendMode của các ImageView là DIFFERENCE nếu isDark = true và SRC_OVER trong th còn lại

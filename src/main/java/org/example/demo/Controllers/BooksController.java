@@ -39,6 +39,8 @@ import javafx.util.Duration;
 import org.example.demo.API.Network;
 import org.example.demo.CustomUI.BookView;
 import org.example.demo.CustomUI.ConfirmBox;
+import org.example.demo.CustomUI.EditBox;
+import org.example.demo.CustomUI.EditBox.TypeBox;
 import org.example.demo.CustomUI.NotificationView;
 import org.example.demo.CustomUI.SuggestionView;
 import org.example.demo.CustomUI.Warning;
@@ -506,7 +508,7 @@ public class BooksController implements MainInfo {
 
   private void setupFocusTextField() {
     categoryTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-      if (newValue) {
+      if (newValue && !categoryTextField.getText().isEmpty()) {
         categoriesListView.setVisible(true);
         int height = Math.min(categoriesListView.getItems().size(), 5) * 35;
         categoriesListView.setMinHeight(height);
@@ -523,7 +525,7 @@ public class BooksController implements MainInfo {
     });
 
     titleTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-      if (newValue) {
+      if (newValue && !titleTextField.getText().isEmpty()) {
         titleListView.setVisible(true);
         int heightOfListView = Math.min(titleListView.getItems().size(), 5) * 40;
         titleListView.setMinHeight(heightOfListView);
@@ -698,6 +700,7 @@ public class BooksController implements MainInfo {
             CreateBookSuggestions();
           }
         });
+        mainPane.setOnMouseClicked(e->{mainPane.requestFocus();});
       });
     });
     thread.start();
@@ -802,6 +805,80 @@ public class BooksController implements MainInfo {
   @FXML
   private void RemoveTitleTextField() {
     titleTextField.clear();
+  }
+
+  public void deleteBookSuggestion(Suggestion suggestion){
+
+    if(titleListView!=null){
+      for(int i=0;i<titleListView.getItems().size();i++){
+        if(titleListView.getItems().get(i).getID()==suggestion.getId()){
+          titleListView.getItems().remove(i);
+          int heightOfListView = Math.min(titleListView.getItems().size(), 5) * 40;
+          titleListView.setMinHeight(heightOfListView);
+          titleListView.setMaxHeight(heightOfListView);
+          if(titleListView.getItems().isEmpty())titleListView.setVisible(false);
+          break;
+        }
+      }
+    }
+
+    int pageNumber = Integer.parseInt(pageNumberTextField.getText());
+    for(int i=0;i<listSuggestions.size();i++){
+      if(listSuggestions.get(i).getId()==suggestion.getId()){
+        listSuggestions.remove(i);
+        if(i+1>=pageNumber*20-19 && i+1<=pageNumber*20){
+          ListBooks.getItems().remove(i%20);
+        }
+        else if(i+1<pageNumber*20-19){
+          ListBooks.getItems().removeFirst();
+        }
+        if(20*pageNumber<listSuggestions.size()){
+          ListBooks.getItems().add(new SuggestionView(listSuggestions.get(pageNumber*20),80,400));
+        }
+        if(ListBooks.getItems().isEmpty()){
+          if(pageNumber-1>=1){
+            setListBooks(pageNumber-1);
+          }
+        }
+        return;
+      }
+    }
+  }
+
+  public void fixBookSuggestion(Suggestion suggestion){
+    if(titleListView!=null){
+      for(int i=0;i<titleListView.getItems().size();i++){
+        if(titleListView.getItems().get(i).getID()==suggestion.getId()){
+          titleListView.getItems().set(i,new SuggestionView(suggestion,35,230));
+          break;
+        }
+      }
+    }
+    int pageNumber = Integer.parseInt(pageNumberTextField.getText());
+    for(int i=0;i<listSuggestions.size();i++){
+      if(listSuggestions.get(i).getId()==suggestion.getId()){
+        listSuggestions.set(i,suggestion);
+        if(i+1>=pageNumber*20-19 && i+1<=pageNumber*20){
+          ListBooks.getItems().set(i%20,new SuggestionView(suggestion,80,400));
+        }
+        return;
+      }
+    }
+  }
+
+  public void addBookSuggestion(Suggestion suggestion){
+    if(titleListView!=null){
+      if(suggestion.getContent().startsWith(titleTextField.getText()) && !titleTextField.getText().isEmpty()){
+        titleListView.getItems().add(new SuggestionView(suggestion,35,230));
+        int heightOfListView = Math.min(titleListView.getItems().size(), 5) * 40;
+        titleListView.setMinHeight(heightOfListView);
+        titleListView.setMaxHeight(heightOfListView);
+      }
+    }
+    listSuggestions.add(suggestion);
+    if(ListBooks.getItems().size()<20){
+      ListBooks.getItems().add(new SuggestionView(suggestion,80,400));
+    }
   }
 
   // set BlendMode của các ImageView là DIFFERENCE nếu isDark = true và SRC_OVER trong th còn lại

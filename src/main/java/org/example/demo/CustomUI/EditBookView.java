@@ -31,6 +31,7 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 import org.example.demo.API.Network;
 import org.example.demo.Controllers.BaseController;
+import org.example.demo.Controllers.EditController;
 import org.example.demo.Database.JDBC;
 import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.BookShelf.Book;
@@ -73,40 +74,16 @@ public class EditBookView extends ScrollPane implements MainInfo {
   private Transition loadingTransition;
 
   private Book oldBook;
-  private ArrayList<Suggestion>listBooks;
-  private Runnable laterAction;
 
   private HashMap<Object,String > viLang;
   private HashMap<Object,String > enLang;
 
-  public EditBookView(){
+  private EditController editController;
+
+  public EditBookView(EditController editController){
+    this.editController=editController;
     initView();
     initLoadingTransition();
-  }
-
-  public EditBookView(ArrayList<Suggestion> listBooks,Runnable laterAction){
-        initView();
-        initDefaultImage();
-        initDefaultId();
-        authorList.getChildren().add(newTextField(authorList,"Tác giả "));
-        categoryList.getChildren().add(newTextField(categoryList,"Thể loại "));
-        this.listBooks=listBooks;
-        this.laterAction=laterAction;
-        this.oldBook=null;
-        viLang=new HashMap<>();
-        enLang=new HashMap<>();
-        setUpLanguage(viLang,enLang);
-        if(BaseController.isTranslate){
-          applyTranslate(null,null,true);
-        }
-        viewPane.getChildren().remove(loadingPane);
-        loadingPane=null;
-        loadingTransition=null;
-  }
-
-  public void setLaterAction(ArrayList<Suggestion> listBooks, Runnable laterAction){
-    this.listBooks=listBooks;
-    this.laterAction=laterAction;
   }
 
   public void setBook(Book book){
@@ -325,6 +302,23 @@ public class EditBookView extends ScrollPane implements MainInfo {
         "Xác nhận Lưu?",
         "Nếu bạn chọn \"Hủy\", bạn sẽ được tiếp tục thay đổi nội dung sách muốn thêm.",
         ()->{
+          Node parent=mainPane.getParent();
+          if(parent!=null){
+            if(parent instanceof AnchorPane){
+              if(oldBook!=null){
+                ((AnchorPane) parent).getChildren().add(new Warning(
+                    "Thành công!",
+                    "Đã thay đổi thông tin sách."
+                ));
+              }
+              else {
+                ((AnchorPane) parent).getChildren().add(new Warning(
+                    "Thành công!",
+                    "Sách đã được thêm thành công."
+                ));
+              }
+            }
+          }
           mainPane.getChildren().removeLast();
           Thread thread=new Thread(()->{
             if(oldBook!=null){
@@ -333,24 +327,23 @@ public class EditBookView extends ScrollPane implements MainInfo {
               }
             }
             Book newBook=createNewBook();
-            Library.getInstance().insertBookWithID(newBook,newBook.getId());
+            if(newBook!=null) {
+              Library.getInstance().insertBookWithID(newBook, newBook.getId());
 
-            if(oldBook==null){
-              listBooks.add(new Suggestion(newBook));
-            }
-            else if(oldBook.getId()==-1){
-              listBooks.add(new Suggestion(newBook));
-            }
-            else {
-              for(int i=0;i<listBooks.size();i++){
-                if(listBooks.get(i).getId()==newBook.getId()){
-                  listBooks.set(i,new Suggestion(newBook));
-                  break;
-                }
+              if (oldBook == null) {
+                Platform.runLater(()->{
+                  editController.addBookSuggestion(new Suggestion(newBook));
+                });
+              } else if (oldBook.getId() == -1) {
+                Platform.runLater(()->{
+                  editController.addBookSuggestion(new Suggestion(newBook));
+                });
+              } else {
+                Platform.runLater(()->{
+                  editController.fixBookSuggestion(new Suggestion(newBook));
+                });
               }
             }
-
-            Platform.runLater(laterAction);
 
           });
           thread.start();

@@ -10,28 +10,38 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import org.example.demo.Controllers.BaseController;
+import org.example.demo.Controllers.EditController;
 import org.example.demo.Interfaces.MainInfo;
+import org.example.demo.Models.Library;
 import org.example.demo.Models.Suggestion.Suggestion;
 
 public class EditBox extends HBox implements MainInfo {
 
-  private final int id;
+  public enum TypeBox{
+    BOOK,
+    USER;
+  }
 
+  private final Suggestion suggestion;
   private StackPane wrapper;
   private ImageView image;
   private VBox content;
   private JFXButton removeButton;
+  private EditController editController;
 
-  public EditBox(Suggestion suggestion,Runnable removeAction, int height,int width, BlendMode blendMode){
-    this.id=suggestion.getId();
+  public EditBox(Suggestion suggestion,TypeBox typeBox, EditController editController, int height,int width){
+    this.suggestion=suggestion;
+    this.editController=editController;
 
-    initImage(suggestion,height,blendMode);
+    initImage(suggestion,height);
     initLabel(suggestion,height,width);
-    initRemoveButton(removeAction,height);
+    initRemoveButton(height,typeBox);
 
     this.getChildren().addAll(
         wrapper,
@@ -48,7 +58,7 @@ public class EditBox extends HBox implements MainInfo {
 
   }
 
-  private void initImage(Suggestion suggestion,int height, BlendMode blendMode){
+  private void initImage(Suggestion suggestion,int height){
     wrapper=new StackPane();
     wrapper.setPrefHeight(height);
     wrapper.setPrefWidth(height/1.5);
@@ -59,8 +69,8 @@ public class EditBox extends HBox implements MainInfo {
     image.setFitHeight(height-10);
     image.setId("IconOfContent");
 
-    if(blendMode==null) wrapper.setBlendMode(BlendMode.SRC_OVER);
-    else wrapper.setBlendMode(blendMode);
+    if(BaseController.isDark) wrapper.setBlendMode(BlendMode.DIFFERENCE);
+    else wrapper.setBlendMode(BlendMode.SRC_OVER);
     wrapper.getChildren().add(image);
   }
 
@@ -82,13 +92,44 @@ public class EditBox extends HBox implements MainInfo {
     content=new VBox(contentLabel,idLabel);
   }
 
-  private void initRemoveButton(Runnable removeAction, int height){
+  private void initRemoveButton(int height,TypeBox typeBox){
     removeButton=new JFXButton();
     removeButton.setPrefWidth(height/1.5);
     removeButton.setPrefHeight(height/1.5);
     removeButton.setContentDisplay(ContentDisplay.CENTER);
     removeButton.setOnAction(event -> {
-      removeAction.run();
+      if(typeBox==TypeBox.BOOK){
+        AnchorPane mainPane=editController.getMainPane();
+        ConfirmBox confirmBox = new ConfirmBox(
+            "Xác nhận xóa sách khỏi thư viện?",
+            "",
+            () -> {
+              Library.getInstance().deleteBook(Library.getInstance().getBook(suggestion.getId()));
+              editController.deleteBookSuggestion(suggestion);
+              mainPane.getChildren().removeLast();
+            },
+            () -> {
+              mainPane.getChildren().removeLast();
+            }
+        );
+        mainPane.getChildren().add(confirmBox);
+      }
+      else {
+        AnchorPane mainPane=editController.getMainPane();
+        ConfirmBox confirmBox = new ConfirmBox(
+            "Xác nhận xóa nguười mượn khỏi thư viện?",
+            "",
+            () -> {
+              Library.getInstance().deleteUser(Library.getInstance().getUser(suggestion.getId()));
+              editController.deleteUserSuggestion(suggestion);
+              mainPane.getChildren().removeLast();
+            },
+            () -> {
+              mainPane.getChildren().removeLast();
+            }
+        );
+        mainPane.getChildren().add(confirmBox);
+      }
     });
     FontAwesomeIconView viewButton=new FontAwesomeIconView(FontAwesomeIcon.TRASH);
     viewButton.setFill(Color.RED);
@@ -98,7 +139,7 @@ public class EditBox extends HBox implements MainInfo {
   }
 
   public int getID(){
-    return id;
+    return suggestion.getId();
   }
 
   @Override
