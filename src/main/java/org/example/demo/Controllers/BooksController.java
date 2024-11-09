@@ -508,7 +508,7 @@ public class BooksController implements MainInfo {
 
   private void setupFocusTextField() {
     categoryTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-      if (newValue) {
+      if (newValue && !categoryTextField.getText().isEmpty()) {
         categoriesListView.setVisible(true);
         int height = Math.min(categoriesListView.getItems().size(), 5) * 35;
         categoriesListView.setMinHeight(height);
@@ -525,7 +525,7 @@ public class BooksController implements MainInfo {
     });
 
     titleTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-      if (newValue) {
+      if (newValue && !titleTextField.getText().isEmpty()) {
         titleListView.setVisible(true);
         int heightOfListView = Math.min(titleListView.getItems().size(), 5) * 40;
         titleListView.setMinHeight(heightOfListView);
@@ -700,6 +700,7 @@ public class BooksController implements MainInfo {
             CreateBookSuggestions();
           }
         });
+        mainPane.setOnMouseClicked(e->{mainPane.requestFocus();});
       });
     });
     thread.start();
@@ -812,6 +813,10 @@ public class BooksController implements MainInfo {
       for(int i=0;i<titleListView.getItems().size();i++){
         if(titleListView.getItems().get(i).getID()==suggestion.getId()){
           titleListView.getItems().remove(i);
+          int heightOfListView = Math.min(titleListView.getItems().size(), 5) * 40;
+          titleListView.setMinHeight(heightOfListView);
+          titleListView.setMaxHeight(heightOfListView);
+          if(titleListView.getItems().isEmpty())titleListView.setVisible(false);
           break;
         }
       }
@@ -863,8 +868,11 @@ public class BooksController implements MainInfo {
 
   public void addBookSuggestion(Suggestion suggestion){
     if(titleListView!=null){
-      if(suggestion.getContent().startsWith(titleTextField.getText())){
+      if(suggestion.getContent().startsWith(titleTextField.getText()) && !titleTextField.getText().isEmpty()){
         titleListView.getItems().add(new SuggestionView(suggestion,35,230));
+        int heightOfListView = Math.min(titleListView.getItems().size(), 5) * 40;
+        titleListView.setMinHeight(heightOfListView);
+        titleListView.setMaxHeight(heightOfListView);
       }
     }
     listSuggestions.add(suggestion);
