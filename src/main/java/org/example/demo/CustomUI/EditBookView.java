@@ -339,7 +339,9 @@ public class EditBookView extends ScrollPane implements MainInfo {
                   editController.addBookSuggestion(new Suggestion(newBook));
                 });
               } else {
-                editController.fixBookSuggestion(new Suggestion(newBook));
+                Platform.runLater(()->{
+                  editController.fixBookSuggestion(new Suggestion(newBook));
+                });
               }
             }
 
