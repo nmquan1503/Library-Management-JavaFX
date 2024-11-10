@@ -1,5 +1,10 @@
 package org.example.demo.Controllers;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -21,9 +26,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
@@ -33,11 +40,14 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
+import javafx.scene.Scene;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.MenuItem;
@@ -45,13 +55,18 @@ import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.effect.BlendMode;
 import javafx.stage.Popup;
+import javafx.stage.Stage;
 import org.example.demo.API.Network;
 import org.example.demo.API.Translate;
 import org.example.demo.App;
@@ -1211,8 +1226,31 @@ public class BaseController {
               }
             }
 
+            ButtonType qrButtonType = new ButtonType("Email", ButtonBar.ButtonData.NEXT_FORWARD);
+            ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+            alert.getButtonTypes().setAll(qrButtonType, okButtonType);
             alert.getDialogPane().setMaxWidth(450);
-            alert.showAndWait();
+
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.isPresent() && result.get() == qrButtonType) {
+              String email = Library.getInstance().getUser(item.getBorrowing().getIdUser())
+                  .getEmail();
+              if (email != null && !email.isEmpty()) {
+                String emailBody = "Thư viện xin gửi đến bạn thông báo về việc quá hạn trả sách. "
+                    + "Hiện tại, bạn đang mượn sách từ thư viện với thông tin như sau:\n\n"
+                    + "Tên sách: " + nameBook + "\n"
+                    + "Ngày mượn: " + formattedBorrowDate + "\n"
+                    + "Ngày đến hạn trả: " + formattedDueDate;
+
+                showQRCodeWindow(email, "Thông báo từ Thư viện", emailBody);
+              } else {
+                Alert emailAlert = new Alert(Alert.AlertType.WARNING);
+                emailAlert.setTitle("Email");
+                emailAlert.setHeaderText("Không có thông tin email!");
+                emailAlert.showAndWait();
+              }
+            }
           });
         }
       }
@@ -1266,4 +1304,40 @@ public class BaseController {
     popup.show(bell, popupX, popupY);
   }
 
+  private void showQRCodeWindow(String email, String subject, String body) {
+    String mailtoLink = "mailto:" + email + "?subject=" + subject + "&body=" + body;
+    WritableImage qrImage = generateQRCodeImage(mailtoLink, 300, 300);
+
+    ImageView qrImageView = new ImageView(qrImage);
+    StackPane qrPane = new StackPane(qrImageView);
+
+    Stage qrStage = new Stage();
+    qrStage.setTitle("Sending Email");
+    qrStage.setScene(new Scene(qrPane, 300, 300));
+    qrStage.show();
+  }
+
+  private WritableImage generateQRCodeImage(String text, int width, int height) {
+    Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
+    hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+
+    QRCodeWriter qrCodeWriter = new QRCodeWriter();
+    try {
+      BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, width, height, hints);
+
+      WritableImage image = new WritableImage(width, height);
+      PixelWriter pixelWriter = image.getPixelWriter();
+
+      for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++) {
+          pixelWriter.setColor(x, y, bitMatrix.get(x, y) ? javafx.scene.paint.Color.BLACK
+              : javafx.scene.paint.Color.WHITE);
+        }
+      }
+      return image;
+    } catch (WriterException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
 }

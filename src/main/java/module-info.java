@@ -11,6 +11,7 @@ module org.example.demo {
   requires de.jensd.fx.glyphs.fontawesome;
   requires java.prefs;
   requires mysql.connector.j;
+  requires com.google.zxing;
 
   opens org.example.demo.Controllers;
   opens org.example.demo.CustomUI to javafx.fxml;
