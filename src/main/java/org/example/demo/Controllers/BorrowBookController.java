@@ -1,42 +1,30 @@
 package org.example.demo.Controllers;
 
 import com.jfoenix.controls.JFXListView;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import javafx.collections.ObservableListBase;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 
-import javafx.geometry.Insets;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
@@ -48,30 +36,25 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 import org.example.demo.CustomUI.SuggestionView;
-import org.example.demo.Database.JDBC;
 import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.BookShelf.Book;
 import org.example.demo.Models.BookShelf.BookShelf;
-import org.example.demo.Models.Borrowing.BorrowHistory;
 import org.example.demo.Models.Borrowing.Borrowing;
 import org.example.demo.Models.Library;
 import org.example.demo.Models.Suggestion.Suggestion;
-import org.example.demo.Models.Trie.Trie;
 import org.example.demo.Models.Users.User;
 import org.example.demo.Models.Users.UserList;
 import org.example.demo.Models.Users.Date;
-import javafx.scene.layout.HBox;
 
 
 public class BorrowBookController implements MainInfo {
 
+  private ReturnBookController returnBookController = new ReturnBookController();
   private ObservableList<TableData> dataList = FXCollections.observableArrayList();
   private int pageNow;
 
@@ -216,9 +199,16 @@ public class BorrowBookController implements MainInfo {
   @FXML
   private Button backButton;
 
+  public static BooleanProperty listenUpdate = new SimpleBooleanProperty(false);
+
   @FXML
   private ObservableList<SuggestionView> suggestions;
   private ObservableList<SuggestionView> suggestions1;
+
+  public void setReturnBookController(
+          ReturnBookController returnBookController) {
+    this.returnBookController = returnBookController;
+  }
 
   @FXML
   private void rightController() {
@@ -480,6 +470,11 @@ public class BorrowBookController implements MainInfo {
     Date due = new Date(x.getYear(), x.getMonthValue(), x.getDayOfMonth());
     Library.getInstance().borrowBook(book, npc, today, due);
     updateHistory("" + sortBox.getValue());
+
+
+    returnBookController.updateHistory();
+
+
     secondPane.setDisable(true);
     secondPane.setVisible(false);
     mainPane.setVisible(true);
@@ -698,52 +693,72 @@ public class BorrowBookController implements MainInfo {
               isBanLabel.setText("Yes");
             }
             userSearchBox.positionCaret(userSearchBox.getText().length());
-            suggestionUser.getItems().clear();
-            suggestionUser.setVisible(false); // Ẩn danh sách gợi ý sau khi chọn
-            if (Pane1.getStyleClass().contains("newShape")) {
-              Pane1.getStyleClass().remove("newShape");
-            }
+            Platform.runLater(() -> {
+              suggestionUser.getItems().clear();
+              suggestionUser.setVisible(false);
+              suggestionUser.setMinHeight(0);
+              suggestionUser.setMaxHeight(0);
 
-            suggestionUser.setMinHeight(0);
-            suggestionUser.setMaxHeight(0);
+              // Xóa class "newShape" khỏi Pane1 nếu tồn tại
+              if (Pane1.getStyleClass().contains("newShape")) {
+                Pane1.getStyleClass().remove("newShape");
+              }
+            });
           }
         });
     suggestionBook.getSelectionModel().selectedItemProperty()
-        .addListener((observable, oldValue, newValue) -> {
-          if (suggestionBook.getItems().isEmpty()) {
-            return;
-          }
-          if (newValue != null) {
-            Pane2.requestFocus();
-            bookSearchBox.setText(
-                newValue.getContent()); // Đặt giá trị của TextField thành gợi ý đã chọn
+            .addListener((observable, oldValue, newValue) -> {
+              if (newValue == null || suggestionBook.getItems().isEmpty()) {
+                return;
+              }
 
-            bookIdBox.setText(String.valueOf(newValue.getID()));
-            book = bookList.getBook(newValue.getID());
-            bookSearchBox.positionCaret(bookSearchBox.getText().length());
-            PublisherLabel.setText(book.getPublisher());
+              Task<Void> updateTask = new Task<Void>() {
+                @Override
+                protected Void call() {
+                  // Cập nhật dữ liệu khi một mục mới được chọn
+                  Platform.runLater(() -> {
+                    Pane2.requestFocus();
+                    bookSearchBox.setText(newValue.getContent());
+                    bookIdBox.setText(String.valueOf(newValue.getID()));
 
-            PublishedDateLabel.setText("" + book.getPublishedDate());
-            Date today = new Date(new java.sql.Date(System.currentTimeMillis()));
+                    // Lấy thông tin về sách
+                    book = bookList.getBook(newValue.getID());
+                    if (book != null) {
+                      bookSearchBox.positionCaret(bookSearchBox.getText().length());
+                      PublisherLabel.setText(book.getPublisher());
+                      PublishedDateLabel.setText(String.valueOf(book.getPublishedDate()));
 
-            BorrowedDateLabel.setText(today.toString());
+                      // Xử lý ngày hiện tại và ngày trả sách
+                      Date today = new Date(new java.sql.Date(System.currentTimeMillis()));
+                      BorrowedDateLabel.setText(today.toString());
 
-            LocalDate localDatePlus10Days = today.add(10).toLocalDate();
-            DueDatePicker.setValue(localDatePlus10Days);
-            QuantityLeftLabel.setText("" + book.getQuantity() + " quyển");
+                      LocalDate localDatePlus10Days = today.add(10).toLocalDate();
+                      DueDatePicker.setValue(localDatePlus10Days);
 
-            CreateBookSuggestions();
-            suggestionBook.getItems().clear();
-            suggestionBook.setVisible(false);
-            Pane2.requestFocus();
-            if (Pane2.getStyleClass().contains("newShape")) {
-              Pane2.getStyleClass().remove("newShape");
-            }
+                      QuantityLeftLabel.setText(book.getQuantity() + " quyển");
+                    }
+                    Pane2.requestFocus();
 
-            suggestionBook.setMinHeight(0);
-            suggestionBook.setMaxHeight(0);
-          }
-        });
+                    // Đảm bảo các thao tác xoá và ẩn danh sách gợi ý diễn ra an toàn
+                    if (!suggestionBook.getItems().isEmpty()) {
+                      suggestionBook.getItems().clear();
+                      suggestionBook.setVisible(false);
+                      suggestionBook.setMinHeight(0);
+                      suggestionBook.setMaxHeight(0);
+
+                      // Xóa class "newShape" khỏi Pane2 nếu tồn tại
+                      if (Pane2.getStyleClass().contains("newShape")) {
+                        Pane2.getStyleClass().remove("newShape");
+                      }
+                    }
+                  });
+                  return null;
+                }
+              };
+
+              // Chạy Task trên luồng nền
+              new Thread(updateTask).start();
+            });
     secondPane.setDisable(true);
     secondPane.setVisible(false);
     tableView.setSelectionModel(null);
