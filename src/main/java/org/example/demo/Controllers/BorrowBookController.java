@@ -693,52 +693,72 @@ public class BorrowBookController implements MainInfo {
               isBanLabel.setText("Yes");
             }
             userSearchBox.positionCaret(userSearchBox.getText().length());
-            suggestionUser.getItems().clear();
-            suggestionUser.setVisible(false); // Ẩn danh sách gợi ý sau khi chọn
-            if (Pane1.getStyleClass().contains("newShape")) {
-              Pane1.getStyleClass().remove("newShape");
-            }
+            Platform.runLater(() -> {
+              suggestionUser.getItems().clear();
+              suggestionUser.setVisible(false);
+              suggestionUser.setMinHeight(0);
+              suggestionUser.setMaxHeight(0);
 
-            suggestionUser.setMinHeight(0);
-            suggestionUser.setMaxHeight(0);
+              // Xóa class "newShape" khỏi Pane1 nếu tồn tại
+              if (Pane1.getStyleClass().contains("newShape")) {
+                Pane1.getStyleClass().remove("newShape");
+              }
+            });
           }
         });
     suggestionBook.getSelectionModel().selectedItemProperty()
-        .addListener((observable, oldValue, newValue) -> {
-          if (suggestionBook.getItems().isEmpty()) {
-            return;
-          }
-          if (newValue != null) {
-            Pane2.requestFocus();
-            bookSearchBox.setText(
-                newValue.getContent()); // Đặt giá trị của TextField thành gợi ý đã chọn
+            .addListener((observable, oldValue, newValue) -> {
+              if (newValue == null || suggestionBook.getItems().isEmpty()) {
+                return;
+              }
 
-            bookIdBox.setText(String.valueOf(newValue.getID()));
-            book = bookList.getBook(newValue.getID());
-            bookSearchBox.positionCaret(bookSearchBox.getText().length());
-            PublisherLabel.setText(book.getPublisher());
+              Task<Void> updateTask = new Task<Void>() {
+                @Override
+                protected Void call() {
+                  // Cập nhật dữ liệu khi một mục mới được chọn
+                  Platform.runLater(() -> {
+                    Pane2.requestFocus();
+                    bookSearchBox.setText(newValue.getContent());
+                    bookIdBox.setText(String.valueOf(newValue.getID()));
 
-            PublishedDateLabel.setText("" + book.getPublishedDate());
-            Date today = new Date(new java.sql.Date(System.currentTimeMillis()));
+                    // Lấy thông tin về sách
+                    book = bookList.getBook(newValue.getID());
+                    if (book != null) {
+                      bookSearchBox.positionCaret(bookSearchBox.getText().length());
+                      PublisherLabel.setText(book.getPublisher());
+                      PublishedDateLabel.setText(String.valueOf(book.getPublishedDate()));
 
-            BorrowedDateLabel.setText(today.toString());
+                      // Xử lý ngày hiện tại và ngày trả sách
+                      Date today = new Date(new java.sql.Date(System.currentTimeMillis()));
+                      BorrowedDateLabel.setText(today.toString());
 
-            LocalDate localDatePlus10Days = today.add(10).toLocalDate();
-            DueDatePicker.setValue(localDatePlus10Days);
-            QuantityLeftLabel.setText("" + book.getQuantity() + " quyển");
+                      LocalDate localDatePlus10Days = today.add(10).toLocalDate();
+                      DueDatePicker.setValue(localDatePlus10Days);
 
-            CreateBookSuggestions();
-            suggestionBook.getItems().clear();
-            suggestionBook.setVisible(false);
-            Pane2.requestFocus();
-            if (Pane2.getStyleClass().contains("newShape")) {
-              Pane2.getStyleClass().remove("newShape");
-            }
+                      QuantityLeftLabel.setText(book.getQuantity() + " quyển");
+                    }
+                    Pane2.requestFocus();
 
-            suggestionBook.setMinHeight(0);
-            suggestionBook.setMaxHeight(0);
-          }
-        });
+                    // Đảm bảo các thao tác xoá và ẩn danh sách gợi ý diễn ra an toàn
+                    if (!suggestionBook.getItems().isEmpty()) {
+                      suggestionBook.getItems().clear();
+                      suggestionBook.setVisible(false);
+                      suggestionBook.setMinHeight(0);
+                      suggestionBook.setMaxHeight(0);
+
+                      // Xóa class "newShape" khỏi Pane2 nếu tồn tại
+                      if (Pane2.getStyleClass().contains("newShape")) {
+                        Pane2.getStyleClass().remove("newShape");
+                      }
+                    }
+                  });
+                  return null;
+                }
+              };
+
+              // Chạy Task trên luồng nền
+              new Thread(updateTask).start();
+            });
     secondPane.setDisable(true);
     secondPane.setVisible(false);
     tableView.setSelectionModel(null);

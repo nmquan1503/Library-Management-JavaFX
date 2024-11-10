@@ -226,13 +226,17 @@ public class ReturnBookController implements MainInfo {
 
                 userIdBox.setText(""+newValue.getID());
                 userSearchBox.positionCaret(userSearchBox.getText().length());
-                suggestionUser.getItems().clear();
-                suggestionUser.setVisible(false); // Ẩn danh sách gợi ý sau khi chọn
-                if (Pane1.getStyleClass().contains("newShape")) {
-                  Pane1.getStyleClass().remove("newShape");
-                }
-                suggestionUser.setMinHeight(0);
-                suggestionUser.setMaxHeight(0);
+                Platform.runLater(() -> {
+                  suggestionUser.getItems().clear();
+                  suggestionUser.setVisible(false);
+                  suggestionUser.setMinHeight(0);
+                  suggestionUser.setMaxHeight(0);
+
+                  // Xóa class "newShape" khỏi Pane1 nếu tồn tại
+                  if (Pane1.getStyleClass().contains("newShape")) {
+                    Pane1.getStyleClass().remove("newShape");
+                  }
+                });
               }
             });
 
