@@ -187,3 +187,21 @@
 .button-rightButton:pressed {
   -fx-background-color: #bba0b4; /* Thay đổi màu nền khi nhấn */
 }
+#SearchBar {
+-fx-border-width: 1px;
+    -fx-border-color: #E464C0;
+    -fx-background-color: #f7ebf3;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-font-size: 14;
+    -fx-shape: "M 100 150 L 700 150 A 15 50 0 1 1 700 350 L 100 350 Z";
+}
+
+#SearchBar.newShape {
+    -fx-background-color: #f7ebf3;
+        -fx-background-radius: 8;
+        -fx-border-radius: 8;
+        -fx-font-size: 14;
+        -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 1, 1);
+    -fx-shape: "M 100 150 L 700 150 Q 739 150 739 250 L 739 350 L 100 350 Z ";
+}

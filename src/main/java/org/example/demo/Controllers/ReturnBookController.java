@@ -1,9 +1,14 @@
 package org.example.demo.Controllers;
 
+import com.jfoenix.controls.JFXListView;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,12 +18,17 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import org.example.demo.CustomUI.SuggestionView;
 import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.BookShelf.BookShelf;
 import org.example.demo.Models.Borrowing.Borrowing;
 import org.example.demo.Models.Library;
+import org.example.demo.Models.Suggestion.Suggestion;
 import org.example.demo.Models.Users.UserList;
 
 public class ReturnBookController implements MainInfo {
@@ -53,9 +63,24 @@ public class ReturnBookController implements MainInfo {
 
   @FXML
   private ComboBox sortBox;
+  @FXML
+  private JFXListView<SuggestionView> suggestionUser;
+  private ObservableList<SuggestionView> suggestions;
+
+  @FXML
+  private TextField userIdBox;
+
+  @FXML
+  private TextField userSearchBox;
 
   @FXML
   private Button searchButton;
+
+  @FXML
+  private Pane Pane1;
+
+  @FXML
+  private VBox VBox1;
   private void addBox() {
     sortBox.getItems().addAll(
             "Tìm Kiếm Theo Người Mượn",
@@ -160,6 +185,62 @@ public class ReturnBookController implements MainInfo {
   private void initialize() {
     addBox();
     left.setDisable(true);
+    suggestionUser.setMinHeight(0);
+    suggestionUser.setMaxHeight(0);
+
+    suggestions = FXCollections.observableArrayList();
+    suggestionUser.setItems(suggestions);
+
+    userSearchBox.focusedProperty().addListener(new ChangeListener<Boolean>() {
+
+      @Override
+      public void changed(ObservableValue<? extends Boolean> observableValue,
+              Boolean oldValue, Boolean newValue) {
+        if (!newValue) {
+          suggestionUser.setVisible(false);
+          if (Pane1.getStyleClass().contains("newShape")) {
+            Pane1.getStyleClass().remove("newShape");
+          }
+        } else {
+          suggestionUser.setVisible(true);
+          if (!Pane1.getStyleClass().contains("newShape") && suggestionUser.getHeight() > 0) {
+            Pane1.getStyleClass().add("newShape");
+          }
+        }
+      }
+    });
+    userSearchBox.textProperty().addListener((observable) -> {
+      if (userSearchBox.isFocused()) {
+        CreateUserSuggestions();
+      }
+    });
+    suggestionUser.getSelectionModel().selectedItemProperty()
+            .addListener((observable, oldValue, newValue) -> {
+              if (suggestionUser.getItems().isEmpty()) {
+                return;
+              }
+              if (newValue != null) {
+                Pane1.requestFocus();
+                userSearchBox.setText(
+                        newValue.getContent()); // Đặt giá trị của TextField thành gợi ý đã chọn
+
+                userIdBox.setText(""+newValue.getID());
+                userSearchBox.positionCaret(userSearchBox.getText().length());
+                suggestionUser.getItems().clear();
+                suggestionUser.setVisible(false); // Ẩn danh sách gợi ý sau khi chọn
+                if (Pane1.getStyleClass().contains("newShape")) {
+                  Pane1.getStyleClass().remove("newShape");
+                }
+                suggestionUser.setMinHeight(0);
+                suggestionUser.setMaxHeight(0);
+              }
+            });
+
+
+
+
+
+
     borrowedDateColumn.setReorderable(false);
     userColumn.setReorderable(false);
     bookColumn.setReorderable(false);
@@ -217,6 +298,53 @@ public class ReturnBookController implements MainInfo {
     tableView.setItems(
             FXCollections.observableArrayList(dataList.subList(0, Math.min(5, dataList.size()))));
 
+  }
+
+  private void CreateUserSuggestions() {
+    String prefixName = userSearchBox.getText();
+    if (prefixName.isEmpty()) {
+      suggestionUser.getItems().clear();
+      suggestionUser.setVisible(false);
+      if (Pane1.getStyleClass().contains("newShape")) {
+        Pane1.getStyleClass().remove("newShape");
+      }
+      suggestionUser.setMaxHeight(0);
+      suggestionUser.setMinHeight(0);
+
+      return;
+    }
+    Thread thread = new Thread(() -> {
+      ArrayList<Suggestion> listSuggestions = Library.getInstance()
+              .getUserSuggestions(prefixName);
+      ObservableList<SuggestionView> observableList = FXCollections.observableArrayList();
+
+      Platform.runLater(() -> {
+        suggestionUser.setItems(observableList);
+        for (Suggestion suggestion : listSuggestions) {
+          if (observableList.size() >= 5) {
+            break;
+          }
+          observableList.add(new SuggestionView(suggestion, 35, 230));
+        }
+        int lastIndex = suggestionUser.getItems().size() - 1;
+
+        suggestionUser.setVisible(true);
+
+        int heightOfListView = Math.min(suggestionUser.getItems().size(), 5) * 55;
+        suggestionUser.setMinHeight(heightOfListView);
+        suggestionUser.setMaxHeight(heightOfListView);
+        if (heightOfListView == 0 && Pane1.getStyleClass().contains("newShape")) {
+          Pane1.getStyleClass().remove("newShape");
+        }
+        if (heightOfListView > 0 && !Pane1.getStyleClass().contains("newShape")) {
+          Pane1.getStyleClass().add("newShape");
+        }
+
+        VBox1.setMinHeight(35 + heightOfListView);
+        VBox1.setMaxHeight(35 + heightOfListView);
+      });
+    });
+    thread.start();
   }
 
   public void confirmButtonAction(ActionEvent event) {

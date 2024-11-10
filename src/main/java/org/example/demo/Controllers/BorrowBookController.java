@@ -470,20 +470,9 @@ public class BorrowBookController implements MainInfo {
     Library.getInstance().borrowBook(book, npc, today, due);
     updateHistory("" + sortBox.getValue());
 
-    Task<Void> task = new Task<Void>() {
-      @Override
-      protected Void call() throws Exception {
-        returnBookController.updateHistory();
-        return null;
-      }
-      @Override
-      protected void succeeded() {
-        super.succeeded();
-        Platform.runLater(() -> {
-        });
-      }
-    };
-    new Thread(task).start();
+
+    returnBookController.updateHistory();
+
 
     secondPane.setDisable(true);
     secondPane.setVisible(false);
