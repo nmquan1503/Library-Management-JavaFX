@@ -1,4 +1,3 @@
-
 package org.example.demo.CustomUI;
 
 import java.util.HashMap;
@@ -9,16 +8,11 @@ import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import org.example.demo.API.Network;
 import org.example.demo.Controllers.BaseController;
 import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.BookShelf.Book;
 import org.example.demo.Models.Borrowing.Borrowing;
 import org.example.demo.Models.Library;
-import org.example.demo.Models.Suggestion.Suggestion;
 import org.example.demo.Models.Users.Date;
 import org.example.demo.Models.Users.User;
 
@@ -26,20 +20,30 @@ public class NotificationView extends HBox implements MainInfo {
 
   private boolean isSeen;
 
-  private StackPane wrapper;
   private ImageView image;
   private Label content;
+
+  private final Borrowing borrowing;
+
+  public Borrowing getBorrowing() {
+    return borrowing;
+  }
+
+  public ImageView getImage() {
+    return image;
+  }
 
   public NotificationView(Borrowing borrowing, int width, int height) {
     isSeen = false;
 
+    this.borrowing = borrowing;
     User user = Library.getInstance().getUser(borrowing.getIdUser());
     Book book = Library.getInstance().getBook(borrowing.getIdBook());
 
     initImage(user, height, width);
     initContent(user, book, borrowing.getDueDate(), height, width);
 
-    this.getChildren().add(wrapper);
+    this.getChildren().add(image);
     this.getChildren().add(content);
 
     this.getStylesheets().add(
@@ -54,8 +58,11 @@ public class NotificationView extends HBox implements MainInfo {
 
   public void markSeen() {
     isSeen = true;
-    content.setId(null);
-    content.setFont(Font.font("System", FontWeight.NORMAL, 14));
+    if (!BaseController.isDark) {
+      content.setId("notification-suggestion-marked");
+    } else {
+      content.setId("notification-suggestion-marked-dark");
+    }
   }
 
   public boolean isSeen() {
@@ -63,54 +70,62 @@ public class NotificationView extends HBox implements MainInfo {
   }
 
   private void initImage(User user, int height, int width) {
-    wrapper = new StackPane();
-    wrapper.setPrefHeight(height);
-    wrapper.setPrefWidth(height / 1.5);
-    wrapper.setAlignment(Pos.CENTER);
 
     image = new ImageView();
     if (user.getAvatar() != null) {
       image.setImage(user.getAvatar());
     } else {
       image.setImage(new Image(Objects.requireNonNull(
-          getClass().getResourceAsStream("/org/example/demo/Assets/default_avt_user.png"))));
+          getClass().getResourceAsStream("/org/example/demo/Assets/default_avt_user.jpg"))));
     }
     image.setPreserveRatio(true);
     image.setFitHeight(height - 30);
 
-    wrapper.getChildren().add(image);
     if (BaseController.isDark) {
-      wrapper.setBlendMode(BlendMode.DIFFERENCE);
+      image.setBlendMode(BlendMode.DIFFERENCE);
     } else {
-      wrapper.setBlendMode(BlendMode.SRC_OVER);
+      image.setBlendMode(BlendMode.SRC_OVER);
     }
   }
 
   private void initContent(User user, Book book, Date dueDate, int height, int width) {
 
     content = new Label();
+    String bookTitle = book.getTitle();
+    int daysDiff = (int) Math.abs(dueDate.datediff(Date.today()));
 
-    if (dueDate.isAfter(Date.today())) {
-      content.setText(user.getName() + " đã quá hạn trả sách " + book.getTitle() + " " + Math.abs(
-          dueDate.datediff(Date.today())) + " ngày!");
+    if (!dueDate.isAfter(Date.today())) {
+      if (!BaseController.isTranslate) {
+        content.setText(
+            user.getName() + " đã quá hạn trả sách " + bookTitle + " " + daysDiff + " ngày!");
+      } else {
+        content.setText(
+            user.getName() + " is " + daysDiff + " days overdue for returning the book " + bookTitle
+                + "!");
+      }
     } else {
-      content.setText(user.getName() + " còn " + Math.abs(dueDate.datediff(Date.today()))
-          + " ngày nữa phải trả sách " + book.getTitle());
+      if (!BaseController.isTranslate) {
+        content.setText(user.getName() + " còn " + daysDiff
+            + " ngày nữa phải trả sách " + bookTitle);
+      } else {
+        content.setText(user.getName() + " has " + daysDiff
+            + " days left to return the book " + bookTitle);
+      }
     }
+
     content.setPrefWidth(width - height / 1.5 - 5);
     content.setPrefHeight(height - 7);
     content.setWrapText(true);
     content.setAlignment(Pos.CENTER);
-    content.setId("notification-suggestion");
+    if (BaseController.isDark) {
+      content.setId("notification-suggestion-dark");
+    } else {
+      content.setId("notification-suggestion");
+    }
   }
 
   @Override
   public void applyDarkMode(boolean isDark) {
-    if (isDark) {
-      wrapper.setBlendMode(BlendMode.DIFFERENCE);
-    } else {
-      wrapper.setBlendMode(BlendMode.SRC_OVER);
-    }
   }
 
   @Override

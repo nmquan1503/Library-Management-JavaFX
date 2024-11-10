@@ -6,6 +6,25 @@
 #notification-suggestion {
   -fx-font-size:14;
   -fx-font-weight: bold;
+  -fx-text-fill: #e05269;
+}
+
+#notification-suggestion-marked {
+  -fx-font-size: 14;
+  -fx-font-weight: 500;
+  -fx-text-fill: #e05269;
+}
+
+#notification-suggestion-dark {
+  -fx-font-size:14;
+  -fx-font-weight: bold;
+  -fx-text-fill: WHITE;
+}
+
+#notification-suggestion-marked-dark {
+  -fx-font-size: 14;
+  -fx-font-weight: 400;
+  -fx-text-fill: WHITE;
 }
 
 #IconOfContent{

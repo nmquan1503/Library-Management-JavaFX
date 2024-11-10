@@ -4,15 +4,25 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import javafx.application.Platform;
@@ -23,6 +33,9 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
+import javafx.scene.chart.XYChart.Data;
+import javafx.scene.chart.XYChart.Series;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
@@ -47,6 +60,7 @@ import org.example.demo.Database.JDBC;
 import org.example.demo.Models.Borrowing.Borrowing;
 import org.example.demo.Models.Language;
 import org.example.demo.Models.Library;
+import org.example.demo.Models.Users.Date;
 
 public class BaseController {
 
@@ -141,6 +155,22 @@ public class BaseController {
 
   private ReturnBookController returnBookController;
 
+  private String libName = "";
+
+  private Popup popup;
+
+  private final ArrayList<NotificationView> notificationList = new ArrayList<>();
+
+  private static final IntegerProperty isBorrowingChanged = new SimpleIntegerProperty(0);
+
+  public static void setIsBorrowingChanged(int val) {
+    isBorrowingChanged.set(val);
+  }
+
+  public static int getIsBorrowingChanged() {
+    return isBorrowingChanged.get();
+  }
+
   public static AnchorPane getMainPane() {
     return mainPane;
   }
@@ -167,6 +197,8 @@ public class BaseController {
 
   private boolean isTranSetUp = false;
 
+  private final HashMap<Integer, String> firstRead = new HashMap<>();
+
   @FXML
   private JFXListView<String> suggestionListView;
 
@@ -185,6 +217,9 @@ public class BaseController {
     });
     checkState.addListener((observable, oldValue, newValue) -> {
       loadLibrarianInfo();
+    });
+    isBorrowingChanged.addListener((observable, oldValue, newValue) -> {
+      refreshNotification();
     });
     setupAutocomplete();
     Thread loadMainThread = new Thread(new LoadMainTask());
@@ -219,6 +254,7 @@ public class BaseController {
     }
 
     avtMenuSetup();
+    initNotificationList();
     mainPane.setVisible(true);
     bookPane.setVisible(false);
     editPane.setVisible(false);
@@ -247,6 +283,7 @@ public class BaseController {
       if (rs.next()) {
         // set librarian name
         String name = rs.getString("name_librarian");
+        this.libName = name;
         homeController.setLibName(name);
 
         // set avatar for account
@@ -372,7 +409,7 @@ public class BaseController {
       }
     });
     suggestionPopup.getContent().add(suggestionListView);
-    suggestionListView.setPrefWidth(300);
+    suggestionListView.setPrefWidth(280);
     suggestionListView.setMaxHeight(100);
     suggestionPopup.setAutoHide(true);
 
@@ -927,10 +964,119 @@ public class BaseController {
     returnPane.setVisible(true);
   }
 
-  private Popup popup;
+  private void initNotificationList() {
+    ArrayList<Borrowing> history = Library.getInstance().getListBorrowingNearingDeadline();
+    for (Borrowing borrowing : history) {
+      notificationList.add(new NotificationView(borrowing, 330, 70));
+    }
+  }
+
+  private void refreshNotification() {
+    ArrayList<Borrowing> history = Library.getInstance().getListBorrowingNearingDeadline();
+    ArrayList<Integer> ls = new ArrayList<>();
+    ArrayList<NotificationView> del = new ArrayList<>();
+    for (NotificationView notificationView : notificationList) {
+      ls.add(notificationView.getBorrowing().getIdBorrowing());
+    }
+    int i = 0;
+    for (Borrowing borrowing : history) {
+      if (!ls.contains(borrowing.getIdBorrowing())) {
+        notificationList.add(new NotificationView(borrowing, 330, 70));
+      } else {
+        if (notificationList.get(i).isSeen()) {
+          del.add(notificationList.get(i));
+        }
+      }
+      i++;
+    }
+    if (notificationList.size() > 20 && !del.isEmpty()) {
+      for (NotificationView notificationView : del) {
+        notificationList.remove(notificationView);
+      }
+    }
+  }
+
+  private void putValueRead(int idBorrowing, String name) {
+    Connection conn = null;
+    PreparedStatement preparedStatement = null;
+
+    try {
+      conn = JDBC.getConnection();
+
+      String sql = "UPDATE borrowing SET name_first_reader = ? WHERE id_borrowing = ?;";
+
+      assert conn != null;
+      preparedStatement = conn.prepareStatement(sql);
+
+      preparedStatement.setString(1, name);
+      preparedStatement.setInt(2, idBorrowing);
+
+      preparedStatement.executeUpdate();
+
+      firstRead.put(idBorrowing, name);
+      JDBC.closeConnection(conn);
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      try {
+        if (preparedStatement != null) {
+          preparedStatement.close();
+        }
+        if (conn != null) {
+          conn.close();
+        }
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+
+  private void setUpFirstRead() {
+    Connection conn = null;
+    PreparedStatement preparedStatement = null;
+    ResultSet rs = null;
+    try {
+      conn = JDBC.getConnection();
+
+      String sql = "SELECT id_borrowing, name_first_reader FROM borrowing WHERE name_first_reader IS NOT NULL;";
+
+      assert conn != null;
+      preparedStatement = conn.prepareStatement(sql);
+      rs = preparedStatement.executeQuery();
+
+      while (rs.next()) {
+        int id = rs.getInt("id_borrowing");
+        String name = rs.getString("name_first_reader");
+        if (!firstRead.containsKey(id)) {
+          firstRead.put(id, name);
+        }
+      }
+
+      JDBC.closeConnection(conn);
+    } catch (Exception se) {
+      se.printStackTrace();
+    } finally {
+      try {
+        if (rs != null) {
+          rs.close();
+        }
+        if (preparedStatement != null) {
+          preparedStatement.close();
+        }
+        if (conn != null) {
+          conn.close();
+        }
+      } catch (SQLException se) {
+        se.printStackTrace();
+      }
+    }
+  }
 
   @FXML
   private void notificationClick() {
+    setUpFirstRead();
 
     if (popup == null) {
       popup = new Popup();
@@ -939,51 +1085,154 @@ public class BaseController {
 
     if (popup.isShowing()) {
       popup.hide();
+      popup.getContent().clear();
       return;
     }
 
-    ArrayList<Borrowing> history = Library.getInstance().getListBorrowingNearingDeadline();
-    ArrayList<NotificationView> notificationList = new ArrayList<>();
-    for (Borrowing borrowing : history) {
-      notificationList.add(new NotificationView(borrowing, 330, 70));
-    }
+    popup.getContent().clear();
 
     JFXListView<NotificationView> listView = new JFXListView<>();
+    setupListViewWithStyledScrollBars(listView);
+    listView.setStyle("-fx-background-color: transparent;" +
+        "-fx-border-color: Transparent");
     listView.getItems().addAll(notificationList);
-
-    listView.setPrefWidth(360);
-    listView.setMaxWidth(360);
+    listView.setPrefWidth(370);
+    listView.setMaxWidth(370);
     listView.setPrefHeight(270);
     listView.setCellFactory(param -> new ListCell<>() {
+      private boolean isHovered = false;
+
       @Override
       protected void updateItem(NotificationView item, boolean empty) {
         super.updateItem(item, empty);
         if (empty || item == null) {
           setGraphic(null);
         } else {
+          if (firstRead.containsKey(item.getBorrowing().getIdBorrowing()) || item.isSeen()) {
+            item.getImage().setBlendMode(BlendMode.SRC_OVER);
+            item.markSeen();
+          }
           setGraphic(item);
+          updateStyle();
+        }
 
-          if (isDark) {
-            setStyle("-fx-background-color: BLACK;");
+        selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
+          updateStyle();
+        });
+
+        // Hover effect
+        setOnMouseEntered(event -> {
+          isHovered = true;
+          updateStyle();
+        });
+
+        setOnMouseExited(event -> {
+          isHovered = false;
+          updateStyle();
+        });
+
+        setOnMouseClicked(event -> {
+          assert item != null;
+
+          boolean readBefore = firstRead.containsKey(item.getBorrowing().getIdBorrowing());
+
+          item.getImage().setBlendMode(BlendMode.SRC_OVER);
+          item.markSeen();
+          Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+          if (BaseController.isTranslate) {
+            alert.setTitle("Notification Details");
           } else {
-            setStyle("");
-
+            alert.setTitle("Chi tiết thông báo");
           }
 
-          setOnMouseClicked(event -> {
-            item.markSeen();
-          });
+          if (readBefore) {
+            String name = firstRead.get(item.getBorrowing().getIdBorrowing());
+            if (BaseController.isTranslate) {
+              alert.setContentText(name + " was the first person to read this notification.");
+            } else {
+              alert.setContentText(name + " là người đầu tiên đọc thông báo này.");
+            }
+          } else {
+            if (BaseController.isTranslate) {
+              alert.setContentText("You are the first person to read this notification.");
+            } else {
+              alert.setContentText("Bạn là người đầu tiên đọc thông báo này");
+            }
+            putValueRead(item.getBorrowing().getIdBorrowing(), libName);
+          }
+          String nameUser = Library.getInstance().getUser(item.getBorrowing().getIdUser())
+              .getName();
+          String nameBook = Library.getInstance().getBook(item.getBorrowing().getIdBook())
+              .getTitle();
+          Date borrowDate = item.getBorrowing().getBorrowedDate();
+          Date dueDate = item.getBorrowing().getDueDate();
+          DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+          String formattedBorrowDate = borrowDate.toLocalDate().format(formatter);
+          String formattedDueDate = dueDate.toLocalDate().format(formatter);
+          if (!isTranslate) {
+            if (dueDate.toLocalDate().isBefore(LocalDate.now())) {
+              alert.setHeaderText(
+                  nameUser + " mượn cuốn " + nameBook + " vào ngày " + formattedBorrowDate
+                      + " và đáng ra phải trả vào ngày " + formattedDueDate);
+            } else {
+              alert.setHeaderText(
+                  nameUser + " mượn cuốn " + nameBook + " vào ngày " + formattedBorrowDate
+                      + " và sẽ phải trả vào ngày " + formattedDueDate);
+            }
+          } else {
+            if (dueDate.toLocalDate().isBefore(LocalDate.now())) {
+              alert.setHeaderText(
+                  nameUser + " borrowed the book " + nameBook + " on " + formattedBorrowDate
+                      + " and was supposed to return it on " + formattedDueDate);
+            } else {
+              alert.setHeaderText(
+                  nameUser + " borrowed the book " + nameBook + " on " + formattedBorrowDate
+                      + " and is expected to return it on " + formattedDueDate);
+            }
+          }
 
-          setOnMouseEntered(event -> {
-            setStyle(
-                "-fx-background-color: lightgray; -fx-cursor: hand;");
-          });
-
-          setOnMouseExited(event -> {
-            setStyle("");
-          });
-        }
+          alert.getDialogPane().setMaxWidth(450);
+          alert.showAndWait();
+        });
       }
+
+      private void updateStyle() {
+        if (isEmpty()) {
+          return;
+        }
+
+        String style = "";
+        if (isSelected()) {
+          if (!isDark) {
+            style += "-fx-background-color: #FFC1E3;";
+          } else {
+            style += "-fx-background-color: #2c5f2d;";
+          }
+        } else if (isHovered) {
+          if (!isDark) {
+            style += "-fx-background-color: #ffcce9;";
+          } else {
+            style += "-fx-background-color: #1C1C1C;";
+          }
+        } else {
+          if (!isDark) {
+            style += "-fx-background-color: #ffe6f4;";
+          } else {
+            style += "-fx-background-color: BLACK;";
+          }
+        }
+
+        if (!isDark) {
+          style += "-fx-border-color: #e05269;";
+        } else {
+          style += "-fx-border-color: #50af52;";
+        }
+
+        style += "-fx-border-insets: 1.8px; -fx-background-insets: 1.8px; -fx-border-width: 0.7px; -fx-cursor: hand; -fx-padding: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;";
+        setStyle(style);
+      }
+
     });
 
     popup = new Popup();
@@ -992,7 +1241,7 @@ public class BaseController {
 
     Bounds bellBounds = bell.localToScreen(bell.getBoundsInLocal());
     double popupX = bellBounds.getMinX() - 280;
-    double popupY = bellBounds.getMaxY() - 5;
+    double popupY = bellBounds.getMaxY() - 10;
 
     popup.show(bell, popupX, popupY);
   }
