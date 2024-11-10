@@ -36,6 +36,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
@@ -1090,6 +1091,23 @@ public class BaseController {
 
     popup.getContent().clear();
 
+    if (notificationList.isEmpty()) {
+      Alert alert = new Alert(Alert.AlertType.INFORMATION);
+      if (isTranslate) {
+        alert.setTitle("No Notifications");
+      } else {
+        alert.setTitle("Không có thông báo");
+      }
+      alert.setHeaderText(null);
+      if (isTranslate) {
+        alert.setContentText("There are no notifications at this time.");
+      } else {
+        alert.setContentText("Không có thông báo ở thời điểm hiện tại.");
+      }
+      alert.showAndWait();
+      return;
+    }
+
     JFXListView<NotificationView> listView = new JFXListView<>();
     setupListViewWithStyledScrollBars(listView);
     listView.setStyle("-fx-background-color: transparent;" +
@@ -1097,7 +1115,8 @@ public class BaseController {
     listView.getItems().addAll(notificationList);
     listView.setPrefWidth(370);
     listView.setMaxWidth(370);
-    listView.setPrefHeight(270);
+    listView.setPrefHeight(70 * notificationList.size());
+    listView.setMaxHeight(270);
     listView.setCellFactory(param -> new ListCell<>() {
       private boolean isHovered = false;
 

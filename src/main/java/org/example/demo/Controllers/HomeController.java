@@ -268,7 +268,7 @@ public class HomeController implements MainInfo {
       }
 
       // display total overdue books
-      String sql3 = "SELECT COUNT(*) AS total FROM borrowing WHERE (due_date < NOW() AND returned_date IS NULL)";
+      String sql3 = "SELECT COUNT(*) AS total FROM borrowing WHERE returned_date IS NULL and DATEDIFF(now(),due_date)>=1";
       pstmt = conn.prepareStatement(sql3);
 
       rs = pstmt.executeQuery();
@@ -515,17 +515,19 @@ public class HomeController implements MainInfo {
       progressAnimation = new Timeline();
       int finalProgress = (int) (progress * 100);
       double totalDuration = 2.0;
-      double incrementDuration = totalDuration / finalProgress;
 
-      for (int i = 0; i <= finalProgress; i++) {
-        final int currentProgress = i;
-        progressAnimation.getKeyFrames()
-            .add(new KeyFrame(Duration.seconds(i * incrementDuration), e -> {
-              ringProgressIndicator.setProgress(currentProgress);
-            }));
+      if (finalProgress > 0) {
+        double incrementDuration = totalDuration / finalProgress;
+
+        for (int i = 0; i <= finalProgress; i++) {
+          final int currentProgress = i;
+          progressAnimation.getKeyFrames()
+              .add(new KeyFrame(Duration.seconds(i * incrementDuration), e -> {
+                ringProgressIndicator.setProgress(currentProgress);
+              }));
+        }
+        progressAnimation.play();
       }
-
-      progressAnimation.play();
 
     } catch (Exception e) {
       e.printStackTrace();
