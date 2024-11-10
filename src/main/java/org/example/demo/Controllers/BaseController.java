@@ -1115,7 +1115,7 @@ public class BaseController {
     listView.getItems().addAll(notificationList);
     listView.setPrefWidth(370);
     listView.setMaxWidth(370);
-    listView.setPrefHeight(70 * notificationList.size());
+    listView.setPrefHeight(90 * notificationList.size());
     listView.setMaxHeight(270);
     listView.setCellFactory(param -> new ListCell<>() {
       private boolean isHovered = false;
@@ -1148,71 +1148,72 @@ public class BaseController {
           isHovered = false;
           updateStyle();
         });
+        if (item != null) {
+          setOnMouseClicked(event -> {
+            assert item != null;
 
-        setOnMouseClicked(event -> {
-          assert item != null;
+            boolean readBefore = firstRead.containsKey(item.getBorrowing().getIdBorrowing());
 
-          boolean readBefore = firstRead.containsKey(item.getBorrowing().getIdBorrowing());
+            item.getImage().setBlendMode(BlendMode.SRC_OVER);
+            item.markSeen();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
 
-          item.getImage().setBlendMode(BlendMode.SRC_OVER);
-          item.markSeen();
-          Alert alert = new Alert(Alert.AlertType.INFORMATION);
-
-          if (BaseController.isTranslate) {
-            alert.setTitle("Notification Details");
-          } else {
-            alert.setTitle("Chi tiết thông báo");
-          }
-
-          if (readBefore) {
-            String name = firstRead.get(item.getBorrowing().getIdBorrowing());
             if (BaseController.isTranslate) {
-              alert.setContentText(name + " was the first person to read this notification.");
+              alert.setTitle("Notification Details");
             } else {
-              alert.setContentText(name + " là người đầu tiên đọc thông báo này.");
+              alert.setTitle("Chi tiết thông báo");
             }
-          } else {
-            if (BaseController.isTranslate) {
-              alert.setContentText("You are the first person to read this notification.");
-            } else {
-              alert.setContentText("Bạn là người đầu tiên đọc thông báo này");
-            }
-            putValueRead(item.getBorrowing().getIdBorrowing(), libName);
-          }
-          String nameUser = Library.getInstance().getUser(item.getBorrowing().getIdUser())
-              .getName();
-          String nameBook = Library.getInstance().getBook(item.getBorrowing().getIdBook())
-              .getTitle();
-          Date borrowDate = item.getBorrowing().getBorrowedDate();
-          Date dueDate = item.getBorrowing().getDueDate();
-          DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-          String formattedBorrowDate = borrowDate.toLocalDate().format(formatter);
-          String formattedDueDate = dueDate.toLocalDate().format(formatter);
-          if (!isTranslate) {
-            if (dueDate.toLocalDate().isBefore(LocalDate.now())) {
-              alert.setHeaderText(
-                  nameUser + " mượn cuốn " + nameBook + " vào ngày " + formattedBorrowDate
-                      + " và đáng ra phải trả vào ngày " + formattedDueDate);
-            } else {
-              alert.setHeaderText(
-                  nameUser + " mượn cuốn " + nameBook + " vào ngày " + formattedBorrowDate
-                      + " và sẽ phải trả vào ngày " + formattedDueDate);
-            }
-          } else {
-            if (dueDate.toLocalDate().isBefore(LocalDate.now())) {
-              alert.setHeaderText(
-                  nameUser + " borrowed the book " + nameBook + " on " + formattedBorrowDate
-                      + " and was supposed to return it on " + formattedDueDate);
-            } else {
-              alert.setHeaderText(
-                  nameUser + " borrowed the book " + nameBook + " on " + formattedBorrowDate
-                      + " and is expected to return it on " + formattedDueDate);
-            }
-          }
 
-          alert.getDialogPane().setMaxWidth(450);
-          alert.showAndWait();
-        });
+            if (readBefore) {
+              String name = firstRead.get(item.getBorrowing().getIdBorrowing());
+              if (BaseController.isTranslate) {
+                alert.setContentText(name + " was the first person to read this notification.");
+              } else {
+                alert.setContentText(name + " là người đầu tiên đọc thông báo này.");
+              }
+            } else {
+              if (BaseController.isTranslate) {
+                alert.setContentText("You are the first person to read this notification.");
+              } else {
+                alert.setContentText("Bạn là người đầu tiên đọc thông báo này");
+              }
+              putValueRead(item.getBorrowing().getIdBorrowing(), libName);
+            }
+            String nameUser = Library.getInstance().getUser(item.getBorrowing().getIdUser())
+                .getName();
+            String nameBook = Library.getInstance().getBook(item.getBorrowing().getIdBook())
+                .getTitle();
+            Date borrowDate = item.getBorrowing().getBorrowedDate();
+            Date dueDate = item.getBorrowing().getDueDate();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            String formattedBorrowDate = borrowDate.toLocalDate().format(formatter);
+            String formattedDueDate = dueDate.toLocalDate().format(formatter);
+            if (!isTranslate) {
+              if (dueDate.toLocalDate().isBefore(LocalDate.now())) {
+                alert.setHeaderText(
+                    nameUser + " mượn cuốn " + nameBook + " vào ngày " + formattedBorrowDate
+                        + " và đáng ra phải trả vào ngày " + formattedDueDate);
+              } else {
+                alert.setHeaderText(
+                    nameUser + " mượn cuốn " + nameBook + " vào ngày " + formattedBorrowDate
+                        + " và sẽ phải trả vào ngày " + formattedDueDate);
+              }
+            } else {
+              if (dueDate.toLocalDate().isBefore(LocalDate.now())) {
+                alert.setHeaderText(
+                    nameUser + " borrowed the book " + nameBook + " on " + formattedBorrowDate
+                        + " and was supposed to return it on " + formattedDueDate);
+              } else {
+                alert.setHeaderText(
+                    nameUser + " borrowed the book " + nameBook + " on " + formattedBorrowDate
+                        + " and is expected to return it on " + formattedDueDate);
+              }
+            }
+
+            alert.getDialogPane().setMaxWidth(450);
+            alert.showAndWait();
+          });
+        }
       }
 
       private void updateStyle() {
