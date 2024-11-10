@@ -4,7 +4,13 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,8 +19,10 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import javafx.application.Platform;
@@ -25,6 +33,8 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
+import javafx.scene.chart.XYChart.Data;
+import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
@@ -145,6 +155,8 @@ public class BaseController {
 
   private ReturnBookController returnBookController;
 
+  private String libName = "";
+
   private Popup popup;
 
   private final ArrayList<NotificationView> notificationList = new ArrayList<>();
@@ -184,6 +196,8 @@ public class BaseController {
   }
 
   private boolean isTranSetUp = false;
+
+  private final HashMap<Integer, String> firstRead = new HashMap<>();
 
   @FXML
   private JFXListView<String> suggestionListView;
@@ -268,6 +282,7 @@ public class BaseController {
       if (rs.next()) {
         // set librarian name
         String name = rs.getString("name_librarian");
+        this.libName = name;
         homeController.setLibName(name);
 
         // set avatar for account
@@ -980,8 +995,87 @@ public class BaseController {
     }
   }
 
+  private void putValueRead(int idBorrowing, String name) {
+    Connection conn = null;
+    PreparedStatement preparedStatement = null;
+
+    try {
+      conn = JDBC.getConnection();
+
+      String sql = "UPDATE borrowing SET name_first_reader = ? WHERE id_borrowing = ?;";
+
+      assert conn != null;
+      preparedStatement = conn.prepareStatement(sql);
+
+      preparedStatement.setString(1, name);
+      preparedStatement.setInt(2, idBorrowing);
+
+      preparedStatement.executeUpdate();
+
+      firstRead.put(idBorrowing, name);
+      JDBC.closeConnection(conn);
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      try {
+        if (preparedStatement != null) {
+          preparedStatement.close();
+        }
+        if (conn != null) {
+          conn.close();
+        }
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+
+  private void setUpFirstRead() {
+    Connection conn = null;
+    PreparedStatement preparedStatement = null;
+    ResultSet rs = null;
+    try {
+      conn = JDBC.getConnection();
+
+      String sql = "SELECT id_borrowing, name_first_reader FROM borrowing WHERE name_first_reader IS NOT NULL;";
+
+      assert conn != null;
+      preparedStatement = conn.prepareStatement(sql);
+      rs = preparedStatement.executeQuery();
+
+      while (rs.next()) {
+        int id = rs.getInt("id_borrowing");
+        String name = rs.getString("name_first_reader");
+        if (!firstRead.containsKey(id)) {
+          firstRead.put(id, name);
+        }
+      }
+
+      JDBC.closeConnection(conn);
+    } catch (Exception se) {
+      se.printStackTrace();
+    } finally {
+      try {
+        if (rs != null) {
+          rs.close();
+        }
+        if (preparedStatement != null) {
+          preparedStatement.close();
+        }
+        if (conn != null) {
+          conn.close();
+        }
+      } catch (SQLException se) {
+        se.printStackTrace();
+      }
+    }
+  }
+
   @FXML
   private void notificationClick() {
+    setUpFirstRead();
 
     if (popup == null) {
       popup = new Popup();
@@ -1013,7 +1107,7 @@ public class BaseController {
         if (empty || item == null) {
           setGraphic(null);
         } else {
-          if (item.isSeen()) {
+          if (firstRead.containsKey(item.getBorrowing().getIdBorrowing()) || item.isSeen()) {
             item.getImage().setBlendMode(BlendMode.SRC_OVER);
             item.markSeen();
           }
@@ -1038,50 +1132,67 @@ public class BaseController {
 
         setOnMouseClicked(event -> {
           assert item != null;
+
+          boolean readBefore = firstRead.containsKey(item.getBorrowing().getIdBorrowing());
+
           item.getImage().setBlendMode(BlendMode.SRC_OVER);
           item.markSeen();
           Alert alert = new Alert(Alert.AlertType.INFORMATION);
-          alert.setTitle("Notification Details");
 
-          if (item != null) {
-            if (BaseController.isTranslate) {
-              alert.setHeaderText("Details for Notification");
-            } else {
-              alert.setHeaderText("Chi tiết thông báo");
-            }
-            String nameUser = Library.getInstance().getUser(item.getBorrowing().getIdUser())
-                .getName();
-            String nameBook = Library.getInstance().getBook(item.getBorrowing().getIdBook())
-                .getTitle();
-            Date borrowDate = item.getBorrowing().getBorrowedDate();
-            Date dueDate = item.getBorrowing().getDueDate();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String formattedBorrowDate = borrowDate.toLocalDate().format(formatter);
-            String formattedDueDate = dueDate.toLocalDate().format(formatter);
-            if (!isTranslate) {
-              if (dueDate.toLocalDate().isBefore(LocalDate.now())) {
-                alert.setContentText(
-                    nameUser + " mượn cuốn " + nameBook + " vào ngày " + formattedBorrowDate
-                        + " và đáng ra phải trả vào ngày " + formattedDueDate);
-              } else {
-                alert.setContentText(
-                    nameUser + " mượn cuốn " + nameBook + " vào ngày " + formattedBorrowDate
-                        + " và sẽ phải trả vào ngày " + formattedDueDate);
-              }
-            } else {
-              if (dueDate.toLocalDate().isBefore(LocalDate.now())) {
-                alert.setContentText(
-                    nameUser + " borrowed the book " + nameBook + " on " + formattedBorrowDate
-                        + " and was supposed to return it on " + formattedDueDate);
-              } else {
-                alert.setContentText(
-                    nameUser + " borrowed the book " + nameBook + " on " + formattedBorrowDate
-                        + " and is expected to return it on " + formattedDueDate);
-              }
-            }
-
-            alert.showAndWait();
+          if (BaseController.isTranslate) {
+            alert.setTitle("Notification Details");
+          } else {
+            alert.setTitle("Chi tiết thông báo");
           }
+
+          if (readBefore) {
+            String name = firstRead.get(item.getBorrowing().getIdBorrowing());
+            if (BaseController.isTranslate) {
+              alert.setContentText(name + " was the first person to read this notification.");
+            } else {
+              alert.setContentText(name + " là người đầu tiên đọc thông báo này.");
+            }
+          } else {
+            if (BaseController.isTranslate) {
+              alert.setContentText("You are the first person to read this notification.");
+            } else {
+              alert.setContentText("Bạn là người đầu tiên đọc thông báo này");
+            }
+            putValueRead(item.getBorrowing().getIdBorrowing(), libName);
+          }
+          String nameUser = Library.getInstance().getUser(item.getBorrowing().getIdUser())
+              .getName();
+          String nameBook = Library.getInstance().getBook(item.getBorrowing().getIdBook())
+              .getTitle();
+          Date borrowDate = item.getBorrowing().getBorrowedDate();
+          Date dueDate = item.getBorrowing().getDueDate();
+          DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+          String formattedBorrowDate = borrowDate.toLocalDate().format(formatter);
+          String formattedDueDate = dueDate.toLocalDate().format(formatter);
+          if (!isTranslate) {
+            if (dueDate.toLocalDate().isBefore(LocalDate.now())) {
+              alert.setHeaderText(
+                  nameUser + " mượn cuốn " + nameBook + " vào ngày " + formattedBorrowDate
+                      + " và đáng ra phải trả vào ngày " + formattedDueDate);
+            } else {
+              alert.setHeaderText(
+                  nameUser + " mượn cuốn " + nameBook + " vào ngày " + formattedBorrowDate
+                      + " và sẽ phải trả vào ngày " + formattedDueDate);
+            }
+          } else {
+            if (dueDate.toLocalDate().isBefore(LocalDate.now())) {
+              alert.setHeaderText(
+                  nameUser + " borrowed the book " + nameBook + " on " + formattedBorrowDate
+                      + " and was supposed to return it on " + formattedDueDate);
+            } else {
+              alert.setHeaderText(
+                  nameUser + " borrowed the book " + nameBook + " on " + formattedBorrowDate
+                      + " and is expected to return it on " + formattedDueDate);
+            }
+          }
+
+          alert.getDialogPane().setMaxWidth(450);
+          alert.showAndWait();
         });
       }
 
