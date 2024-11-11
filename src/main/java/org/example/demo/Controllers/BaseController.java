@@ -791,6 +791,8 @@ public class BaseController {
 
   private void handleLogout() {
     refresh();
+    returnBookController.refresh();
+    borrowBookController.refresh();
     App.primaryStage.setScene(App.startScene);
     App.primaryStage.show();
   }
