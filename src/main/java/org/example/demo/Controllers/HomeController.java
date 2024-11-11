@@ -268,7 +268,7 @@ public class HomeController implements MainInfo {
       }
 
       // display total overdue books
-      String sql3 = "SELECT COUNT(*) AS total FROM borrowing WHERE returned_date IS NULL and DATEDIFF(now(),due_date)>=1";
+      String sql3 = "SELECT COUNT(*) AS total FROM borrowing WHERE returned_date IS NULL and datediff(now(),due_date)>=1";
       pstmt = conn.prepareStatement(sql3);
 
       rs = pstmt.executeQuery();
@@ -449,6 +449,8 @@ public class HomeController implements MainInfo {
       if (rs.next()) {
         borrowedBooks = rs.getInt("total");
       }
+
+      totalBooks += borrowedBooks;
 
       double progress = (totalBooks > 0) ? (double) borrowedBooks / totalBooks : 0.0;
 
