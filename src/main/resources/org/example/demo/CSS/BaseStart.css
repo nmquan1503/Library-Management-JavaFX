@@ -1,10 +1,8 @@
-@font-face {
-    font-family: 'HYWenHei-85W';
-}
 
 * {
-    -fx-font-family: 'HYWenHei-85W';
-    -fx-font-size: 13px; /* Bạn có thể thay đổi kích thước font nếu muốn */
+    -fx-font-family: 'System';
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
 }
 
 #mainPane {

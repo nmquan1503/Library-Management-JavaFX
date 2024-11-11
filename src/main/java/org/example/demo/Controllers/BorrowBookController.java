@@ -25,6 +25,7 @@ import javafx.scene.control.ComboBox;
 
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
@@ -378,8 +379,8 @@ public class BorrowBookController implements MainInfo {
     secondPane.setEffect(darkenEffect);
     secondPane.getChildren().forEach(node -> {
       node.setDisable(true);
-
     });
+    
     alert.setDisable(false);
 
     confirmTitle.setText("Hủy Yêu Cầu Mượn Sách");
@@ -400,8 +401,7 @@ public class BorrowBookController implements MainInfo {
     alert.setDisable(true);
     closeButton.setVisible(false);
     closeButton.setDisable(true);
-    book = null;
-    npc = null;
+
   }
 
   @FXML
@@ -415,6 +415,8 @@ public class BorrowBookController implements MainInfo {
       successPane.setVisible(false);
       resetUserSearch();
       resetBookSearch();
+      book = null;
+      npc = null;
       DeclineButtonAction();
     } else {
       Date today = new Date(new java.sql.Date(System.currentTimeMillis()));
@@ -472,7 +474,7 @@ public class BorrowBookController implements MainInfo {
     updateHistory("" + sortBox.getValue());
 
 
-    returnBookController.updateHistory();
+    returnBookController.updateHistory(-1, "");
 
 
     secondPane.setDisable(true);
@@ -483,6 +485,8 @@ public class BorrowBookController implements MainInfo {
     successPane.setDisable(true);
     resetUserSearch();
     resetBookSearch();
+    book = null;
+    npc = null;
     DeclineButtonAction();
   }
 
@@ -934,6 +938,19 @@ public class BorrowBookController implements MainInfo {
     // Gắn Tooltip vào FontAwesomeIconView searchIcon
     Tooltip.install(searchButton, tooltip);
     Tooltip.install(searchButton1, tooltip);
+  }
+
+  public void refresh() {
+    sortBox.setValue("Sách Chưa Trả");
+    resetBookSearch();
+    resetUserSearch();
+    secondPane.setVisible(false);
+    secondPane.setDisable(true);
+    mainPane.setVisible(true);
+    mainPane.setDisable(false);
+    updateHistory("Sách Chưa Trả");
+    book = null;
+    npc = null;
   }
 
   @Override

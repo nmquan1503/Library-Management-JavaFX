@@ -144,6 +144,9 @@ public class Library {
   public ArrayList<Borrowing> getListBorrowingFromUser(int idUser) {
     return borrowHistory.getListBorrowingFromUser(idUser);
   }
+  public ArrayList<Borrowing> getListBorrowingFromUserName(String prefixName) {
+    return borrowHistory.getListBorrowingFromUserName(prefixName);
+  }
 
   public Borrowing getBorrowing(int idBorrowing) {
     return borrowHistory.getBorrowing(idBorrowing);

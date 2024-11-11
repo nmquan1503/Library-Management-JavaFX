@@ -19,7 +19,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="BackgroundPane" layoutX="60.0" layoutY="60.0" prefHeight="540.0" prefWidth="900.0" stylesheets="@../CSS/Base.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo.Controllers.BorrowBookController">
+<AnchorPane id="BackgroundPane" layoutX="60.0" layoutY="60.0" prefHeight="540.0" prefWidth="900.0" stylesheets="@../CSS/Base.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo.Controllers.BorrowBookController">
 
   <AnchorPane id="mainPane" fx:id="mainPane" prefHeight="540.0" prefWidth="900.0" stylesheets="@../CSS/BorrowBook.css">
     <children>
@@ -34,7 +34,7 @@
           <Image url="@../../../../images/Screenshot_2024-10-19_143451-removebg-preview.png" />
         </image>
       </ImageView>
-      <ComboBox fx:id="sortBox" layoutX="257.0" layoutY="57.0" prefHeight="48.0" prefWidth="559.0" promptText="Sách Chưa Trả" styleClass="custom-combo-box" stylesheets="@../CSS/BorrowBook.css" />
+      <ComboBox fx:id="sortBox" layoutX="257.0" layoutY="57.0" prefHeight="52.0" prefWidth="559.0" promptText="Sách Chưa Trả" styleClass="custom-combo-box" stylesheets="@../CSS/BorrowBook.css" />
       <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="459.0" layoutY="172.0" pickOnBounds="true" preserveRatio="true" />
       <Label fx:id="pageNumber" alignment="CENTER" layoutX="350.0" layoutY="488.0" prefHeight="31.0" prefWidth="132.0" text="1">
         <font>
@@ -74,7 +74,7 @@
          <Line endX="40.39996337890625" endY="327.0" layoutX="785.0" layoutY="121.0" startX="40.39996337890625" startY="0.9999847412109375" stroke="#e464c0" />
     </children>
   </AnchorPane>
-  <AnchorPane id="mainPane" fx:id="secondPane" disable="true" prefHeight="540.0" prefWidth="900.0" styleClass="Anchor-Pane-mainPane" stylesheets="@../CSS/BorrowBookProcessing.css" visible="false">
+  <AnchorPane id="mainPane" fx:id="secondPane" disable="true" prefHeight="540.0" prefWidth="900.0" styleClass="Anchor-Pane-mainPane" stylesheets="@../CSS/BorrowBookProcessing.css">
     <children>
       <Button id="CreateButton" fx:id="CreateButton" layoutX="450.0" layoutY="460.0" mnemonicParsing="false" onAction="#CreateAction" prefHeight="40.0" prefWidth="146.0" text="Tạo" />
       <ImageView fitHeight="44.0" fitWidth="41.0" layoutX="43.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">

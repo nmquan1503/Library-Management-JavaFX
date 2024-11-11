@@ -37,6 +37,7 @@ import javafx.scene.layout.AnchorPane;
 
 import javafx.scene.layout.StackPane;
 
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.example.demo.App;
@@ -390,6 +391,7 @@ public class StartController {
 
   @FXML
   public void initialize() {
+
     spacetimeInNano = 50_000_000;
     setdefaultImage();
     loadingIndicator.setVisible(false);

@@ -6,11 +6,15 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javafx.animation.PauseTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.SequentialTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -23,12 +27,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import org.example.demo.CustomUI.SuggestionView;
 import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.BookShelf.BookShelf;
 import org.example.demo.Models.Borrowing.Borrowing;
 import org.example.demo.Models.Library;
 import org.example.demo.Models.Suggestion.Suggestion;
+import org.example.demo.Models.Users.User;
 import org.example.demo.Models.Users.UserList;
 
 public class ReturnBookController implements MainInfo {
@@ -80,6 +86,8 @@ public class ReturnBookController implements MainInfo {
   private Pane Pane1;
 
   @FXML
+  private Label wrongNotification;
+  @FXML
   private VBox VBox1;
   private void addBox() {
     sortBox.getItems().addAll(
@@ -120,16 +128,19 @@ public class ReturnBookController implements MainInfo {
             FXCollections.observableArrayList(dataList.subList(5 * (pageNow - 1), x)));
   }
 
-  public void updateHistory() {
+  public void updateHistory(int userID, String prefixName) {
 
-    while (pageNow > 1) {
-      leftController();
+    pageNow = 1;
+    if ( userID != -2 ) {
+      pageNumber.setText(String.valueOf(pageNow));
     }
+    left.setDisable(true);
     dataList.clear();
     ArrayList<Borrowing> allBorrowing;
 
-    allBorrowing = Library.getInstance().getAllBorrowing();
-
+    if ( userID == -1) allBorrowing = Library.getInstance().getAllBorrowing();
+    else if ( userID == -2 ) allBorrowing = Library.getInstance().getListBorrowingFromUserName(prefixName);
+    else allBorrowing = Library.getInstance().getListBorrowingFromUser(userID);
     for (Borrowing x : allBorrowing) {
       String action = "";
       if (x.getReturnedDate() == null) {
@@ -176,11 +187,50 @@ public class ReturnBookController implements MainInfo {
     }
   }
 
-  @FXML
-  private void searchButtonController() {
+  private void createErrorText(String content) {
+    if (wrongNotification.isVisible()) {
+      return;
+    }
+    wrongNotification.setVisible(true);
+    ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(0.2),
+            wrongNotification);
+    wrongNotification.setText(content);
+    scaleTransition.setFromX(0);  // Bắt đầu từ kích thước 0 (nhỏ tí)
+    scaleTransition.setFromY(0);
+    scaleTransition.setToX(1);    // Kết thúc ở kích thước gốc
+    scaleTransition.setToY(1);
+    PauseTransition pause1 = new PauseTransition(Duration.seconds(1.5));
+    ScaleTransition scaleDown = new ScaleTransition(Duration.seconds(0.2),
+            wrongNotification);
+    scaleDown.setFromX(1);  // Bắt đầu từ kích thước gốc
+    scaleDown.setFromY(1);
+    scaleDown.setToX(0);    // Thu nhỏ lại về kích thước 0
+    scaleDown.setToY(0);
 
+    // Tạo SequentialTransition để nối hai animation lại với nhau
+    SequentialTransition sequentialTransition = new SequentialTransition(scaleTransition,
+            pause1, scaleDown);
+    sequentialTransition.setOnFinished(event -> wrongNotification.setVisible(false));
+    sequentialTransition.play();
   }
 
+  @FXML
+  private void searchButtonController() {
+    if (userIdBox.getText().isEmpty() ) return;
+    int id = Integer.parseInt(userIdBox.getText());
+    User user = userList.getUser(id);
+    if( user == null ) {
+      userSearchBox.setText("");
+      createErrorText("User ID không tồn tại");
+      return;
+    }
+    userSearchBox.setText(user.getName());
+    updateHistory(user.getId(),"");
+  }
+
+  private void searchButtonController1() {
+    updateHistory(-2,userSearchBox.getText());
+  }
   @FXML
   private void initialize() {
     addBox();
@@ -209,9 +259,38 @@ public class ReturnBookController implements MainInfo {
         }
       }
     });
-    userSearchBox.textProperty().addListener((observable) -> {
+    userSearchBox.textProperty().addListener((observable, oldValue, newValue) -> {
+      // Kiểm tra nếu TextField được focus
       if (userSearchBox.isFocused()) {
+        // Tạo Task để xử lý tìm kiếm trong nền
         CreateUserSuggestions();
+        Task<Void> searchTask = new Task<Void>() {
+          @Override
+          protected Void call() throws Exception {
+            // Gọi hàm tạo gợi ý người dùng và xử lý tìm kiếm
+            searchButtonController1();
+            return null;  // Không trả về kết quả gì
+          }
+
+          @Override
+          protected void succeeded() {
+            super.succeeded();
+            // Cập nhật UI trên JavaFX Application Thread
+            Platform.runLater(() -> {
+              pageNumber.setText(String.valueOf(1));
+            });
+          }
+
+          @Override
+          protected void failed() {
+            super.failed();
+          }
+        };
+
+        // Chạy Task trong một thread riêng biệt
+        Thread taskThread = new Thread(searchTask);
+        taskThread.setDaemon(true);  // Đảm bảo thread không chặn việc thoát ứng dụng
+        taskThread.start();
       }
     });
     suggestionUser.getSelectionModel().selectedItemProperty()
@@ -225,6 +304,7 @@ public class ReturnBookController implements MainInfo {
                         newValue.getContent()); // Đặt giá trị của TextField thành gợi ý đã chọn
 
                 userIdBox.setText(""+newValue.getID());
+                updateHistory(newValue.getID(),"");
                 userSearchBox.positionCaret(userSearchBox.getText().length());
                 Platform.runLater(() -> {
                   suggestionUser.getItems().clear();
@@ -239,10 +319,6 @@ public class ReturnBookController implements MainInfo {
                 });
               }
             });
-
-
-
-
 
 
     borrowedDateColumn.setReorderable(false);
@@ -297,7 +373,7 @@ public class ReturnBookController implements MainInfo {
                 }
               };
             });
-    updateHistory();
+    updateHistory(-1,"");
     tableView.setPrefHeight(5 * 55 + 54);
     tableView.setItems(
             FXCollections.observableArrayList(dataList.subList(0, Math.min(5, dataList.size()))));
@@ -358,6 +434,15 @@ public class ReturnBookController implements MainInfo {
   }
 
   public void backButtonAction(ActionEvent event) {
+  }
+
+  public void refresh() {
+    sortBox.setValue("Tìm Kiếm Theo Người Mượn");
+
+    userIdBox.setText("");
+    userSearchBox.setText("");
+    updateHistory(-1,"");
+
   }
   @Override
   public void applyDarkMode(boolean isDark) {
