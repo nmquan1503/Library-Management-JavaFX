@@ -415,6 +415,8 @@ public class BorrowBookController implements MainInfo {
       successPane.setVisible(false);
       resetUserSearch();
       resetBookSearch();
+      book = null;
+      npc = null;
       DeclineButtonAction();
     } else {
       Date today = new Date(new java.sql.Date(System.currentTimeMillis()));
@@ -483,6 +485,8 @@ public class BorrowBookController implements MainInfo {
     successPane.setDisable(true);
     resetUserSearch();
     resetBookSearch();
+    book = null;
+    npc = null;
     DeclineButtonAction();
   }
 
@@ -934,6 +938,19 @@ public class BorrowBookController implements MainInfo {
     // Gắn Tooltip vào FontAwesomeIconView searchIcon
     Tooltip.install(searchButton, tooltip);
     Tooltip.install(searchButton1, tooltip);
+  }
+
+  public void refresh() {
+    sortBox.setValue("Sách Chưa Trả");
+    resetBookSearch();
+    resetUserSearch();
+    secondPane.setVisible(false);
+    secondPane.setDisable(true);
+    mainPane.setVisible(true);
+    mainPane.setDisable(false);
+    updateHistory("Sách Chưa Trả");
+    book = null;
+    npc = null;
   }
 
   @Override

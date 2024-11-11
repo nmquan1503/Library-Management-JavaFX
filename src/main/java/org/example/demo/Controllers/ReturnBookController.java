@@ -435,6 +435,15 @@ public class ReturnBookController implements MainInfo {
 
   public void backButtonAction(ActionEvent event) {
   }
+
+  public void refresh() {
+    sortBox.setValue("Tìm Kiếm Theo Người Mượn");
+
+    userIdBox.setText("");
+    userSearchBox.setText("");
+    updateHistory(-1,"");
+
+  }
   @Override
   public void applyDarkMode(boolean isDark) {
 
