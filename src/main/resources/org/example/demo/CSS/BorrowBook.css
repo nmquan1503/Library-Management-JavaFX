@@ -1,9 +1,6 @@
-@font-face {
-    font-family: 'HYWenHei-85W';
-}
-
 * {
-    -fx-font-family: 'HYWenHei-85W';
+    -fx-font-family: 'System';
+    -fx-font-weight: bold;
     -fx-text-fill: #584f58;
 }
 .button:hover{
@@ -40,7 +37,7 @@
 }
 
 .custom-combo-box {
-    -fx-font-size: 17px; /* Thay đổi kích thước chữ cho ComboBox */
+    -fx-font-size: 19px; /* Thay đổi kích thước chữ cho ComboBox */
 
 }
 
@@ -84,7 +81,7 @@
 
     /* Tạo hiệu ứng hai đoạn kéo vuông góc */
     -fx-background-insets: 0;
-    -fx-font-size: 17px; /* Thay đổi kích thước chữ cho ComboBox */
+    -fx-font-size: 19px; /* Thay đổi kích thước chữ cho ComboBox */
 }
 .table-view {
     -fx-border-color: #E464C0; /* Màu viền của TableView */

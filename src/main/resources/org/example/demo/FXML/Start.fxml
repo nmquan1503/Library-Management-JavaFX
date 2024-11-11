@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="BackgroundPane" fx:id="BackgroundPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#BackgroundRequest" prefHeight="600.0" prefWidth="960.0" stylesheets="@../CSS/BaseStart.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo.Controllers.StartController">
+<AnchorPane id="BackgroundPane" fx:id="BackgroundPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#BackgroundRequest" prefHeight="600.0" prefWidth="960.0" stylesheets="@../CSS/BaseStart.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo.Controllers.StartController">
    <children>
       <AnchorPane id="mainPane" fx:id="mainPane" layoutX="262.0" layoutY="50.0" onMouseClicked="#mainRequest" prefHeight="499.0" prefWidth="436.0" stylesheets="@../CSS/BaseStart.css">
          <children>
@@ -84,7 +84,7 @@
             </HBox>
             <JFXCheckBox fx:id="remember" checkedColor="#fa6e96" layoutX="23.0" layoutY="371.0" stylesheets="@../CSS/BaseStart.css" text="Ghi nhớ đăng nhập" textFill="#584f58">
                <font>
-                  <Font name="Arial" size="13.0" />
+                  <Font name="Segoe UI Symbol" size="13.0" />
                </font>
             </JFXCheckBox>
             <JFXButton fx:id="LogIn" layoutX="23.0" layoutY="418.0" onAction="#LogInController" prefHeight="42.0" prefWidth="390.0" styleClass="jfx-buttonLogIn" stylesheets="@../CSS/BaseStart.css" text="Đăng nhập" textFill="#9e9696">

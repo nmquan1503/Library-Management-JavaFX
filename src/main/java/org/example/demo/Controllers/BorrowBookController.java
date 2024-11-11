@@ -25,6 +25,7 @@ import javafx.scene.control.ComboBox;
 
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
@@ -378,8 +379,8 @@ public class BorrowBookController implements MainInfo {
     secondPane.setEffect(darkenEffect);
     secondPane.getChildren().forEach(node -> {
       node.setDisable(true);
-
     });
+    
     alert.setDisable(false);
 
     confirmTitle.setText("Hủy Yêu Cầu Mượn Sách");
