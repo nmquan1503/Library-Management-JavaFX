@@ -91,7 +91,7 @@
           <FontAwesomeIconView glyphName="SEARCH" />
         </graphic>
       </Button>
-         <Button id="SearchIcon" fx:id="searchButton1" layoutX="805.0" layoutY="67.0" maxWidth="15.0" minHeight="12.0" minWidth="0.0" mnemonicParsing="false" onAction="#searchButtonController" prefHeight="22.0" prefWidth="15.0">
+         <Button id="SearchIcon" fx:id="searchButton1" layoutX="805.0" layoutY="67.0" maxWidth="15.0" minHeight="12.0" minWidth="0.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="15.0">
             <graphic>
                <FontAwesomeIconView glyphName="SEARCH" />
             </graphic>
@@ -160,5 +160,10 @@
       </FontAwesomeIconView>
     </graphic>
   </Button>
+   <Label id="ErrorText" fx:id="wrongNotification" alignment="CENTER" layoutX="310.0" layoutY="245.0" prefHeight="23.0" prefWidth="287.0" stylesheets="@BorrowBookProcessing.css" text="User ID không tồn tại !!!" visible="false">
+      <font>
+         <Font size="14.0" />
+      </font>
+   </Label>
 
 </AnchorPane>

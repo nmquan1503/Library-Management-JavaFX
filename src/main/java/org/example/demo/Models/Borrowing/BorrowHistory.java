@@ -142,7 +142,6 @@ public class BorrowHistory {
     return history;
   }
 
-
   public int addBorrowing(Borrowing borrowing) {
     Connection connection = JDBC.getConnection();
     try {
@@ -187,6 +186,7 @@ public class BorrowHistory {
     }
     return -1;
   }
+
 
   public void updateReturnedDateOfBorrowing(int idBorrowing, Date returnedDate) {
     Connection connection = JDBC.getConnection();
@@ -309,7 +309,7 @@ public class BorrowHistory {
       String query = "select id_borrowing, " +
           "id_book, " +
           "borrowed_date, " +
-          "due_date, " +
+          "due_date " +
           "from borrowing " +
           "where returned_date is null and id_user = (?) " +
           "order by due_date asc, borrowed_date desc";
@@ -319,8 +319,8 @@ public class BorrowHistory {
       while (resultSet.next()) {
         int idBorrowing = resultSet.getInt("id_borrowing");
         int idBook = resultSet.getInt("id_book");
-        Date borrowedDate = (Date) resultSet.getDate("borrowed_date");
-        Date dueDate = (Date) resultSet.getDate("due_date");
+        Date borrowedDate = new Date(resultSet.getDate("borrowed_date"));
+        Date dueDate = new Date(resultSet.getDate("due_date"));
         history.add(new Borrowing(idBorrowing, idBook, idUser, borrowedDate, dueDate, null));
       }
 
@@ -328,7 +328,7 @@ public class BorrowHistory {
           "id_book, " +
           "borrowed_date, " +
           "due_date, " +
-          "returned_date, " +
+          "returned_date " +
           "from borrowing " +
           "where returned_date is not null and id_user = (?)" +
           "order by returned_date desc,borrowed_date desc";
@@ -343,6 +343,39 @@ public class BorrowHistory {
         Date returnedDate = (Date) resultSet.getDate("returned_date");
         history.add(
             new Borrowing(idBorrowing, idBook, idUser, borrowedDate, dueDate, returnedDate));
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    JDBC.closeConnection(connection);
+    return history;
+  }
+
+  public ArrayList<Borrowing> getListBorrowingFromUserName(String prefixName) {
+    ArrayList<Borrowing> history = new ArrayList<>();
+    Connection connection = JDBC.getConnection();
+    try {
+      String query = "SELECT b.id_borrowing, " +
+              "b.id_user, " +
+              "u.name_user, " +
+              "b.id_book, " +
+              "b.borrowed_date, " +
+              "b.due_date " +
+              "FROM borrowing b " +
+              "JOIN user u ON b.id_user = u.id_user " +
+              "WHERE b.returned_date IS NULL AND u.name_user LIKE ? " +
+              "ORDER BY b.due_date ASC, b.borrowed_date DESC";
+      PreparedStatement statement = connection.prepareStatement(query);
+
+      statement.setString(1, prefixName+"%");
+      ResultSet resultSet = statement.executeQuery();
+      while (resultSet.next()) {
+        int idBorrowing = resultSet.getInt("id_borrowing");
+        int idBook = resultSet.getInt("id_book");
+        Date borrowedDate = new Date(resultSet.getDate("borrowed_date"));
+        Date dueDate = new Date(resultSet.getDate("due_date"));
+        int idUser = resultSet.getInt("id_user");
+        history.add(new Borrowing(idBorrowing, idBook, idUser, borrowedDate, dueDate, null));
       }
     } catch (Exception e) {
       e.printStackTrace();

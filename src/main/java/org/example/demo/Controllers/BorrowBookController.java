@@ -401,8 +401,7 @@ public class BorrowBookController implements MainInfo {
     alert.setDisable(true);
     closeButton.setVisible(false);
     closeButton.setDisable(true);
-    book = null;
-    npc = null;
+
   }
 
   @FXML
@@ -473,7 +472,7 @@ public class BorrowBookController implements MainInfo {
     updateHistory("" + sortBox.getValue());
 
 
-    returnBookController.updateHistory();
+    returnBookController.updateHistory(-1, "");
 
 
     secondPane.setDisable(true);
