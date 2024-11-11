@@ -790,8 +790,19 @@ public class BaseController {
   }
 
   private void handleLogout() {
+    refresh();
     App.primaryStage.setScene(App.startScene);
     App.primaryStage.show();
+  }
+
+  public void refresh() {
+    if (isDark) {
+      darkMode();
+    }
+    if (isTranslate) {
+      handleTranslate();
+    }
+    searchBase.setText("");
   }
 
   private void setUpLang() {

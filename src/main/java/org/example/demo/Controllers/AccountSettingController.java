@@ -203,6 +203,10 @@ public class AccountSettingController {
           loadDefaultAvatar();
         }
 
+        promptName.setText("");
+        promptPassword.setText("");
+        promptEmail.setText("");
+
         LocalDate date = rs.getDate("birthday").toLocalDate();
         promptBirth.setValue(date);
 
@@ -216,8 +220,9 @@ public class AccountSettingController {
         }
 
         if (rs.getString("name_address") != null) {
-          promptAddress.setPromptText(rs.getString("name_address"));
+          promptAddress.setValue(rs.getString("name_address"));
         } else {
+          promptAddress.setValue("");
           promptAddress.setPromptText("Choose an address");
         }
       }
