@@ -168,6 +168,7 @@ public class UsersController implements MainInfo {
 
 
   private void showUser(int idUser) {
+    mainPane.requestFocus();
     Thread thread = new Thread(() -> {
       UserView userView = new UserView();
       Platform.runLater(() -> {
@@ -422,6 +423,18 @@ public class UsersController implements MainInfo {
     if(usersListView.getItems().size()<20){
       usersListView.getItems().add(new SuggestionView(suggestion,80,400));
     }
+  }
+
+  public void refresh(){
+
+    while(mainPane.getChildren().getLast() instanceof UserView){
+      ((UserView) mainPane.getChildren().getLast()).stopSpeak();
+      mainPane.getChildren().removeLast();
+    }
+
+    nameTextField.setText("");
+    BanList.scrollTo(0);
+    loadUserList();
   }
 
   // set BlendMode của các ImageView là DIFFERENCE nếu isDark = true và SRC_OVER trong th còn lại

@@ -135,6 +135,9 @@ public class HomeController implements MainInfo {
   @FXML
   private Button allBtn;
 
+  @FXML
+  private AnchorPane blur = new AnchorPane();
+
   private JFXTreeTableView<LibrarianTable> tempTable;
 
   private ScatterChart<String, Number> fullyScatterChart;
@@ -775,7 +778,6 @@ public class HomeController implements MainInfo {
 
   @FXML
   public void scatterClick() {
-    AnchorPane blur = new AnchorPane();
     blur.setStyle("-fx-background-color: rgba(0,0,0,0.4);\n"
         + "  -fx-background-radius: 12px 0px 0px 0px;\n"
         + "  -fx-border-radius: 12px 0px 0px 0px;");
@@ -1057,12 +1059,19 @@ public class HomeController implements MainInfo {
     AnchorPane.setLeftAnchor(child, leftAnchor);
   }
 
+  public void resetClick() {
+    if (homePane != null && blur != null) {
+      blur.getChildren().clear();
+      homePane.getChildren().remove(blur);
+    }
+  }
+
   @FXML
   public void allOnClick() {
-    AnchorPane blur = new AnchorPane();
     blur.setStyle("-fx-background-color: rgba(0,0,0,0.4);\n"
         + "  -fx-background-radius: 12px 0px 0px 0px;\n"
         + "  -fx-border-radius: 12px 0px 0px 0px;");
+
     blur.setPrefWidth(homePane.getBoundsInLocal().getWidth());
     blur.setPrefHeight(homePane.getBoundsInLocal().getHeight());
     homePane.getChildren().add(blur);
@@ -1170,7 +1179,6 @@ public class HomeController implements MainInfo {
 
   @FXML
   public void areaClick() {
-    AnchorPane blur = new AnchorPane();
     blur.setStyle("-fx-background-color: rgba(0,0,0,0.4);\n"
         + "  -fx-background-radius: 12px 0px 0px 0px;\n"
         + "  -fx-border-radius: 12px 0px 0px 0px;");

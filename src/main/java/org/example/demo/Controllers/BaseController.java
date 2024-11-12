@@ -552,7 +552,7 @@ public class BaseController {
     } else if (idx == 9) {
       handleChangeAccountInfo();
     } else if (idx == 10) {
-      System.out.println("Setup notification later");
+      notificationClick();
     } else if (idx == 11) {
       handleTranslate();
     }
@@ -790,8 +790,22 @@ public class BaseController {
   }
 
   private void handleLogout() {
+    refresh();
+    homeController.resetClick();
+    returnBookController.refresh();
+    borrowBookController.refresh();
     App.primaryStage.setScene(App.startScene);
     App.primaryStage.show();
+  }
+
+  public void refresh() {
+    if (isDark) {
+      darkMode();
+    }
+    if (isTranslate) {
+      handleTranslate();
+    }
+    searchBase.setText("");
   }
 
   private void setUpLang() {
@@ -928,6 +942,7 @@ public class BaseController {
   @FXML
   public void moveBooks() {
     homeController.clearTimeline();
+    booksController.refresh();
     mainPane.setVisible(false);
     bookPane.setVisible(true);
     editPane.setVisible(false);
@@ -939,6 +954,7 @@ public class BaseController {
   @FXML
   public void moveUser() {
     homeController.clearTimeline();
+    usersController.refresh();
     mainPane.setVisible(false);
     bookPane.setVisible(false);
     editPane.setVisible(false);
@@ -950,6 +966,7 @@ public class BaseController {
   @FXML
   public void moveEdit() {
     homeController.clearTimeline();
+    editController.refresh();
     mainPane.setVisible(false);
     bookPane.setVisible(false);
     editPane.setVisible(true);

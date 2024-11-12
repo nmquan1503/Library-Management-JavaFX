@@ -31,7 +31,7 @@ import org.example.demo.Models.Language;
 
 public class BookView extends ScrollPane implements MainInfo {
 
-  @FXML private AnchorPane wrapper;
+  @FXML private VBox wrapper;
   @FXML private ImageView imageBook;
   
   @FXML private Label titleLabel;
@@ -319,8 +319,8 @@ public class BookView extends ScrollPane implements MainInfo {
   }
 
   @FXML
-  private void ExitView(){
-    tts.stopSpeak();
+  public void ExitView(){
+    stopSpeak();
     ScaleTransition transition=new ScaleTransition(Duration.millis(200),this);
     transition.setToX(0);
     transition.setToY(0);
@@ -329,6 +329,10 @@ public class BookView extends ScrollPane implements MainInfo {
       mainPane.getChildren().remove(this);
     });
     transition.play();
+  }
+
+  public void stopSpeak(){
+    tts.stopSpeak();
   }
 
   @FXML

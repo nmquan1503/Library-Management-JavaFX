@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -23,11 +24,14 @@
                      <children>
                         <AnchorPane prefWidth="150.0">
                            <children>
-                              <AnchorPane id="wrapper_light" fx:id="wrapper" prefHeight="225.0">
+                              <VBox id="wrapper_light" fx:id="wrapper" alignment="CENTER" maxHeight="225.0" maxWidth="150.0">
                                  <children>
                                 <ImageView fx:id="imageBook" fitHeight="225.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0" />
                                  </children>
-                              </AnchorPane>
+                                 <padding>
+                                    <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                                 </padding>
+                              </VBox>
                            </children>
                         </AnchorPane>
                     <VBox prefWidth="240.0" spacing="10.0">

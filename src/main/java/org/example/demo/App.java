@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import java.util.Objects;
 import javafx.util.Duration;
@@ -35,6 +36,9 @@ public class App extends Application {
         new FXMLLoader(getClass().getResource("/org/example/demo/FXML/Waiting.fxml")));
     AtomicReference<Scene> waitScene = new AtomicReference<>(new Scene(waitLoader.get().load()));
 
+    Image icon = new Image(
+        String.valueOf(getClass().getResource("/org/example/demo/Assets/icon.png")));
+    primaryStage.getIcons().add(icon);
     primaryStage.setTitle("Library Management");
     primaryStage.setResizable(false);
     primaryStage.setScene(waitScene.get());

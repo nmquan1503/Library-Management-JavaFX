@@ -881,6 +881,29 @@ public class BooksController implements MainInfo {
     }
   }
 
+  public void refresh(){
+
+    while (mainPane.getChildren().getLast() instanceof BookView){
+      ((BookView) mainPane.getChildren().getLast()).stopSpeak();
+      mainPane.getChildren().removeLast();
+    }
+
+    categoryTextField.setText("");
+    categoryComboBox.hide();
+    categoriesListView.getItems().clear();
+    categoriesListView.setMinHeight(0);
+    categoriesListView.setMaxHeight(0);
+    categoriesListView.setVisible(false);
+
+    titleTextField.setText("");
+    titleListView.getItems().clear();
+    titleListView.setMinHeight(0);
+    titleListView.setMaxHeight(0);
+    titleListView.setVisible(false);
+
+//    Search();
+  }
+
   // set BlendMode của các ImageView là DIFFERENCE nếu isDark = true và SRC_OVER trong th còn lại
   @Override
   public void applyDarkMode(boolean isDark) {

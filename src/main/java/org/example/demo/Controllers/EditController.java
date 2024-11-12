@@ -233,6 +233,7 @@ public class EditController implements MainInfo {
 
   @FXML
   private void AddBook() {
+    mainPane.requestFocus();
     Thread thread = new Thread(() -> {
       EditBookView editBookView=new EditBookView(this);
       editBookView.setScaleX(0);
@@ -260,6 +261,7 @@ public class EditController implements MainInfo {
 
   @FXML
   private void FixBook() {
+    mainPane.requestFocus();
     Thread thread = new Thread(() -> {
       EditBookView editBookView=new EditBookView(this);
       Platform.runLater(()->{
@@ -298,6 +300,7 @@ public class EditController implements MainInfo {
 
   @FXML
   private void openAddUserView() {
+    mainPane.requestFocus();
     Thread thread = new Thread(() -> {
       EditUserView editUserView = new EditUserView(this);
       editUserView.setScaleX(0);
@@ -324,6 +327,7 @@ public class EditController implements MainInfo {
 
   @FXML
   private void FixUser() {
+    mainPane.requestFocus();
     Thread thread = new Thread(() -> {
 
       EditUserView editUserView=new EditUserView(this);
@@ -566,6 +570,23 @@ public class EditController implements MainInfo {
   @FXML
   private void removeText(){
     bookSuggestionsTextField.clear();
+  }
+
+  public void refresh(){
+    while (mainPane.getChildren().getLast() instanceof ConfirmBox ||
+    mainPane.getChildren().getLast() instanceof EditBookView ||
+    mainPane.getChildren().getLast() instanceof EditUserView){
+      mainPane.getChildren().removeLast();
+    }
+
+    bookSuggestionsTextField.setText("");
+    googleBooksListView.getItems().clear();
+    googleBooksListView.setMaxHeight(0);
+    googleBooksListView.setMinHeight(0);
+    googleBooksListView.setVisible(false);
+    setPageBook(1);
+
+    setPageUser(1);
   }
 
   // set BlendMode của các ImageView là DIFFERENCE nếu isDark = true và SRC_OVER trong th còn lại
