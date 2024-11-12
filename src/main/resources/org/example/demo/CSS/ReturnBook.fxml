@@ -26,7 +26,7 @@
           <Font name="HYWenHei 85W" size="22.0" />
         </font>
       </Label>
-      <Pane id="pinkPane" layoutX="39.0" layoutY="116.0" prefHeight="340.0" prefWidth="798.0" />
+      <Pane id="pinkPane" layoutX="39.0" layoutY="116.0" prefHeight="340.0" prefWidth="805.0" />
       <TableView fx:id="tableView" layoutX="51.0" layoutY="122.0" prefHeight="327.0" prefWidth="774.0">
         <columns>
           <TableColumn fx:id="userColumn" editable="false" prefWidth="183.99998474121094" resizable="false" sortable="false" text="User" />
@@ -53,6 +53,46 @@
           </VBox>
         </children>
       </Pane>
+         <JFXButton id="returnButton" contentDisplay="CENTER" ellipsisString="" layoutX="797.0" layoutY="178.0" prefHeight="42.0" prefWidth="41.0" ripplerFill="#3e3434" textFill="#e71212">
+            <graphic>
+               <FontAwesomeIconView id="icon" fill="#500f87" glyphName="MAIL_REPLY_ALL" text="" />
+            </graphic>
+            <font>
+               <Font size="20.0" />
+            </font>
+         </JFXButton>
+         <JFXButton id="returnButton" contentDisplay="CENTER" ellipsisString="" layoutX="797.0" layoutY="234.0" prefHeight="42.0" prefWidth="41.0" ripplerFill="#3e3434" textFill="#e71212">
+            <graphic>
+               <FontAwesomeIconView id="icon" fill="#500f87" glyphName="MAIL_REPLY_ALL" text="" />
+            </graphic>
+            <font>
+               <Font size="20.0" />
+            </font>
+         </JFXButton>
+         <JFXButton id="returnButton" contentDisplay="CENTER" ellipsisString="" layoutX="797.0" layoutY="289.0" prefHeight="42.0" prefWidth="41.0" ripplerFill="#3e3434" textFill="#e71212">
+            <graphic>
+               <FontAwesomeIconView id="icon" fill="#500f87" glyphName="MAIL_REPLY_ALL" text="" />
+            </graphic>
+            <font>
+               <Font size="20.0" />
+            </font>
+         </JFXButton>
+         <JFXButton id="returnButton" contentDisplay="CENTER" ellipsisString="" layoutX="797.0" layoutY="346.0" prefHeight="42.0" prefWidth="41.0" ripplerFill="#3e3434" textFill="#e71212">
+            <graphic>
+               <FontAwesomeIconView id="icon" fill="#500f87" glyphName="MAIL_REPLY_ALL" text="" />
+            </graphic>
+            <font>
+               <Font size="20.0" />
+            </font>
+         </JFXButton>
+         <JFXButton id="returnButton" contentDisplay="CENTER" ellipsisString="" layoutX="797.0" layoutY="402.0" prefHeight="42.0" prefWidth="41.0" ripplerFill="#3e3434" textFill="#e71212">
+            <graphic>
+               <FontAwesomeIconView id="icon" fill="#500f87" glyphName="MAIL_REPLY_ALL" text="" />
+            </graphic>
+            <font>
+               <Font size="20.0" />
+            </font>
+         </JFXButton>
       <Pane id="SearchBar" fx:id="Pane1" layoutX="483.0" layoutY="57.0" prefHeight="40.0" prefWidth="342.0">
         <children>
           <VBox id="Basic" fx:id="VBox1" layoutX="-1.0" layoutY="3.0" prefHeight="35.0" prefWidth="343.0">
@@ -91,11 +131,6 @@
           <FontAwesomeIconView glyphName="SEARCH" />
         </graphic>
       </Button>
-         <Button id="SearchIcon" fx:id="searchButton1" layoutX="805.0" layoutY="67.0" maxWidth="15.0" minHeight="12.0" minWidth="0.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="15.0">
-            <graphic>
-               <FontAwesomeIconView glyphName="SEARCH" />
-            </graphic>
-         </Button>
     </children>
   </AnchorPane>
   <VBox id="alert" fx:id="alert" disable="true" layoutX="286.0" layoutY="92.0" prefHeight="300.0" prefWidth="250.0" stylesheets="@BorrowBookProcessing.css" visible="false">

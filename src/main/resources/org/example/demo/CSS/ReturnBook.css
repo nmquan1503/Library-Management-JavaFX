@@ -202,3 +202,12 @@
         -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 1, 1);
     -fx-shape: "M 100 150 L 700 150 Q 739 150 739 250 L 739 350 L 100 350 Z ";
 }
+
+#returnButton{
+    -fx-font-size:18px;
+}
+
+#icon{
+  -fx-fill: red;
+}
+

@@ -82,7 +82,13 @@ public class Trie {
             boolean check = false;
             HashMap<Character, TrieNode> map = root1.getChildren();
             TrieNode nextNode = map.get(prefix.charAt(i));
-            if ( nextNode == null ) break;
+            if ( nextNode == null ) {
+                char x = prefix.charAt(i);
+                if ( Character.isUpperCase(x) ) x = Character.toLowerCase(x);
+                else x = Character.toUpperCase(x);
+                nextNode = map.get(x);
+                if ( nextNode == null ) break;
+            }
             root1=nextNode;
             i++;
         }

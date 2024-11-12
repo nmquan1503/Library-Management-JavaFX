@@ -6,9 +6,13 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
+import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -128,7 +132,7 @@ public class ReturnBookController implements MainInfo {
             FXCollections.observableArrayList(dataList.subList(5 * (pageNow - 1), x)));
   }
 
-  public void updateHistory(int userID, String prefixName) {
+  public void updateHistory(int userID) {
 
     pageNow = 1;
     if ( userID != -2 ) {
@@ -138,8 +142,12 @@ public class ReturnBookController implements MainInfo {
     dataList.clear();
     ArrayList<Borrowing> allBorrowing;
 
-    if ( userID == -1) allBorrowing = Library.getInstance().getAllBorrowing();
-    else if ( userID == -2 ) allBorrowing = Library.getInstance().getListBorrowingFromUserName(prefixName);
+    if ( userID == -1) allBorrowing = Library.getInstance().getListBorrowingFromUserName("");
+    else if ( userID == -2 ) {
+      String prefixName = userSearchBox.getText();
+      allBorrowing = Library.getInstance().getListBorrowingFromUserName(prefixName);
+
+    }
     else allBorrowing = Library.getInstance().getListBorrowingFromUser(userID);
     for (Borrowing x : allBorrowing) {
       String action = "";
@@ -225,12 +233,13 @@ public class ReturnBookController implements MainInfo {
       return;
     }
     userSearchBox.setText(user.getName());
-    updateHistory(user.getId(),"");
+    updateHistory(user.getId());
   }
 
   private void searchButtonController1() {
-    updateHistory(-2,userSearchBox.getText());
+    updateHistory(-2);
   }
+  private Timer timer;
   @FXML
   private void initialize() {
     addBox();
@@ -247,12 +256,19 @@ public class ReturnBookController implements MainInfo {
       public void changed(ObservableValue<? extends Boolean> observableValue,
               Boolean oldValue, Boolean newValue) {
         if (!newValue) {
-          suggestionUser.setVisible(false);
+          suggestionUser.setVisible(true);
+          suggestionUser.getItems().clear();
+          suggestionUser.setMinHeight(0);
+          suggestionUser.setMaxHeight(0);
+          VBox1.setMaxHeight(35);
+          VBox1.setMinHeight(35);
           if (Pane1.getStyleClass().contains("newShape")) {
             Pane1.getStyleClass().remove("newShape");
           }
+
         } else {
           suggestionUser.setVisible(true);
+          CreateUserSuggestions();
           if (!Pane1.getStyleClass().contains("newShape") && suggestionUser.getHeight() > 0) {
             Pane1.getStyleClass().add("newShape");
           }
@@ -260,37 +276,45 @@ public class ReturnBookController implements MainInfo {
       }
     });
     userSearchBox.textProperty().addListener((observable, oldValue, newValue) -> {
-      // Kiểm tra nếu TextField được focus
       if (userSearchBox.isFocused()) {
-        // Tạo Task để xử lý tìm kiếm trong nền
         CreateUserSuggestions();
-        Task<Void> searchTask = new Task<Void>() {
-          @Override
-          protected Void call() throws Exception {
-            // Gọi hàm tạo gợi ý người dùng và xử lý tìm kiếm
-            searchButtonController1();
-            return null;  // Không trả về kết quả gì
-          }
+        if (timer != null) {
+          timer.cancel();
+        }
 
-          @Override
-          protected void succeeded() {
-            super.succeeded();
-            // Cập nhật UI trên JavaFX Application Thread
-            Platform.runLater(() -> {
-              pageNumber.setText(String.valueOf(1));
-            });
-          }
+        timer = new Timer();
 
+        timer.schedule(new TimerTask() {
           @Override
-          protected void failed() {
-            super.failed();
-          }
-        };
+          public void run() {
+            Task<Void> searchTask = new Task<Void>() {
+              @Override
+              protected Void call() throws Exception {
 
-        // Chạy Task trong một thread riêng biệt
-        Thread taskThread = new Thread(searchTask);
-        taskThread.setDaemon(true);  // Đảm bảo thread không chặn việc thoát ứng dụng
-        taskThread.start();
+                searchButtonController1();
+                return null;
+              }
+
+              @Override
+              protected void succeeded() {
+                super.succeeded();
+                Platform.runLater(() -> {
+                  pageNumber.setText(String.valueOf(1));
+                });
+              }
+
+              @Override
+              protected void failed() {
+                super.failed();
+              }
+            };
+
+            // Chạy Task trong một thread riêng biệt
+            Thread taskThread = new Thread(searchTask);
+            taskThread.setDaemon(true);  // Đảm bảo thread không chặn việc thoát ứng dụng
+            taskThread.start();
+          }
+        }, 100);
       }
     });
     suggestionUser.getSelectionModel().selectedItemProperty()
@@ -299,27 +323,36 @@ public class ReturnBookController implements MainInfo {
                 return;
               }
               if (newValue != null) {
-                Pane1.requestFocus();
-                userSearchBox.setText(
-                        newValue.getContent()); // Đặt giá trị của TextField thành gợi ý đã chọn
 
-                userIdBox.setText(""+newValue.getID());
-                updateHistory(newValue.getID(),"");
-                userSearchBox.positionCaret(userSearchBox.getText().length());
-                Platform.runLater(() -> {
-                  suggestionUser.getItems().clear();
-                  suggestionUser.setVisible(false);
-                  suggestionUser.setMinHeight(0);
-                  suggestionUser.setMaxHeight(0);
+                Task<Void> updateTask = new Task<Void>() {
+                  @Override
+                  protected Void call() {
+                    Platform.runLater(() -> {
+                      Pane1.requestFocus();
+                      userSearchBox.setText(
+                              newValue.getContent()); // Đặt giá trị của TextField thành gợi ý đã chọn
 
-                  // Xóa class "newShape" khỏi Pane1 nếu tồn tại
-                  if (Pane1.getStyleClass().contains("newShape")) {
-                    Pane1.getStyleClass().remove("newShape");
+                      userIdBox.setText(""+newValue.getID());
+                      updateHistory(newValue.getID());
+                      userSearchBox.positionCaret(userSearchBox.getText().length());
+                      if (!suggestionUser.getItems().isEmpty()) {
+                        suggestionUser.getItems().clear();
+                        suggestionUser.setVisible(false);
+                        suggestionUser.setMinHeight(0);
+                        suggestionUser.setMaxHeight(0);
+
+                        // Xóa class "newShape" khỏi Pane1 nếu tồn tại
+                        if (Pane1.getStyleClass().contains("newShape")) {
+                          Pane1.getStyleClass().remove("newShape");
+                        }
+                      }
+                    });
+                    return null;
                   }
-                });
+              };
+                new Thread(updateTask).start();
               }
             });
-
 
     borrowedDateColumn.setReorderable(false);
     userColumn.setReorderable(false);
@@ -373,7 +406,7 @@ public class ReturnBookController implements MainInfo {
                 }
               };
             });
-    updateHistory(-1,"");
+    updateHistory(-1);
     tableView.setPrefHeight(5 * 55 + 54);
     tableView.setItems(
             FXCollections.observableArrayList(dataList.subList(0, Math.min(5, dataList.size()))));
@@ -441,7 +474,7 @@ public class ReturnBookController implements MainInfo {
 
     userIdBox.setText("");
     userSearchBox.setText("");
-    updateHistory(-1,"");
+    updateHistory(-1);
 
   }
   @Override

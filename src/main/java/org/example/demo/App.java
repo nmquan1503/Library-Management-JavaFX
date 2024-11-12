@@ -83,8 +83,9 @@ public class App extends Application {
 
     primaryStage.setOnCloseRequest(e -> {
       Network.close();
+      Platform.exit();
+      System.exit(0);
     });
-
   }
 
   public static void main(String[] args) {

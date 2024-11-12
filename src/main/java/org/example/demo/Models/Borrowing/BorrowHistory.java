@@ -324,26 +324,26 @@ public class BorrowHistory {
         history.add(new Borrowing(idBorrowing, idBook, idUser, borrowedDate, dueDate, null));
       }
 
-      query = "select id_borrowing, " +
-          "id_book, " +
-          "borrowed_date, " +
-          "due_date, " +
-          "returned_date " +
-          "from borrowing " +
-          "where returned_date is not null and id_user = (?)" +
-          "order by returned_date desc,borrowed_date desc";
-      statement = connection.prepareStatement(query);
-      statement.setInt(1, idUser);
-      resultSet = statement.executeQuery();
-      while (resultSet.next()) {
-        int idBorrowing = resultSet.getInt("id_borrowing");
-        int idBook = resultSet.getInt("id_book");
-        Date borrowedDate = (Date) resultSet.getDate("borrowed_date");
-        Date dueDate = (Date) resultSet.getDate("due_date");
-        Date returnedDate = (Date) resultSet.getDate("returned_date");
-        history.add(
-            new Borrowing(idBorrowing, idBook, idUser, borrowedDate, dueDate, returnedDate));
-      }
+//      query = "select id_borrowing, " +
+//          "id_book, " +
+//          "borrowed_date, " +
+//          "due_date, " +
+//          "returned_date " +
+//          "from borrowing " +
+//          "where returned_date is not null and id_user = (?)" +
+//          "order by returned_date desc,borrowed_date desc";
+//      statement = connection.prepareStatement(query);
+//      statement.setInt(1, idUser);
+//      resultSet = statement.executeQuery();
+//      while (resultSet.next()) {
+//        int idBorrowing = resultSet.getInt("id_borrowing");
+//        int idBook = resultSet.getInt("id_book");
+//        Date borrowedDate = (Date) resultSet.getDate("borrowed_date");
+//        Date dueDate = (Date) resultSet.getDate("due_date");
+//        Date returnedDate = (Date) resultSet.getDate("returned_date");
+//        history.add(
+//            new Borrowing(idBorrowing, idBook, idUser, borrowedDate, dueDate, returnedDate));
+//      }
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -366,7 +366,6 @@ public class BorrowHistory {
               "WHERE b.returned_date IS NULL AND u.name_user LIKE ? " +
               "ORDER BY b.due_date ASC, b.borrowed_date DESC";
       PreparedStatement statement = connection.prepareStatement(query);
-
       statement.setString(1, prefixName+"%");
       ResultSet resultSet = statement.executeQuery();
       while (resultSet.next()) {

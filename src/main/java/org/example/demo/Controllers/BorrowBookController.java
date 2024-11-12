@@ -474,7 +474,7 @@ public class BorrowBookController implements MainInfo {
     updateHistory("" + sortBox.getValue());
 
 
-    returnBookController.updateHistory(-1, "");
+    returnBookController.updateHistory(-1);
 
 
     secondPane.setDisable(true);
@@ -627,11 +627,17 @@ public class BorrowBookController implements MainInfo {
           Boolean oldValue, Boolean newValue) {
         if (!newValue) {
           suggestionUser.setVisible(false);
+          suggestionUser.setMaxHeight(0);
+          suggestionUser.setMinHeight(0);
+          VBox1.setMaxHeight(35);
+          VBox1.setMinHeight(35);
+
           if (Pane1.getStyleClass().contains("newShape")) {
             Pane1.getStyleClass().remove("newShape");
           }
         } else {
           suggestionUser.setVisible(true);
+          CreateUserSuggestions();
           if (!Pane1.getStyleClass().contains("newShape") && suggestionUser.getHeight() > 0) {
             Pane1.getStyleClass().add("newShape");
           }
@@ -648,12 +654,14 @@ public class BorrowBookController implements MainInfo {
           suggestionBook.getItems().clear();
           suggestionBook.setMinHeight(0);
           suggestionBook.setMaxHeight(0);
-
+          VBox2.setMaxHeight(35);
+          VBox2.setMinHeight(35);
           if (Pane2.getStyleClass().contains("newShape")) {
             Pane2.getStyleClass().remove("newShape");
           }
         } else {
           suggestionBook.setVisible(true);
+          CreateBookSuggestions();
           if (!Pane2.getStyleClass().contains("newShape") && suggestionBook.getHeight() > 0) {
             Pane2.getStyleClass().add("newShape");
           }
