@@ -568,6 +568,23 @@ public class EditController implements MainInfo {
     bookSuggestionsTextField.clear();
   }
 
+  public void refresh(){
+    while (mainPane.getChildren().getLast() instanceof ConfirmBox ||
+    mainPane.getChildren().getLast() instanceof EditBookView ||
+    mainPane.getChildren().getLast() instanceof EditUserView){
+      mainPane.getChildren().removeLast();
+    }
+
+    bookSuggestionsTextField.setText("");
+    googleBooksListView.getItems().clear();
+    googleBooksListView.setMaxHeight(0);
+    googleBooksListView.setMinHeight(0);
+    googleBooksListView.setVisible(false);
+    setPageBook(1);
+
+    setPageUser(1);
+  }
+
   // set BlendMode của các ImageView là DIFFERENCE nếu isDark = true và SRC_OVER trong th còn lại
   @Override
   public void applyDarkMode(boolean isDark) {

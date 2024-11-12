@@ -424,6 +424,18 @@ public class UsersController implements MainInfo {
     }
   }
 
+  public void refresh(){
+
+    while(mainPane.getChildren().getLast() instanceof UserView){
+      ((UserView) mainPane.getChildren().getLast()).stopSpeak();
+      mainPane.getChildren().removeLast();
+    }
+
+    nameTextField.setText("");
+    BanList.scrollTo(0);
+    loadUserList();
+  }
+
   // set BlendMode của các ImageView là DIFFERENCE nếu isDark = true và SRC_OVER trong th còn lại
   @Override
   public void applyDarkMode(boolean isDark) {

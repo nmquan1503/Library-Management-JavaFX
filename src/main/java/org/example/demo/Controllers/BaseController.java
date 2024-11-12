@@ -793,6 +793,9 @@ public class BaseController {
     refresh();
     returnBookController.refresh();
     borrowBookController.refresh();
+    booksController.refresh();
+    usersController.refresh();
+    editController.refresh();
     App.primaryStage.setScene(App.startScene);
     App.primaryStage.show();
   }

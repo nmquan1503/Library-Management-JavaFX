@@ -276,7 +276,7 @@ public class EditBookView extends ScrollPane implements MainInfo {
 
 
   @FXML
-  private void ExitView(){
+  public void ExitView(){
     AnchorPane mainPane=(AnchorPane) this.getParent();
     ConfirmBox confirmBox=new ConfirmBox(
         "Xác nhận hủy sự thay đổi?",
