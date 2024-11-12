@@ -42,7 +42,7 @@ public class EditBookView extends ScrollPane implements MainInfo {
 
   @FXML private AnchorPane viewPane;
 
-  @FXML private AnchorPane wrapper;
+  @FXML private VBox wrapper;
   @FXML private ImageView imageBook;
 
   @FXML private TextField titleTextField;
@@ -141,6 +141,7 @@ public class EditBookView extends ScrollPane implements MainInfo {
         getClass().getResourceAsStream("/org/example/demo/Assets/basic.jpg"))));
     if(BaseController.isDark){
       wrapper.setBlendMode(BlendMode.DIFFERENCE);
+      wrapper.setId("wrapper_dark");
     }
     else wrapper.setBlendMode(BlendMode.SRC_OVER);
   }

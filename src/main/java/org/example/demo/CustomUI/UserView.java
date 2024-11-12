@@ -7,6 +7,7 @@ import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Transition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -33,7 +34,7 @@ public class UserView extends ScrollPane implements MainInfo {
 
   @FXML private AnchorPane viewPane;
 
-  @FXML private AnchorPane wrapper;
+  @FXML private VBox wrapper;
   @FXML private ImageView imageUser;
 
   @FXML private Label nameLabel;
@@ -118,7 +119,7 @@ public class UserView extends ScrollPane implements MainInfo {
   private void setImage(User user){
     if(user.getAvatar()==null || !Network.isConnected()){
       imageUser.setImage(new Image(Objects.requireNonNull(
-          getClass().getResourceAsStream("/org/example/demo/Assets/basic.jpg"))));
+          getClass().getResourceAsStream("/org/example/demo/Assets/default_avatar.jpg"))));
     }
     else {
       imageUser.setImage(user.getAvatar());

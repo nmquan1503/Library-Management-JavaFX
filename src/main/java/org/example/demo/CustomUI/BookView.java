@@ -31,7 +31,7 @@ import org.example.demo.Models.Language;
 
 public class BookView extends ScrollPane implements MainInfo {
 
-  @FXML private AnchorPane wrapper;
+  @FXML private VBox wrapper;
   @FXML private ImageView imageBook;
   
   @FXML private Label titleLabel;

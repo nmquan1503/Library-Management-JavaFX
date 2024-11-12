@@ -168,6 +168,7 @@ public class UsersController implements MainInfo {
 
 
   private void showUser(int idUser) {
+    mainPane.requestFocus();
     Thread thread = new Thread(() -> {
       UserView userView = new UserView();
       Platform.runLater(() -> {

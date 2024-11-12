@@ -25,6 +25,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Arc;
 import javafx.util.Duration;
 import org.example.demo.API.Network;
@@ -42,7 +43,7 @@ public class EditUserView extends ScrollPane implements MainInfo {
 
   @FXML private AnchorPane viewPane;
 
-  @FXML private AnchorPane wrapper;
+  @FXML private VBox wrapper;
   @FXML private ImageView imageUser;
 
   @FXML private TextField nameTextField;
@@ -225,15 +226,17 @@ public class EditUserView extends ScrollPane implements MainInfo {
 
     if(BaseController.isDark){
       wrapper.setBlendMode(BlendMode.DIFFERENCE);
+      wrapper.setId("wrapper_dark");
     }
     else wrapper.setBlendMode(BlendMode.SRC_OVER);
 
   }
   private void initDefaultImage(){
     imageUser.setImage(new Image(Objects.requireNonNull(
-        getClass().getResourceAsStream("/org/example/demo/Assets/basic.jpg"))));
+        getClass().getResourceAsStream("/org/example/demo/Assets/default_avatar.jpg"))));
     if(BaseController.isDark){
       wrapper.setBlendMode(BlendMode.DIFFERENCE);
+      wrapper.setId("wrapper_dark");
     }
     else wrapper.setBlendMode(BlendMode.SRC_OVER);
   }
@@ -467,9 +470,11 @@ public class EditUserView extends ScrollPane implements MainInfo {
   public void applyDarkMode(boolean isDark) {
     if(isDark){
       this.wrapper.setBlendMode(BlendMode.DIFFERENCE);
+      this.wrapper.setId("wrapper_dark");
     }
     else {
       this.wrapper.setBlendMode(BlendMode.SRC_OVER);
+      this.wrapper.setId("wrapper_light");
     }
   }
 
