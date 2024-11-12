@@ -552,7 +552,7 @@ public class BaseController {
     } else if (idx == 9) {
       handleChangeAccountInfo();
     } else if (idx == 10) {
-      System.out.println("Setup notification later");
+      notificationClick();
     } else if (idx == 11) {
       handleTranslate();
     }
