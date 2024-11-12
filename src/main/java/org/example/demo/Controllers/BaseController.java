@@ -791,11 +791,9 @@ public class BaseController {
 
   private void handleLogout() {
     refresh();
+    homeController.resetClick();
     returnBookController.refresh();
     borrowBookController.refresh();
-    booksController.refresh();
-    usersController.refresh();
-    editController.refresh();
     App.primaryStage.setScene(App.startScene);
     App.primaryStage.show();
   }
@@ -944,6 +942,7 @@ public class BaseController {
   @FXML
   public void moveBooks() {
     homeController.clearTimeline();
+    booksController.refresh();
     mainPane.setVisible(false);
     bookPane.setVisible(true);
     editPane.setVisible(false);
@@ -955,6 +954,7 @@ public class BaseController {
   @FXML
   public void moveUser() {
     homeController.clearTimeline();
+    usersController.refresh();
     mainPane.setVisible(false);
     bookPane.setVisible(false);
     editPane.setVisible(false);
@@ -966,6 +966,7 @@ public class BaseController {
   @FXML
   public void moveEdit() {
     homeController.clearTimeline();
+    editController.refresh();
     mainPane.setVisible(false);
     bookPane.setVisible(false);
     editPane.setVisible(true);
