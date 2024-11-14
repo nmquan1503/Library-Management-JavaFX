@@ -956,6 +956,12 @@ public class BorrowBookController implements MainInfo {
     secondPane.setDisable(true);
     mainPane.setVisible(true);
     mainPane.setDisable(false);
+    alert.setDisable(true);
+    alert.setVisible(false);
+    successPane.setDisable(true);
+    successPane.setVisible(false);
+    closeButton.setDisable(true);
+    closeButton.setVisible(false);
     updateHistory("Sách Chưa Trả");
     book = null;
     npc = null;

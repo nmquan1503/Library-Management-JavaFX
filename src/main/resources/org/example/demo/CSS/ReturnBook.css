@@ -3,6 +3,9 @@
     -fx-font-weight: bold;
     -fx-text-fill: #584f58;
 }
+* :disabled {
+    -fx-opacity: 1;
+}
 .table-view {
     -fx-border-color: #E464C0; /* Màu viền của TableView */
     -fx-border-width: 0;    /* Độ rộng viền để rõ ràng hơn */
@@ -184,6 +187,10 @@
 .button-rightButton:pressed {
   -fx-background-color: #bba0b4; /* Thay đổi màu nền khi nhấn */
 }
+
+.button-rightButton:disabled{
+  -fx-opacity: 0.3;
+}
 #SearchBar {
 -fx-border-width: 1px;
     -fx-border-color: #E464C0;
@@ -211,3 +218,47 @@
   -fx-fill: red;
 }
 
+#VBoxCustom{
+  -fx-spacing: 10;
+}
+#LINE{
+  -fx-stroke: #E464C0;            /* Màu của nét đứt */
+      -fx-stroke-width: 1;          /* Độ dày của nét */
+      -fx-stroke-dash-array: 3 3;   /* Tạo nét đứt, 5px đường nét - 5px khoảng trống */
+}
+#smallPane{
+    -fx-border-width: 1px;
+    -fx-border-color: #E464C0;
+    -fx-border-radius: 15px;
+    -fx-background-radius: 15px;
+    -fx-background-color: #f4cfea;
+    -fx-font-size: 15px;
+}
+
+.date-picker {
+  -fx-background-color: #f4cfea; /* Màu nền */
+      -fx-border-color: #d7bacf; /* Màu viền */
+      -fx-border-width: 0 0 0 0;
+      -fx-border-style: dashed;
+      /* Tạo phần lồi ra bằng cách giả lập hai đoạn vuông góc ở trên và dưới */
+      -fx-background-insets: 0;
+      -fx-font-size: 14px;
+}
+.date-picker .arrow-button {
+    -fx-background-color: transparent; /* Nền trong suốt */
+    -fx-background-radius: 0; /* Loại bỏ bo góc nếu cần */
+    -fx-border-color: transparent; /* Loại bỏ viền */
+}
+.date-picker .arrow-button:hover {
+    -fx-cursor: hand;
+}
+.date-picker .text-field {
+    -fx-background-color: #f4cfea; /* Đặt màu nền tùy ý */
+    -fx-background-insets: 0; /* Đảm bảo màu nền không bị ảnh hưởng bởi insets */
+}
+#titleLabel{
+  -fx-font-size:22px;
+}
+#pageLabel{
+  -fx-font-size: 21px;
+}
