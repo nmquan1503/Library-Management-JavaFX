@@ -470,6 +470,9 @@ public class AccountSettingController {
   private void succeedNotification() {
     succeedPane.setVisible(true);
     succeedPane.setOpacity(1.0);
+
+    succeedPane.getScene().getRoot().setDisable(true);
+
     if (fadeOutTimeline != null && fadeOutTimeline.getStatus() == Timeline.Status.RUNNING) {
       fadeOutTimeline.stop();
     }
@@ -486,6 +489,7 @@ public class AccountSettingController {
     fadeOutTimeline.setOnFinished(event -> {
       succeedPane.setVisible(false);
       fadeOutTimeline.stop();
+      succeedPane.getScene().getRoot().setDisable(false);
     });
 
     fadeOutTimeline.play();
@@ -494,6 +498,9 @@ public class AccountSettingController {
   private void errorNotification() {
     errorPane.setVisible(true);
     errorPane.setOpacity(1.0);
+
+    errorPane.getScene().getRoot().setDisable(true);
+
     if (fadeOutTimeline != null && fadeOutTimeline.getStatus() == Timeline.Status.RUNNING) {
       fadeOutTimeline.stop();
     }
@@ -510,6 +517,7 @@ public class AccountSettingController {
     fadeOutTimeline.setOnFinished(event -> {
       errorPane.setVisible(false);
       fadeOutTimeline.stop();
+      errorPane.getScene().getRoot().setDisable(false);
     });
 
     fadeOutTimeline.play();
