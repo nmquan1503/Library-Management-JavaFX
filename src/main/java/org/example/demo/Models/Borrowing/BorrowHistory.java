@@ -193,10 +193,22 @@ public class BorrowHistory {
     public void updateReturnedDateOfBorrowing(int idBorrowing, Date returnedDate) {
         Connection connection = JDBC.getConnection();
         try {
-            String query = "update borrowing set returned_date = (?), id_borrowing = (SELECT MAX(id_borrowing) + 1 FROM borrowing) where id_borrowing = (?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            String query = "SELECT MAX(id_borrowing) + 1 FROM borrowing";
+            PreparedStatement selectStatement = connection.prepareStatement(query);
+            ResultSet resultSet = selectStatement.executeQuery();
+
+            int newIdBorrowing = 0;
+            if (resultSet.next()) {
+                newIdBorrowing = resultSet.getInt(1); // Lấy giá trị MAX(id_borrowing) + 1
+            }
+            resultSet.close();
+            selectStatement.close();
+
+            String updateQuery = "UPDATE borrowing SET returned_date = ?, id_borrowing = ? WHERE id_borrowing = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(updateQuery);
             preparedStatement.setDate(1, returnedDate);
-            preparedStatement.setInt(2, idBorrowing);
+            preparedStatement.setInt(2, newIdBorrowing); // Giá trị mới cho id_borrowing
+            preparedStatement.setInt(3, idBorrowing); // id_borrowing hiện tại để tìm hàng cần cập nhật
             preparedStatement.executeUpdate();
 
             query = "select borrowing.id_book as id_book, " +
@@ -206,7 +218,7 @@ public class BorrowHistory {
                     "where borrowing.id_borrowing = (?)";
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, idBorrowing);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 int id_book = resultSet.getInt("id_book");
                 int quantity = resultSet.getInt("quantity");

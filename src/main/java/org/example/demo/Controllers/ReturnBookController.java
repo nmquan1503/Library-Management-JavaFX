@@ -30,6 +30,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -190,6 +191,9 @@ public class ReturnBookController implements MainInfo {
 
   @FXML
   private TextField bookSearchBox;
+
+  @FXML
+  private ImageView borrowImage;
 
   private void addBox() {
     sortBox.getItems().addAll(
@@ -1130,7 +1134,17 @@ public class ReturnBookController implements MainInfo {
 
   @Override
   public void applyDarkMode(boolean isDark) {
-
+    if ( isDark ) {
+      userAvatar.setBlendMode(BlendMode.DIFFERENCE);
+      bookAvatar.setBlendMode(BlendMode.DIFFERENCE);
+    }
+    else {
+      bookAvatar.setBlendMode(BlendMode.SRC_OVER);
+      userAvatar.setBlendMode(BlendMode.SRC_OVER);
+    }
+    for (SuggestionView suggestionView : suggestionUser.getItems()) {
+      suggestionView.applyDarkMode(isDark);
+    }
   }
 
   // Không gọi setUpLanguage ở đây
