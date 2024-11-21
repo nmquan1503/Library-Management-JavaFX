@@ -204,6 +204,16 @@ public class BaseController {
 
   private final HashMap<Integer, String> firstRead = new HashMap<>();
 
+  private static final IntegerProperty dueUpdate = new SimpleIntegerProperty(0);
+
+  public static int getDueUpdate() {
+    return dueUpdate.get();
+  }
+
+  public static void setDueUpdate(int val) {
+    dueUpdate.set(val);
+  }
+
   @FXML
   private JFXListView<String> suggestionListView;
 
@@ -226,6 +236,9 @@ public class BaseController {
     isBorrowingChanged.addListener((observable, oldValue, newValue) -> {
       refreshNotification();
     });
+    dueUpdate.addListener(((observableValue, oldValue, newValue) -> {
+      refreshNotification();
+    }));
     setupAutocomplete();
     Thread loadMainThread = new Thread(new LoadMainTask());
     Thread loadBookThread = new Thread(new LoadBookTask());
