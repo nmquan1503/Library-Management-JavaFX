@@ -6,6 +6,9 @@
 * :disabled {
     -fx-opacity: 1;
 }
+.button:hover{
+    -fx-cursor: hand;
+}
 .table-view {
     -fx-border-color: #E464C0; /* Màu viền của TableView */
     -fx-border-width: 0;    /* Độ rộng viền để rõ ràng hơn */
@@ -212,6 +215,11 @@
 
 #returnButton{
     -fx-font-size:18px;
+    -fx-background-color:transparent;
+}
+
+#returnButton:hover .font-icon {
+    -fx-fill: #ff66ff;
 }
 
 #icon{
@@ -236,7 +244,7 @@
 }
 
 .date-picker {
-  -fx-background-color: #f4cfea; /* Màu nền */
+  -fx-background-color: #fef7e7; /* Màu nền */
       -fx-border-color: #d7bacf; /* Màu viền */
       -fx-border-width: 0 0 0 0;
       -fx-border-style: dashed;
@@ -253,7 +261,7 @@
     -fx-cursor: hand;
 }
 .date-picker .text-field {
-    -fx-background-color: #f4cfea; /* Đặt màu nền tùy ý */
+    -fx-background-color: #fef7e7; /* Đặt màu nền tùy ý */
     -fx-background-insets: 0; /* Đảm bảo màu nền không bị ảnh hưởng bởi insets */
 }
 #titleLabel{
@@ -262,3 +270,45 @@
 #pageLabel{
   -fx-font-size: 21px;
 }
+#CreateButton1{
+    -fx-background-color: #4a5366; /* Màu nền */
+    -fx-border-color: #E464C0; /* Màu viền */
+    -fx-border-width: 1px;
+    -fx-text-fill: #f0f3f7;
+      -fx-background-insets: 0;
+      -fx-font-size: 17px; /* Thay đổi kích thước chữ cho ComboBox */
+      -fx-border-radius: 20;
+      -fx-background-radius: 20;
+      -fx-transition: all 0.2s ease-in-out;
+      -fx-scale-x: 1;
+          -fx-scale-y: 1;
+}
+
+#CreateButton1:hover{
+  -fx-background-color: #697387; /* Thay đổi màu nền khi hover */
+
+
+}
+#CreateButton1:pressed{
+  -fx-background-color: #e6e6da; /* Thay đổi màu nền khi hover */
+
+  -fx-text-fill: #aba073;
+}
+#smallPane1{
+  -fx-border-width: 1px;
+      -fx-border-color: #E464C0;
+      -fx-border-radius: 15px;
+      -fx-background-radius: 15px;
+      -fx-background-color: #fef7e7;
+      -fx-font-size: 15px;
+}
+#YellowPane{
+  -fx-background-color: rgba(231, 224, 142,0.3);
+  -fx-background-radius:20;
+  -fx-border-radius:20;
+
+}
+#dueDate{
+  -fx-font-size: 15px;
+}
+

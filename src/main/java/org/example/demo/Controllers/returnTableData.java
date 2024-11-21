@@ -10,6 +10,7 @@ public class returnTableData {
     private int idUser;
     private int idBook;
     private LocalDate due;
+    private int idBorrowing;
     public returnTableData(  String user,String book, String borrowedDate, String dueDate) {
         this.borrowedDate = borrowedDate;
         this.dueDate = dueDate;
@@ -71,5 +72,13 @@ public class returnTableData {
 
     public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public int getIdBorrowing() {
+        return idBorrowing;
+    }
+
+    public void setIdBorrowing(int idBorrowing) {
+        this.idBorrowing = idBorrowing;
     }
 }

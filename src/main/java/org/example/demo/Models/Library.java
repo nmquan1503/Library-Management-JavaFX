@@ -83,6 +83,13 @@ public class Library {
     borrowHistory.updateReturnedDateOfBorrowing(id_borrowing, returnDate);
   }
 
+  public void updateDueDate(int id, Date date) {
+    borrowHistory.updateDueDateOfBorrowing(id,date);
+  }
+
+  public ArrayList<Borrowing> getListBorrowingFromBookName(String s){
+    return borrowHistory.getListBorrowingFromBookName(s);
+  }
   /**
    * @param prefix a word given to create suggestions of all book have prefix of title like that
    *               word.
@@ -183,6 +190,7 @@ public class Library {
   public ArrayList<Borrowing> getListBorrowingNearingDeadline() {
     return borrowHistory.getListBorrowingNearingDeadline();
   }
+
 
 
   public static void main(String[] args) {

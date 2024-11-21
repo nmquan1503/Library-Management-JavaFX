@@ -27,6 +27,7 @@ public class Trie {
         root1 = root;
         for (char x : name.toCharArray()) {
             Character x1 = x;
+            x1=Character.toLowerCase(x1);
             HashMap<Character, TrieNode> children = root1.getChildren();
             TrieNode getNode = children.get(x1);
             if (getNode == null) {

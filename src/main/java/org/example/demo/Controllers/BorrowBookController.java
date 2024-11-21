@@ -256,7 +256,7 @@ public class BorrowBookController implements MainInfo {
         "Sách Đã Trả",
         "Toàn Bộ Lịch Sử"
     );
-    sortBox.setValue("Sách Chưa Trả");
+    sortBox.setValue("Toàn Bộ Lịch Sử");
   }
 
   private void resetUserSearch() {
@@ -385,8 +385,8 @@ public class BorrowBookController implements MainInfo {
 
     confirmTitle.setText("Hủy Yêu Cầu Mượn Sách");
     confirmMessage.setText("Xác Nhận Hủy Chứ?");
-    confirmButton.setText("YES");
-    declineButton.setText("Cancel");
+    confirmButton.setText("Yes");
+    declineButton.setText(" No");
     closeButton.setVisible(true);
     closeButton.setDisable(false);
   }
@@ -406,7 +406,7 @@ public class BorrowBookController implements MainInfo {
 
   @FXML
   private void confirmButtonAction() {
-    if (declineButton.getText().equals("Cancel")) {
+    if (!confirmTitle.getText().equals("Thêm Yêu Cầu Mượn Sách")) {
       secondPane.setDisable(true);
       secondPane.setVisible(false);
       mainPane.setVisible(true);
@@ -458,6 +458,33 @@ public class BorrowBookController implements MainInfo {
 
         });
         delay.play();
+        Task<Void> borrowTask = new Task<>() {
+          @Override
+          protected Void call() throws Exception {
+            Date today = new Date(new java.sql.Date(System.currentTimeMillis()));
+            LocalDate x = DueDatePicker.getValue();
+            Date due = new Date(x.getYear(), x.getMonthValue(), x.getDayOfMonth());
+            Library.getInstance().borrowBook(book, npc, today, due);
+            return null;
+          }
+
+          @Override
+          protected void succeeded() {
+            super.succeeded();
+            updateHistory("" + sortBox.getValue());
+            returnBookController.updateHistory(-1);
+            returnBookController.setPageNumber(1);
+          }
+
+          @Override
+          protected void failed() {
+          }
+        };
+
+        // Chạy Task trên một luồng riêng biệt
+        Thread taskThread = new Thread(borrowTask);
+        taskThread.setDaemon(true); // Đảm bảo luồng không chặn việc thoát ứng dụng
+        taskThread.start();
         BaseController.setIsBorrowingChanged(1 - BaseController.getIsBorrowingChanged());
         return;
       }
@@ -467,16 +494,6 @@ public class BorrowBookController implements MainInfo {
 
   @FXML
   private void backButtonAction() {
-    Date today = new Date(new java.sql.Date(System.currentTimeMillis()));
-    LocalDate x = DueDatePicker.getValue();
-    Date due = new Date(x.getYear(), x.getMonthValue(), x.getDayOfMonth());
-    Library.getInstance().borrowBook(book, npc, today, due);
-    updateHistory("" + sortBox.getValue());
-
-
-    returnBookController.updateHistory(-1);
-
-
     secondPane.setDisable(true);
     secondPane.setVisible(false);
     mainPane.setVisible(true);
@@ -503,19 +520,20 @@ public class BorrowBookController implements MainInfo {
 
     confirmTitle.setText("Thêm Yêu Cầu Mượn Sách");
     confirmMessage.setText("Xác Nhận Thêm Chứ?");
-    confirmButton.setText("YES");
-    declineButton.setText("NO");
+    confirmButton.setText("Yes");
+    declineButton.setText(" No");
     closeButton.setVisible(true);
     closeButton.setDisable(false);
   }
 
-  private void updateHistory(String type) {
+  public void updateHistory(String type) {
 
     while (pageNow > 1) {
       leftController();
     }
     dataList.clear();
     ArrayList<Borrowing> allBorrowing;
+    sortBox.setValue(""+type);
     if (type.equals("Toàn Bộ Lịch Sử")) {
       allBorrowing = Library.getInstance().getAllHistory();
     } else if (type.equals("Sách Chưa Trả")) {
@@ -710,7 +728,8 @@ public class BorrowBookController implements MainInfo {
               suggestionUser.setVisible(false);
               suggestionUser.setMinHeight(0);
               suggestionUser.setMaxHeight(0);
-
+              VBox1.setMinHeight(35);
+              VBox1.setMaxHeight(35);
               // Xóa class "newShape" khỏi Pane1 nếu tồn tại
               if (Pane1.getStyleClass().contains("newShape")) {
                 Pane1.getStyleClass().remove("newShape");
@@ -757,7 +776,8 @@ public class BorrowBookController implements MainInfo {
                       suggestionBook.setVisible(false);
                       suggestionBook.setMinHeight(0);
                       suggestionBook.setMaxHeight(0);
-
+                      VBox2.setMinHeight(35);
+                      VBox2.setMaxHeight(35);
                       // Xóa class "newShape" khỏi Pane2 nếu tồn tại
                       if (Pane2.getStyleClass().contains("newShape")) {
                         Pane2.getStyleClass().remove("newShape");
@@ -803,7 +823,7 @@ public class BorrowBookController implements MainInfo {
             text.wrappingWidthProperty()
                 .bind(getTableColumn().widthProperty()); // Đặt wrappingWidth để tự động xuống dòng
             text.setStyle(
-                "-fx-font-family: 'HYWenHei-85W'; -fx-fill: #8e8e8e;-fx-font-size: 17px;");
+                "-fx-fill: #8e8e8e;-fx-font-size: 17px;");
             text.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
             setAlignment(javafx.geometry.Pos.CENTER); // Căn giữa nội dung trong ô
             setGraphic(text);
@@ -825,7 +845,7 @@ public class BorrowBookController implements MainInfo {
             text.wrappingWidthProperty()
                 .bind(getTableColumn().widthProperty()); // Đặt wrappingWidth để tự động xuống dòng
             text.setStyle(
-                "-fx-font-family: 'HYWenHei-85W'; -fx-fill: #8e8e8e;-fx-font-size: 17px;");
+                "-fx-fill: #8e8e8e;-fx-font-size: 17px;");
             text.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
             setAlignment(javafx.geometry.Pos.CENTER); // Căn giữa nội dung trong ô
             setGraphic(text);
@@ -849,7 +869,8 @@ public class BorrowBookController implements MainInfo {
       }
       suggestionUser.setMaxHeight(0);
       suggestionUser.setMinHeight(0);
-
+      VBox1.setMinHeight(35);
+      VBox1.setMaxHeight(35);
       return;
     }
     Thread thread = new Thread(() -> {
@@ -900,6 +921,8 @@ public class BorrowBookController implements MainInfo {
       }
       suggestionBook.setMaxHeight(0);
       suggestionBook.setMinHeight(0);
+      VBox2.setMinHeight(35);
+      VBox2.setMaxHeight(35);
       return;
     }
     Thread thread = new Thread(() -> {
@@ -949,7 +972,7 @@ public class BorrowBookController implements MainInfo {
   }
 
   public void refresh() {
-    sortBox.setValue("Sách Chưa Trả");
+    sortBox.setValue("Toàn Bộ Lịch Sử");
     resetBookSearch();
     resetUserSearch();
     secondPane.setVisible(false);
@@ -962,7 +985,16 @@ public class BorrowBookController implements MainInfo {
     successPane.setVisible(false);
     closeButton.setDisable(true);
     closeButton.setVisible(false);
-    updateHistory("Sách Chưa Trả");
+    mainPane.getChildren().forEach(node -> {
+      node.setDisable(false);
+    });
+    mainPane.setEffect(null);
+    secondPane.getChildren().forEach(node -> {
+      node.setDisable(false);
+    });
+    secondPane.setEffect(null);
+    secondPane.setDisable(true);
+    updateHistory("Toàn Bộ Lịch Sử");
     book = null;
     npc = null;
   }

@@ -984,6 +984,7 @@ public class BaseController {
     userPane.setVisible(false);
     borrowPane.setVisible(true);
     returnPane.setVisible(false);
+    borrowBookController.refresh();
   }
 
   @FXML
@@ -995,6 +996,7 @@ public class BaseController {
     userPane.setVisible(false);
     borrowPane.setVisible(false);
     returnPane.setVisible(true);
+    returnBookController.refresh();
   }
 
   private void initNotificationList() {
