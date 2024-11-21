@@ -59,7 +59,7 @@ public class Network {
           socket.close();
         }
         catch (IOException e){
-          e.printStackTrace();
+          System.out.println("Không có mạng");
         }
       }
     }

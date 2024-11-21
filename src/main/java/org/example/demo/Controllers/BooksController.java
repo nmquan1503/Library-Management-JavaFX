@@ -901,7 +901,7 @@ public class BooksController implements MainInfo {
     titleListView.setMaxHeight(0);
     titleListView.setVisible(false);
 
-//    Search();
+    Search();
   }
 
   // set BlendMode của các ImageView là DIFFERENCE nếu isDark = true và SRC_OVER trong th còn lại
