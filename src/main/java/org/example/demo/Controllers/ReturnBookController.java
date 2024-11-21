@@ -34,6 +34,7 @@ import javafx.scene.effect.BlendMode;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -194,6 +195,13 @@ public class ReturnBookController implements MainInfo {
 
   @FXML
   private ImageView borrowImage;
+
+  @FXML
+  private Pane userPane;
+
+  @FXML
+  private Pane bookPane;
+
 
   private void addBox() {
     sortBox.getItems().addAll(
@@ -1135,12 +1143,22 @@ public class ReturnBookController implements MainInfo {
   @Override
   public void applyDarkMode(boolean isDark) {
     if ( isDark ) {
+      userPane.setStyle("-fx-background-color: white;");
+      bookPane.setStyle("-fx-background-color: white");
+      bookPane.setBlendMode(BlendMode.DARKEN);
+      userPane.setBlendMode(BlendMode.DARKEN);
       userAvatar.setBlendMode(BlendMode.DIFFERENCE);
       bookAvatar.setBlendMode(BlendMode.DIFFERENCE);
+      borrowImage.setBlendMode(BlendMode.DIFFERENCE);
     }
     else {
+      userPane.setStyle("-fx-background-color: transparent;");
+      bookPane.setStyle("-fx-background-color: transparent;");
+      bookPane.setBlendMode(BlendMode.SRC_OVER);
+      userPane.setBlendMode(BlendMode.SRC_OVER);
       bookAvatar.setBlendMode(BlendMode.SRC_OVER);
       userAvatar.setBlendMode(BlendMode.SRC_OVER);
+      borrowImage.setBlendMode(BlendMode.SRC_OVER);
     }
     for (SuggestionView suggestionView : suggestionUser.getItems()) {
       suggestionView.applyDarkMode(isDark);

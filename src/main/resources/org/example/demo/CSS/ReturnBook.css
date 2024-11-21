@@ -312,3 +312,14 @@
   -fx-font-size: 15px;
 }
 
+.table-view .scroll-bar:vertical,
+.table-view .scroll-bar:horizontal {
+    -fx-opacity: 0; /* Ẩn thanh cuộn */
+    -fx-padding: 0; /* Loại bỏ khoảng trống của thanh cuộn */
+    -fx-max-width: 0; /* Loại bỏ chiều rộng thanh cuộn ngang */
+    -fx-max-height: 0; /* Loại bỏ chiều cao thanh cuộn dọc */
+}
+
+#whitePane{
+  -fx-background-color: white;
+}

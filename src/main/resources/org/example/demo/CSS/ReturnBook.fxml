@@ -152,14 +152,18 @@
                      <Font size="16.0" />
                   </font>
                </Label>
-               <ImageView fx:id="userAvatar" fitHeight="102.0" fitWidth="102.0" layoutX="5.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
-                  <image>
-                     <Image url="@../Assets/default_avatar.jpg" />
-                  </image>
-                  <viewport>
-                     <Rectangle2D />
-                  </viewport>
-               </ImageView>
+               <StackPane id="whitePane" fx:id="userPane" blendMode="DARKEN" layoutX="5.0" layoutY="25.0" prefHeight="102.0" prefWidth="102.0">
+                  <children>
+                     <ImageView fx:id="userAvatar" fitHeight="102.0" fitWidth="102.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                           <Image url="@../Assets/default_avatar.jpg" />
+                        </image>
+                        <viewport>
+                           <Rectangle2D />
+                        </viewport>
+                     </ImageView>
+                  </children>
+               </StackPane>
             </children>
          </Pane>
          <Pane id="smallPane" layoutX="353.0" layoutY="41.0" prefHeight="150.0" prefWidth="264.0">
@@ -179,11 +183,15 @@
                      <Font size="16.0" />
                   </font>
                </Label>
-               <ImageView fx:id="bookAvatar" fitHeight="102.0" fitWidth="80.0" layoutX="176.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
-                  <image>
-                     <Image url="@../Assets/basic.jpg" />
-                  </image>
-               </ImageView>
+               <StackPane id="whitePane" fx:id="bookPane" blendMode="DARKEN" layoutX="176.0" layoutY="24.0" prefHeight="102.0" prefWidth="80.0">
+                  <children>
+                     <ImageView fx:id="bookAvatar" fitHeight="102.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                           <Image url="@../Assets/basic.jpg" />
+                        </image>
+                     </ImageView>
+                  </children>
+               </StackPane>
             </children>
          </Pane>
          <JFXButton alignment="CENTER" contentDisplay="CENTER" ellipsisString="" layoutX="591.0" layoutY="8.0" onAction="#closeAction" prefHeight="25.0" prefWidth="3.0">
