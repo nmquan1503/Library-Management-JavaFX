@@ -1001,7 +1001,12 @@ public class BorrowBookController implements MainInfo {
 
   @Override
   public void applyDarkMode(boolean isDark) {
-
+    for (SuggestionView suggestionView : suggestionUser.getItems()) {
+      suggestionView.applyDarkMode(isDark);
+    }
+    for (SuggestionView suggestionView : suggestionBook.getItems()) {
+      suggestionView.applyDarkMode(isDark);
+    }
   }
 
   @Override
