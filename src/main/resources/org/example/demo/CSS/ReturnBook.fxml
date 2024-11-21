@@ -132,7 +132,7 @@
       </Button>
     </children>
   </AnchorPane>
-   <Pane id="pinkPane" fx:id="returnPane" layoutX="130.0" layoutY="37.0" prefHeight="440.0" prefWidth="631.0" stylesheets="@ReturnBook.css" visible="false">
+   <Pane id="pinkPane" fx:id="returnPane" layoutX="130.0" layoutY="37.0" prefHeight="440.0" prefWidth="631.0" stylesheets="@ReturnBook.css">
       <children>
          <Line id="LINE" endX="351.20001220703125" layoutX="280.0" layoutY="239.0" startX="-280.0" />
          <Pane id="smallPane" layoutX="14.0" layoutY="41.0" prefHeight="150.0" prefWidth="264.0">
