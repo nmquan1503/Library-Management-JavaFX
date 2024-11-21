@@ -192,6 +192,9 @@ public class ReturnBookController implements MainInfo {
   @FXML
   private TextField bookSearchBox;
 
+  @FXML
+  private ImageView borrowImage;
+
   private void addBox() {
     sortBox.getItems().addAll(
         "Tìm Kiếm Theo Người Mượn",

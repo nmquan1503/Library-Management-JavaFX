@@ -191,7 +191,7 @@
                <FontAwesomeIconView glyphName="CLOSE" />
             </graphic>
          </JFXButton>
-         <ImageView fitHeight="204.0" fitWidth="79.0" layoutX="276.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+         <ImageView fx:id="borrowImage" fitHeight="204.0" fitWidth="79.0" layoutX="276.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
             <image>
                <Image url="@../../../../images/borrow.png" />
             </image>
