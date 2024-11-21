@@ -1011,25 +1011,21 @@ public class BaseController {
   private void refreshNotification() {
     ArrayList<Borrowing> history = Library.getInstance().getListBorrowingNearingDeadline();
     ArrayList<Integer> ls = new ArrayList<>();
-    ArrayList<NotificationView> del = new ArrayList<>();
+
     for (NotificationView notificationView : notificationList) {
-      ls.add(notificationView.getBorrowing().getIdBorrowing());
-    }
-    int i = 0;
-    for (Borrowing borrowing : history) {
-      if (!ls.contains(borrowing.getIdBorrowing())) {
-        notificationList.add(new NotificationView(borrowing, 330, 70));
+      if (notificationView.isSeen()) {
+        ls.add(notificationView.getBorrowing().getIdBorrowing());
       } else {
-        if (notificationList.get(i).isSeen()) {
-          del.add(notificationList.get(i));
-        }
+        firstRead.remove(notificationView.getBorrowing().getIdBorrowing());
       }
-      i++;
     }
-    if (notificationList.size() > 20 && !del.isEmpty()) {
-      for (NotificationView notificationView : del) {
-        notificationList.remove(notificationView);
+    notificationList.clear();
+    for (Borrowing borrowing : history) {
+      NotificationView plus = new NotificationView(borrowing, 330, 70);
+      if (ls.contains(plus.getBorrowing().getIdBorrowing())) {
+        plus.markSeen();
       }
+      notificationList.add(plus);
     }
   }
 
