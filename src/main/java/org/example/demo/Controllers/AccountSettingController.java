@@ -1,5 +1,6 @@
 package org.example.demo.Controllers;
 
+import com.jfoenix.controls.JFXButton;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.io.File;
 import java.io.FileInputStream;
@@ -467,11 +468,47 @@ public class AccountSettingController {
     }
   }
 
+  @FXML
+  private JFXButton btnName;
+
+  @FXML
+  private JFXButton btnBirth;
+
+  @FXML
+  private JFXButton btnEmail;
+
+  @FXML
+  private JFXButton btnAddr;
+
+  @FXML
+  private JFXButton btnPass;
+
+  @FXML
+  private JFXButton btnReset;
+
+  private void btnDisable() {
+    btnName.setDisable(true);
+    btnBirth.setDisable(true);
+    btnEmail.setDisable(true);
+    btnAddr.setDisable(true);
+    btnPass.setDisable(true);
+    btnReset.setDisable(true);
+  }
+
+  private void btnEnable() {
+    btnName.setDisable(false);
+    btnBirth.setDisable(false);
+    btnEmail.setDisable(false);
+    btnAddr.setDisable(false);
+    btnPass.setDisable(false);
+    btnReset.setDisable(false);
+  }
+
   private void succeedNotification() {
     succeedPane.setVisible(true);
     succeedPane.setOpacity(1.0);
 
-    succeedPane.getScene().getRoot().setDisable(true);
+    btnDisable();
 
     if (fadeOutTimeline != null && fadeOutTimeline.getStatus() == Timeline.Status.RUNNING) {
       fadeOutTimeline.stop();
@@ -489,7 +526,7 @@ public class AccountSettingController {
     fadeOutTimeline.setOnFinished(event -> {
       succeedPane.setVisible(false);
       fadeOutTimeline.stop();
-      succeedPane.getScene().getRoot().setDisable(false);
+      btnEnable();
     });
 
     fadeOutTimeline.play();
@@ -499,7 +536,7 @@ public class AccountSettingController {
     errorPane.setVisible(true);
     errorPane.setOpacity(1.0);
 
-    errorPane.getScene().getRoot().setDisable(true);
+    btnDisable();
 
     if (fadeOutTimeline != null && fadeOutTimeline.getStatus() == Timeline.Status.RUNNING) {
       fadeOutTimeline.stop();
@@ -517,7 +554,7 @@ public class AccountSettingController {
     fadeOutTimeline.setOnFinished(event -> {
       errorPane.setVisible(false);
       fadeOutTimeline.stop();
-      errorPane.getScene().getRoot().setDisable(false);
+      btnEnable();
     });
 
     fadeOutTimeline.play();
