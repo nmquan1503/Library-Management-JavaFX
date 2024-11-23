@@ -107,6 +107,110 @@ public class BooksController implements MainInfo {
   private Pane loadingPane;
   private Transition loadingTransition;
 
+  public Label getTopChoicesLabel() {
+    return topChoicesLabel;
+  }
+
+  public AnchorPane getAdvertisementPane() {
+    return advertisementPane;
+  }
+
+  public ImageView getContent1() {
+    return content1;
+  }
+
+  public ImageView getContent2() {
+    return content2;
+  }
+
+  public ImageView getContent3() {
+    return content3;
+  }
+
+  public RadioButton getRadioButton1() {
+    return radioButton1;
+  }
+
+  public RadioButton getRadioButton2() {
+    return radioButton2;
+  }
+
+  public RadioButton getRadioButton3() {
+    return radioButton3;
+  }
+
+  public Queue<Transition> getAdvertisementTransitions() {
+    return advertisementTransitions;
+  }
+
+  public Timeline getTimeline() {
+    return timeline;
+  }
+
+  public JFXComboBox<String> getCategoryComboBox() {
+    return categoryComboBox;
+  }
+
+  public TextField getCategoryTextField() {
+    return categoryTextField;
+  }
+
+  public JFXListView<String> getCategoriesListView() {
+    return categoriesListView;
+  }
+
+  public TextField getTitleTextField() {
+    return titleTextField;
+  }
+
+  public JFXButton getRemoveTextFieldButton() {
+    return removeTextFieldButton;
+  }
+
+  public JFXListView<SuggestionView> getTitleListView() {
+    return titleListView;
+  }
+
+  public TextField getPageNumberTextField() {
+    return pageNumberTextField;
+  }
+
+  public JFXButton getNextPageButton() {
+    return nextPageButton;
+  }
+
+  public JFXButton getPrevPageButton() {
+    return prevPageButton;
+  }
+
+  public JFXListView<SuggestionView> getListBooks() {
+    return ListBooks;
+  }
+
+  public ArrayList<Suggestion> getListSuggestions() {
+    return listSuggestions;
+  }
+
+  public Trie getCategories() {
+    return categories;
+  }
+
+  public AnchorPane getMainPane() {
+    return mainPane;
+  }
+
+  public Queue<Thread> getLoadingThread() {
+    return loadingThread;
+  }
+
+  public Pane getLoadingPane() {
+    return loadingPane;
+  }
+
+  public Transition getLoadingTransition() {
+    return loadingTransition;
+  }
+
   @FXML
   private void initialize() {
     advertisementTransitions = new LinkedList<>();

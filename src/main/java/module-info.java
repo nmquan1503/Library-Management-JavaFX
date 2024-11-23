@@ -13,8 +13,9 @@ module org.example.demo {
   requires mysql.connector.j;
   requires com.google.zxing;
 
-  opens org.example.demo.Controllers;
+  opens org.example.demo.Controllers to javafx.fxml;
   opens org.example.demo.CustomUI to javafx.fxml;
   exports org.example.demo;
-  opens org.example.demo.Interfaces;
+  opens org.example.demo.Interfaces to javafx.fxml;
+  opens org.example.demo to org.junit.jupiter.api, org.testfx;
 }
