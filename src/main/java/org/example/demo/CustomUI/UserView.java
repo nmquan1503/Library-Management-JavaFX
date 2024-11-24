@@ -32,66 +32,94 @@ import org.example.demo.Models.Users.User;
 
 public class UserView extends ScrollPane implements MainInfo {
 
-  @FXML private AnchorPane viewPane;
+  @FXML
+  private AnchorPane viewPane;
 
-  @FXML private VBox wrapper;
-  @FXML private ImageView imageUser;
+  @FXML
+  private VBox wrapper;
+  @FXML
+  private ImageView imageUser;
 
-  @FXML private Label nameLabel;
-  @FXML private Label idLabel;
+  @FXML
+  private Label nameLabel;
+  @FXML
+  private Label idLabel;
 
-  @FXML private VBox infoBox;
+  @FXML
+  private VBox infoBox;
 
-  @FXML private HBox birthdayBox;
-  @FXML private Label birthdayTag;
-  @FXML private Label birthdayLabel;
+  @FXML
+  private HBox birthdayBox;
+  @FXML
+  private Label birthdayTag;
+  @FXML
+  private Label birthdayLabel;
 
-  @FXML private HBox addressBox;
-  @FXML private Label addressTag;
-  @FXML private Label addressLabel;
+  @FXML
+  private HBox addressBox;
+  @FXML
+  private Label addressTag;
+  @FXML
+  private Label addressLabel;
 
-  @FXML private HBox phoneNumberBox;
-  @FXML private Label phoneNumberTag;
-  @FXML private Label phoneNumberLabel;
+  @FXML
+  private HBox phoneNumberBox;
+  @FXML
+  private Label phoneNumberTag;
+  @FXML
+  private Label phoneNumberLabel;
 
-  @FXML private HBox emailBox;
-  @FXML private Label emailTag;
-  @FXML private Label emailLabel;
+  @FXML
+  private HBox emailBox;
+  @FXML
+  private Label emailTag;
+  @FXML
+  private Label emailLabel;
 
-  @FXML private HBox endBanDateBox;
-  @FXML private Label endBanDateTag;
-  @FXML private Label endBanDateLabel;
+  @FXML
+  private HBox endBanDateBox;
+  @FXML
+  private Label endBanDateTag;
+  @FXML
+  private Label endBanDateLabel;
 
-  @FXML private Pane loadingPane;
+  @FXML
+  private Pane loadingPane;
   private Transition loadingTransition;
 
-  private HashMap<Object,String > viLang;
-  private HashMap<Object,String > enLang;
+  private HashMap<Object, String> viLang;
+  private HashMap<Object, String> enLang;
 
   private TextToSpeech tts;
 
-  public UserView(){
+  /**
+   * constructor.
+   */
+  public UserView() {
     try {
       FXMLLoader fxmlLoader = new FXMLLoader(
           getClass().getResource("/org/example/demo/FXML/UserView.fxml"));
       fxmlLoader.setController(this);
-      AnchorPane anchorPane=fxmlLoader.load();
+      AnchorPane anchorPane = fxmlLoader.load();
       this.setContent(anchorPane);
-    }
-    catch (Exception e){
+    } catch (Exception e) {
       e.printStackTrace();
     }
 
     this.setPrefHeight(540);
     this.setPrefWidth(900);
-    this.getStylesheets().add(getClass().getResource("/org/example/demo/CSS/BookView.css").toExternalForm());
+    this.getStylesheets()
+        .add(getClass().getResource("/org/example/demo/CSS/BookView.css").toExternalForm());
     this.setId("FadedScrollPane");
 
     initLoadingTransition();
-    tts=new TextToSpeech();
+    tts = new TextToSpeech();
   }
 
-  public void setUser(User user){
+  /**
+   * set up all with user info.
+   */
+  public void setUser(User user) {
     setImage(user);
     setName(user);
     setID(user);
@@ -101,116 +129,145 @@ public class UserView extends ScrollPane implements MainInfo {
     setEmail(user);
     setEndBanDate(user);
 
-    viLang=new HashMap<>();
-    enLang=new HashMap<>();
-    setUpLanguage(viLang,enLang);
-    if(BaseController.isTranslate){
-      applyTranslate(null,null,true);
+    viLang = new HashMap<>();
+    enLang = new HashMap<>();
+    setUpLanguage(viLang, enLang);
+    if (BaseController.isTranslate) {
+      applyTranslate(null, null, true);
     }
 
     viewPane.getChildren().remove(loadingPane);
-    loadingPane=null;
+    loadingPane = null;
     loadingTransition.stop();
-    loadingTransition=null;
+    loadingTransition = null;
 
   }
 
-
-  private void setImage(User user){
-    if(user.getAvatar()==null || !Network.isConnected()){
+  /**
+   * init image user. if image is null, set default image.
+   */
+  private void setImage(User user) {
+    if (user.getAvatar() == null || !Network.isConnected()) {
       imageUser.setImage(new Image(Objects.requireNonNull(
           getClass().getResourceAsStream("/org/example/demo/Assets/default_avatar.jpg"))));
-    }
-    else {
+    } else {
       imageUser.setImage(user.getAvatar());
     }
-    if(BaseController.isDark){
+    if (BaseController.isDark) {
       wrapper.setBlendMode(BlendMode.DIFFERENCE);
       wrapper.setId("wrapper_dark");
+    } else {
+      wrapper.setBlendMode(BlendMode.SRC_OVER);
     }
-    else wrapper.setBlendMode(BlendMode.SRC_OVER);
-    wrapper.setPrefWidth(imageUser.getFitWidth()+6);
-  }
-  
-  private void setName(User user){
-    if(user.getName()!=null)nameLabel.setText(user.getName());
+    wrapper.setPrefWidth(imageUser.getFitWidth() + 6);
   }
 
-  private void setID(User user){
-    if(user.getId()>0){
-      idLabel.setText("#"+user.getId());
+  /**
+   * set name of user.
+   */
+  private void setName(User user) {
+    if (user.getName() != null) {
+      nameLabel.setText(user.getName());
     }
   }
 
-  private void setBirthday(User user){
-    if(user.getBirthday()!=null){
+  /**
+   * set id of user.
+   */
+  private void setID(User user) {
+    if (user.getId() > 0) {
+      idLabel.setText("#" + user.getId());
+    }
+  }
+
+  /**
+   * set birthday of user.
+   */
+  private void setBirthday(User user) {
+    if (user.getBirthday() != null) {
       birthdayLabel.setText(user.getBirthday().toString());
-    }
-    else {
+    } else {
       infoBox.getChildren().remove(birthdayBox);
     }
   }
 
-  private void setAddress(User user){
-    if(user.getAddress()!=null){
+  /**
+   * set address of user.
+   */
+  private void setAddress(User user) {
+    if (user.getAddress() != null) {
       addressLabel.setText(user.getAddress());
-    }
-    else {
+    } else {
       infoBox.getChildren().remove(addressBox);
     }
   }
 
-  private void setPhoneNumber(User user){
-    if(user.getPhoneNumber()!=null){
+  /**
+   * set phone of user.
+   */
+  private void setPhoneNumber(User user) {
+    if (user.getPhoneNumber() != null) {
       phoneNumberLabel.setText(user.getPhoneNumber());
-    }
-    else {
+    } else {
       infoBox.getChildren().remove(phoneNumberBox);
     }
   }
 
-  private void setEmail(User user){
-    if(user.getEmail()!=null){
+  /**
+   * set email of user.
+   */
+  private void setEmail(User user) {
+    if (user.getEmail() != null) {
       emailLabel.setText(user.getEmail());
-    }
-    else {
+    } else {
       infoBox.getChildren().remove(emailBox);
     }
   }
 
-  private void setEndBanDate(User user){
-    if(user.isBan()){
+  /**
+   * set end ban date of user.
+   */
+  private void setEndBanDate(User user) {
+    if (user.isBan()) {
       endBanDateLabel.setText(user.getBanEndTime().toString());
+    } else {
+      infoBox.getChildren().remove(endBanDateBox);
     }
-    else infoBox.getChildren().remove(endBanDateBox);
   }
 
+  /**
+   * exit view.
+   */
   @FXML
-  public void ExitView(){
+  public void ExitView() {
     stopSpeak();
-    ScaleTransition transition=new ScaleTransition(Duration.millis(200),this);
+    ScaleTransition transition = new ScaleTransition(Duration.millis(200), this);
     transition.setToX(0);
     transition.setToY(0);
-    transition.setOnFinished(e->{
-      AnchorPane mainPane=(AnchorPane) this.getParent();
+    transition.setOnFinished(e -> {
+      AnchorPane mainPane = (AnchorPane) this.getParent();
       mainPane.getChildren().remove(this);
     });
     transition.play();
   }
 
-  public void stopSpeak(){
+  public void stopSpeak() {
     tts.stopSpeak();
   }
 
+
+  /**
+   * call tts api to speak info of user.
+   */
   @FXML
-  private void Speak(){
-    if(!Network.isConnected()){
-      Node parent=this.getParent();
-      if(parent!=null){
-        while(parent.getParent()!=null){
-          parent=parent.getParent();
+  private void Speak() {
+    if (!Network.isConnected()) {
+      Node parent = this.getParent();
+      if (parent != null) {
+        while (parent.getParent() != null) {
+          parent = parent.getParent();
         }
-        if(parent instanceof AnchorPane){
+        if (parent instanceof AnchorPane) {
           ((AnchorPane) parent).getChildren().add(
               new Warning("Mất kết nối mạng!",
                   "Vui lòng kiểm tra lại kết nối của bạn và thử lại."
@@ -220,53 +277,60 @@ public class UserView extends ScrollPane implements MainInfo {
       }
       return;
     }
-    String oup="";
-    if(nameLabel!=null){
-      if(!nameLabel.getText().isEmpty()){
-        if(BaseController.isTranslate)oup=oup.concat("Name user: "+nameLabel.getText()+"\n");
-        else oup=oup.concat("Tên người mượn: "+nameLabel.getText()+"\n");
+    String oup = "";
+    if (nameLabel != null) {
+      if (!nameLabel.getText().isEmpty()) {
+        if (BaseController.isTranslate) {
+          oup = oup.concat("Name user: " + nameLabel.getText() + "\n");
+        } else {
+          oup = oup.concat("Tên người mượn: " + nameLabel.getText() + "\n");
+        }
       }
     }
 
-    if(birthdayLabel!=null){
-      if(!birthdayLabel.getText().isEmpty()){
-        oup=oup.concat(birthdayTag.getText()+birthdayLabel.getText()+"\n");
+    if (birthdayLabel != null) {
+      if (!birthdayLabel.getText().isEmpty()) {
+        oup = oup.concat(birthdayTag.getText() + birthdayLabel.getText() + "\n");
       }
     }
 
-    if(addressLabel!=null){
-      if(!addressLabel.getText().isEmpty()){
-        oup=oup.concat(addressTag.getText()+addressLabel.getText()+"\n");
+    if (addressLabel != null) {
+      if (!addressLabel.getText().isEmpty()) {
+        oup = oup.concat(addressTag.getText() + addressLabel.getText() + "\n");
       }
     }
 
-    if(phoneNumberLabel!=null){
-      if(!phoneNumberLabel.getText().isEmpty()){
-        oup=oup.concat(phoneNumberTag.getText()+phoneNumberLabel.getText()+"\n");
+    if (phoneNumberLabel != null) {
+      if (!phoneNumberLabel.getText().isEmpty()) {
+        oup = oup.concat(phoneNumberTag.getText() + phoneNumberLabel.getText() + "\n");
       }
     }
 
-    if(emailLabel!=null){
-      if(!emailLabel.getText().isEmpty()){
-        oup=oup.concat(emailTag.getText()+emailLabel.getText()+"\n");
+    if (emailLabel != null) {
+      if (!emailLabel.getText().isEmpty()) {
+        oup = oup.concat(emailTag.getText() + emailLabel.getText() + "\n");
       }
     }
 
-    if(endBanDateLabel!=null){
-      if(!endBanDateLabel.getText().isEmpty()){
-        oup=oup.concat(endBanDateTag.getText()+endBanDateLabel.getText()+"\n");
+    if (endBanDateLabel != null) {
+      if (!endBanDateLabel.getText().isEmpty()) {
+        oup = oup.concat(endBanDateTag.getText() + endBanDateLabel.getText() + "\n");
       }
     }
 
     tts.stopSpeak();
-    tts=new TextToSpeech();
-    if(BaseController.isTranslate){
+    tts = new TextToSpeech();
+    if (BaseController.isTranslate) {
       tts.SpeakPassage(oup, Language.ENGLISH);
+    } else {
+      tts.SpeakPassage(oup, Language.VIETNAMESE);
     }
-    else tts.SpeakPassage(oup,Language.VIETNAMESE);
 
   }
 
+  /**
+   * create start transition.
+   */
   private void initLoadingTransition() {
     Arc arc1 = (Arc) loadingPane.getChildren().getFirst();
     Arc arc2 = (Arc) loadingPane.getChildren().get(1);
@@ -291,52 +355,59 @@ public class UserView extends ScrollPane implements MainInfo {
     loadingTransition.play();
   }
 
+  /**
+   * set dark/light mode.
+   */
   @Override
   public void applyDarkMode(boolean isDark) {
-    if(isDark){
+    if (isDark) {
       this.wrapper.setBlendMode(BlendMode.DIFFERENCE);
       wrapper.setId("wrapper_dark");
-    }
-    else {
+    } else {
       this.wrapper.setBlendMode(BlendMode.SRC_OVER);
       wrapper.setId("wrapper_light");
     }
   }
 
+  /**
+   * translate en/vi language for some text.
+   */
   @Override
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
       boolean isTranslate) {
-    if(isTranslate){
-      if(birthdayTag!=null){
+    if (isTranslate) {
+      if (birthdayTag != null) {
         birthdayTag.setText("Birthday: ");
       }
-      if(addressTag!=null){
+      if (addressTag != null) {
         addressTag.setText("Address: ");
       }
-      if(phoneNumberTag!=null){
+      if (phoneNumberTag != null) {
         phoneNumberTag.setText("Phone number: ");
       }
-      if(endBanDateTag!=null){
+      if (endBanDateTag != null) {
         endBanDateTag.setText("Banned until: ");
       }
 
-    }
-    else {
-      if(birthdayTag!=null){
+    } else {
+      if (birthdayTag != null) {
         birthdayTag.setText("Ngày sinh: ");
       }
-      if(addressTag!=null){
+      if (addressTag != null) {
         addressTag.setText("Địa chỉ: ");
       }
-      if(phoneNumberTag!=null){
+      if (phoneNumberTag != null) {
         phoneNumberTag.setText("Số điện thoại: ");
       }
-      if(endBanDateTag!=null){
+      if (endBanDateTag != null) {
         endBanDateTag.setText("Bị cấm tới ngày: ");
       }
     }
   }
 
+  /**
+   * set up en/vi language.
+   */
   @Override
   public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
 

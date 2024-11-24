@@ -53,7 +53,8 @@ public class UsersController implements MainInfo {
   @FXML
   private JFXButton prevPageButton;
 
-  @FXML private Label banListLabel;
+  @FXML
+  private Label banListLabel;
   @FXML
   private JFXListView<SuggestionView> BanList;
 
@@ -64,6 +65,65 @@ public class UsersController implements MainInfo {
   private Pane loadingPane;
   private Transition loadingTransition;
 
+  public AnchorPane getMainPane() {
+    return mainPane;
+  }
+
+  public JFXButton getDeleteButton() {
+    return deleteButton;
+  }
+
+  public TextField getNameTextField() {
+    return nameTextField;
+  }
+
+  public JFXListView<SuggestionView> getUserSuggestionsListView() {
+    return userSuggestionsListView;
+  }
+
+  public JFXListView<SuggestionView> getUsersListView() {
+    return usersListView;
+  }
+
+  public TextField getPageNumberTextField() {
+    return pageNumberTextField;
+  }
+
+  public JFXButton getNextPageButton() {
+    return nextPageButton;
+  }
+
+  public JFXButton getPrevPageButton() {
+    return prevPageButton;
+  }
+
+  public Label getBanListLabel() {
+    return banListLabel;
+  }
+
+  public JFXListView<SuggestionView> getBanList() {
+    return BanList;
+  }
+
+  public ArrayList<Suggestion> getListUser() {
+    return listUser;
+  }
+
+  public Queue<Thread> getLoadingThread() {
+    return loadingThread;
+  }
+
+  public Pane getLoadingPane() {
+    return loadingPane;
+  }
+
+  public Transition getLoadingTransition() {
+    return loadingTransition;
+  }
+
+  /**
+   * init view.
+   */
   @FXML
   private void initialize() {
     listUser = new ArrayList<>();
@@ -73,6 +133,10 @@ public class UsersController implements MainInfo {
     initView();
   }
 
+  /**
+   * action when press enter key (when press key on number of page text field). if page number is
+   * invalid, fix page number. render 20 suggestions of user based on page number.
+   */
   @FXML
   private void changePage() {
     int pageNumber = Integer.parseInt(pageNumberTextField.getText());
@@ -90,6 +154,10 @@ public class UsersController implements MainInfo {
     setListUsers(pageNumber);
   }
 
+  /**
+   * action when click to next page button. switch to next page. if current page number is max, set
+   * visible (false) for this button.
+   */
   @FXML
   private void switchToNextPage() {
     int pageNumber = Integer.parseInt(pageNumberTextField.getText());
@@ -99,6 +167,10 @@ public class UsersController implements MainInfo {
     prevPageButton.setVisible(pageNumber + 1 != 1);
   }
 
+  /**
+   * action when click to prev page button. switch to previous page. if current page number is 1,
+   * set visible (false) for this button.
+   */
   @FXML
   private void switchToPrevPage() {
     int pageNumber = Integer.parseInt(pageNumberTextField.getText());
@@ -108,12 +180,21 @@ public class UsersController implements MainInfo {
     prevPageButton.setVisible(pageNumber - 1 != 1);
   }
 
-  private void setListUsers(int pageNumber) {
+  /**
+   * render 20 suggestions of user based on page number.
+   */
+  public void setListUsers(int pageNumber) {
     if (pageNumber > (listUser.size() - 1) / 20 + 1) {
       pageNumber = (listUser.size() - 1) / 20 + 1;
       pageNumberTextField.setText(String.valueOf(pageNumber));
       nextPageButton.setVisible(pageNumber != (listUser.size() - 1) / 20 + 1);
       prevPageButton.setVisible(pageNumber != 1);
+    }
+    if (pageNumber < 1) {
+      pageNumber = 1;
+      pageNumberTextField.setText("1");
+      nextPageButton.setVisible(pageNumber != (listUser.size() - 1) / 20 + 1);
+      prevPageButton.setVisible(false);
     }
     int start = pageNumber * 20 - 20;
     int end = Math.min(start + 19, listUser.size() - 1);
@@ -129,6 +210,9 @@ public class UsersController implements MainInfo {
     thread.start();
   }
 
+  /**
+   * set up focus property of text field. when text field is not focused, hide all suggestions.
+   */
   private void SetupFocusTextField() {
     nameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
       if (newValue) {
@@ -154,6 +238,9 @@ public class UsersController implements MainInfo {
     });
   }
 
+  /**
+   * set up for text field that only accept number.
+   */
   private void setUpPageNumberTextField() {
     pageNumberTextField.textProperty().addListener(new ChangeListener<String>() {
       @Override
@@ -166,7 +253,9 @@ public class UsersController implements MainInfo {
     });
   }
 
-
+  /**
+   * open user view to show all info of user u clicked. get user by id.
+   */
   private void showUser(int idUser) {
     mainPane.requestFocus();
     Thread thread = new Thread(() -> {
@@ -179,11 +268,13 @@ public class UsersController implements MainInfo {
         transition.setToX(1);
         transition.setToY(1);
         transition.play();
-        Thread thread1=new Thread(()->{
-          User user=Library.getInstance().getUser(idUser);
-          Platform.runLater(()->{
-            PauseTransition pauseTransition=new PauseTransition(Duration.millis(700));
-            pauseTransition.setOnFinished(e->{userView.setUser(user);});
+        Thread thread1 = new Thread(() -> {
+          User user = Library.getInstance().getUser(idUser);
+          Platform.runLater(() -> {
+            PauseTransition pauseTransition = new PauseTransition(Duration.millis(700));
+            pauseTransition.setOnFinished(e -> {
+              userView.setUser(user);
+            });
             pauseTransition.play();
           });
         });
@@ -193,8 +284,11 @@ public class UsersController implements MainInfo {
     thread.start();
   }
 
+  /**
+   * load user list when click search button.
+   */
   @FXML
-  private void loadUserList() {
+  public void loadUserList() {
     loadingPane.setVisible(true);
     loadingTransition.play();
     String prefixName = nameTextField.getText();
@@ -224,11 +318,17 @@ public class UsersController implements MainInfo {
     thread.start();
   }
 
+  /**
+   * remove content of text field when click remove button.
+   */
   @FXML
   private void DeleteContentOfTextField() {
     nameTextField.clear();
   }
 
+  /**
+   * create user suggestion when enter name user.
+   */
   @FXML
   private void CreateUserSuggestions() {
     String prefixName = nameTextField.getText();
@@ -259,6 +359,9 @@ public class UsersController implements MainInfo {
     thread.start();
   }
 
+  /**
+   * open user view.
+   */
   @FXML
   private void SelectUserFromUserListView() {
     SuggestionView suggestionView = usersListView.getSelectionModel().getSelectedItem();
@@ -267,6 +370,9 @@ public class UsersController implements MainInfo {
     }
   }
 
+  /**
+   * init list view of banned users.
+   */
   private void initBannedUsersList() {
     ObservableList<SuggestionView> observableList = FXCollections.observableArrayList();
     BanList.setItems(observableList);
@@ -281,6 +387,9 @@ public class UsersController implements MainInfo {
     thread.start();
   }
 
+  /**
+   * open user view.
+   */
   @FXML
   private void SelectBannedUser() {
     SuggestionView suggestionView = BanList.getSelectionModel().getSelectedItem();
@@ -289,6 +398,9 @@ public class UsersController implements MainInfo {
     }
   }
 
+  /**
+   * loading transition when search user.
+   */
   private void initLoadingTransition() {
     Arc arc1 = (Arc) loadingPane.getChildren().getFirst();
     Arc arc2 = (Arc) loadingPane.getChildren().get(1);
@@ -313,6 +425,9 @@ public class UsersController implements MainInfo {
 
   }
 
+  /**
+   * init view.
+   */
   private void initView() {
     Thread thread = new Thread(() -> {
       listUser = Library.getInstance().getUserSuggestions("");
@@ -324,21 +439,26 @@ public class UsersController implements MainInfo {
         prevPageButton.setVisible(false);
         initLoadingTransition();
         initBannedUsersList();
-        mainPane.setOnMouseClicked(e->{mainPane.requestFocus();});
+        mainPane.setOnMouseClicked(e -> {
+          mainPane.requestFocus();
+        });
       });
     });
     thread.start();
   }
 
-  public void deleteUserSuggestion(Suggestion suggestion){
-    if(userSuggestionsListView!=null){
-      for(int i=0;i<userSuggestionsListView.getItems().size();i++){
-        if(userSuggestionsListView.getItems().get(i).getID()==suggestion.getId()){
+  /**
+   * delete suggestion of user when it deleted.
+   */
+  public void deleteUserSuggestion(Suggestion suggestion) {
+    if (userSuggestionsListView != null) {
+      for (int i = 0; i < userSuggestionsListView.getItems().size(); i++) {
+        if (userSuggestionsListView.getItems().get(i).getID() == suggestion.getId()) {
           userSuggestionsListView.getItems().remove(i);
           int heightOfListView = Math.min(userSuggestionsListView.getItems().size(), 5) * 55;
           userSuggestionsListView.setMinHeight(heightOfListView);
           userSuggestionsListView.setMaxHeight(heightOfListView);
-          if(userSuggestionsListView.getItems().isEmpty()){
+          if (userSuggestionsListView.getItems().isEmpty()) {
             userSuggestionsListView.setVisible(false);
           }
           break;
@@ -346,9 +466,9 @@ public class UsersController implements MainInfo {
       }
     }
 
-    if(BanList !=null){
-      for(int i=0;i<BanList.getItems().size();i++){
-        if(BanList.getItems().get(i).getID()==suggestion.getId()){
+    if (BanList != null) {
+      for (int i = 0; i < BanList.getItems().size(); i++) {
+        if (BanList.getItems().get(i).getID() == suggestion.getId()) {
           BanList.getItems().remove(i);
           break;
         }
@@ -356,21 +476,20 @@ public class UsersController implements MainInfo {
     }
 
     int pageNumber = Integer.parseInt(pageNumberTextField.getText());
-    for(int i=0;i<listUser.size();i++){
-      if(listUser.get(i).getId()==suggestion.getId()){
+    for (int i = 0; i < listUser.size(); i++) {
+      if (listUser.get(i).getId() == suggestion.getId()) {
         listUser.remove(i);
-        if(i+1>=pageNumber*20-19 && i+1<=pageNumber*20){
-          usersListView.getItems().remove(i%20);
-        }
-        else if(i+1<pageNumber*20-19){
+        if (i + 1 >= pageNumber * 20 - 19 && i + 1 <= pageNumber * 20) {
+          usersListView.getItems().remove(i % 20);
+        } else if (i + 1 < pageNumber * 20 - 19) {
           usersListView.getItems().removeFirst();
         }
-        if(20*pageNumber<listUser.size()){
-          usersListView.getItems().add(new SuggestionView(listUser.get(pageNumber*20),80,400));
+        if (20 * pageNumber < listUser.size()) {
+          usersListView.getItems().add(new SuggestionView(listUser.get(pageNumber * 20), 80, 400));
         }
-        if(usersListView.getItems().isEmpty()){
-          if(pageNumber-1>=1){
-            setListUsers(pageNumber-1);
+        if (usersListView.getItems().isEmpty()) {
+          if (pageNumber - 1 >= 1) {
+            setListUsers(pageNumber - 1);
           }
         }
         return;
@@ -378,56 +497,66 @@ public class UsersController implements MainInfo {
     }
   }
 
-  public void fixUserSuggestion(Suggestion suggestion){
-    if(userSuggestionsListView!=null){
-      for(int i=0;i<userSuggestionsListView.getItems().size();i++){
-        if(userSuggestionsListView.getItems().get(i).getID()==suggestion.getId()){
-          userSuggestionsListView.getItems().set(i,new SuggestionView(suggestion,35,400));
+  /**
+   * delete a user suggestion when u delete a book.
+   */
+  public void fixUserSuggestion(Suggestion suggestion) {
+    if (userSuggestionsListView != null) {
+      for (int i = 0; i < userSuggestionsListView.getItems().size(); i++) {
+        if (userSuggestionsListView.getItems().get(i).getID() == suggestion.getId()) {
+          userSuggestionsListView.getItems().set(i, new SuggestionView(suggestion, 35, 400));
           break;
         }
       }
     }
-    if(BanList!=null){
-      for(int i=0;i<BanList.getItems().size();i++){
-        if(BanList.getItems().get(i).getID()==suggestion.getId()){
+    if (BanList != null) {
+      for (int i = 0; i < BanList.getItems().size(); i++) {
+        if (BanList.getItems().get(i).getID() == suggestion.getId()) {
           BanList.getItems().remove(i);
           break;
         }
       }
     }
     int pageNumber = Integer.parseInt(pageNumberTextField.getText());
-    for(int i=0;i<listUser.size();i++){
-      if(listUser.get(i).getId()==suggestion.getId()){
-        listUser.set(i,suggestion);
-        if(i+1>=pageNumber*20-19 && i+1<=pageNumber*20){
-          usersListView.getItems().set(i%20,new SuggestionView(suggestion,80,400));
+    for (int i = 0; i < listUser.size(); i++) {
+      if (listUser.get(i).getId() == suggestion.getId()) {
+        listUser.set(i, suggestion);
+        if (i + 1 >= pageNumber * 20 - 19 && i + 1 <= pageNumber * 20) {
+          usersListView.getItems().set(i % 20, new SuggestionView(suggestion, 80, 400));
         }
         return;
       }
     }
   }
 
-  public void addUserSuggestion(Suggestion suggestion){
-    if(userSuggestionsListView!=null){
-      if(suggestion.getContent().startsWith(nameTextField.getText()) && !nameTextField.getText().isEmpty()){
-        userSuggestionsListView.getItems().add(new SuggestionView(suggestion,35,400));
+  /**
+   * add a user suggestion when u add user completely.
+   */
+  public void addUserSuggestion(Suggestion suggestion) {
+    if (userSuggestionsListView != null) {
+      if (suggestion.getContent().startsWith(nameTextField.getText()) && !nameTextField.getText()
+          .isEmpty()) {
+        userSuggestionsListView.getItems().add(new SuggestionView(suggestion, 35, 400));
         int heightOfListView = Math.min(userSuggestionsListView.getItems().size(), 5) * 55;
         userSuggestionsListView.setMinHeight(heightOfListView);
         userSuggestionsListView.setMaxHeight(heightOfListView);
       }
     }
-    if(Library.getInstance().getUser(suggestion.getId()).isBan()){
-      BanList.getItems().add(new SuggestionView(suggestion,30,200));
+    if (Library.getInstance().getUser(suggestion.getId()).isBan()) {
+      BanList.getItems().add(new SuggestionView(suggestion, 30, 200));
     }
     listUser.add(suggestion);
-    if(usersListView.getItems().size()<20){
-      usersListView.getItems().add(new SuggestionView(suggestion,80,400));
+    if (usersListView.getItems().size() < 20) {
+      usersListView.getItems().add(new SuggestionView(suggestion, 80, 400));
     }
   }
 
-  public void refresh(){
+  /**
+   * refresh screen. set page 1 for user list. clear edit user view.
+   */
+  public void refresh() {
 
-    while(mainPane.getChildren().getLast() instanceof UserView){
+    while (mainPane.getChildren().getLast() instanceof UserView) {
       ((UserView) mainPane.getChildren().getLast()).stopSpeak();
       mainPane.getChildren().removeLast();
     }
@@ -437,43 +566,48 @@ public class UsersController implements MainInfo {
     loadUserList();
   }
 
-  // set BlendMode của các ImageView là DIFFERENCE nếu isDark = true và SRC_OVER trong th còn lại
+  /**
+   * set dark/light mode.
+   */
   @Override
   public void applyDarkMode(boolean isDark) {
-    for(SuggestionView suggestionView:userSuggestionsListView.getItems()){
+    for (SuggestionView suggestionView : userSuggestionsListView.getItems()) {
       suggestionView.applyDarkMode(isDark);
     }
-    for(SuggestionView suggestionView:usersListView.getItems()){
+    for (SuggestionView suggestionView : usersListView.getItems()) {
       suggestionView.applyDarkMode(isDark);
     }
-    for(SuggestionView suggestionView:BanList.getItems()){
+    for (SuggestionView suggestionView : BanList.getItems()) {
       suggestionView.applyDarkMode(isDark);
     }
 
-    if(mainPane.getChildren().getLast() instanceof UserView){
+    if (mainPane.getChildren().getLast() instanceof UserView) {
       ((UserView) mainPane.getChildren().getLast()).applyDarkMode(isDark);
     }
 
   }
 
-  // Không gọi setUpLanguage ở đây
+  /**
+   * translate en/vi language for some text.
+   */
   @Override
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
       boolean isTranslate) {
-    if(isTranslate){
+    if (isTranslate) {
       nameTextField.setPromptText("Enter name");
       banListLabel.setText("List banned Users");
-    }
-    else {
+    } else {
       nameTextField.setPromptText("Nhập tên");
       banListLabel.setText("Danh sách người bị cấm");
     }
-    if(mainPane.getChildren().getLast() instanceof UserView){
-      ((UserView) mainPane.getChildren().getLast()).applyTranslate(null,null,isTranslate);
+    if (mainPane.getChildren().getLast() instanceof UserView) {
+      ((UserView) mainPane.getChildren().getLast()).applyTranslate(null, null, isTranslate);
     }
   }
 
-  // viLang lưu nội dung tiếng Việt gắn với Object, enLang lưu tiếng Anh
+  /**
+   * set up en/vi language.
+   */
   @Override
   public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
 

@@ -40,60 +40,85 @@ import org.example.demo.Models.Suggestion.Suggestion;
 
 public class EditBookView extends ScrollPane implements MainInfo {
 
-  @FXML private AnchorPane viewPane;
+  @FXML
+  private AnchorPane viewPane;
 
-  @FXML private VBox wrapper;
-  @FXML private ImageView imageBook;
+  @FXML
+  private VBox wrapper;
+  @FXML
+  private ImageView imageBook;
 
-  @FXML private TextField titleTextField;
-  @FXML private Label idLabel;
+  @FXML
+  private TextField titleTextField;
+  @FXML
+  private Label idLabel;
 
-  @FXML private VBox authorList;
+  @FXML
+  private VBox authorList;
 
-  @FXML private Label publisherTag;
-  @FXML private TextField publisherTextField;
+  @FXML
+  private Label publisherTag;
+  @FXML
+  private TextField publisherTextField;
 
-  @FXML private Label publishedDateTag;
-  @FXML private TextField publishedDateTextField;
+  @FXML
+  private Label publishedDateTag;
+  @FXML
+  private TextField publishedDateTextField;
 
-  @FXML private Label descriptionTag;
-  @FXML private TextArea descriptionTextArea;
+  @FXML
+  private Label descriptionTag;
+  @FXML
+  private TextArea descriptionTextArea;
 
-  @FXML private Label categoryTag;
-  @FXML private VBox categoryList;
+  @FXML
+  private Label categoryTag;
+  @FXML
+  private VBox categoryList;
 
-  @FXML private Label pageCountTag;
-  @FXML private TextField countPageTextField;
+  @FXML
+  private Label pageCountTag;
+  @FXML
+  private TextField countPageTextField;
 
-  @FXML private Label quantityTag;
-  @FXML private TextField quantityTextField;
+  @FXML
+  private Label quantityTag;
+  @FXML
+  private TextField quantityTextField;
 
-  @FXML private JFXButton saveButton;
+  @FXML
+  private JFXButton saveButton;
 
-  @FXML private Pane loadingPane;
+  @FXML
+  private Pane loadingPane;
   private Transition loadingTransition;
 
   private Book oldBook;
 
-  private HashMap<Object,String > viLang;
-  private HashMap<Object,String > enLang;
+  private HashMap<Object, String> viLang;
+  private HashMap<Object, String> enLang;
 
   private EditController editController;
 
-  public EditBookView(EditController editController){
-    this.editController=editController;
+  /**
+   * init view.
+   */
+  public EditBookView(EditController editController) {
+    this.editController = editController;
     initView();
     initLoadingTransition();
   }
 
-  public void setBook(Book book){
-    if(book==null){
+  /**
+   * set all with info of book.
+   */
+  public void setBook(Book book) {
+    if (book == null) {
       initDefaultImage();
       initDefaultId();
-      authorList.getChildren().add(newTextField(authorList,"Tác giả "));
-      categoryList.getChildren().add(newTextField(categoryList,"Thể loại "));
-    }
-    else {
+      authorList.getChildren().add(newTextField(authorList, "Tác giả "));
+      categoryList.getChildren().add(newTextField(categoryList, "Thể loại "));
+    } else {
       initImage(book);
       initTitle(book);
       initId(book);
@@ -105,148 +130,215 @@ public class EditBookView extends ScrollPane implements MainInfo {
       initPageCount(book);
       initQuantity(book);
     }
-    this.oldBook=book;
+    this.oldBook = book;
   }
 
-  public void completeSetup(){
-    viLang=new HashMap<>();
-    enLang=new HashMap<>();
-    setUpLanguage(viLang,enLang);
-    if(BaseController.isTranslate){
-      applyTranslate(null,null,true);
+  /**
+   * setup after open edit book view.
+   */
+  public void completeSetup() {
+    viLang = new HashMap<>();
+    enLang = new HashMap<>();
+    setUpLanguage(viLang, enLang);
+    if (BaseController.isTranslate) {
+      applyTranslate(null, null, true);
     }
     viewPane.getChildren().remove(loadingPane);
-    loadingPane=null;
+    loadingPane = null;
     loadingTransition.stop();
-    loadingTransition=null;
+    loadingTransition = null;
   }
 
-  private void initImage(Book book){
-    if(book.getImageLink()==null || !Network.isConnected()){
+  /**
+   * set up image of book.
+   */
+  private void initImage(Book book) {
+    if (book.getImageLink() == null || !Network.isConnected()) {
       initDefaultImage();
       return;
-    }
-    else {
+    } else {
       imageBook.setImage(new Image(book.getImageLink()));
     }
-    if(BaseController.isDark){
+    if (BaseController.isDark) {
       wrapper.setBlendMode(BlendMode.DIFFERENCE);
       wrapper.setId("wrapper_dark");
+    } else {
+      wrapper.setBlendMode(BlendMode.SRC_OVER);
     }
-    else wrapper.setBlendMode(BlendMode.SRC_OVER);
   }
 
-  private void initDefaultImage(){
+  /**
+   * set up default image.
+   */
+  private void initDefaultImage() {
     imageBook.setImage(new Image(Objects.requireNonNull(
         getClass().getResourceAsStream("/org/example/demo/Assets/basic.jpg"))));
-    if(BaseController.isDark){
+    if (BaseController.isDark) {
       wrapper.setBlendMode(BlendMode.DIFFERENCE);
       wrapper.setId("wrapper_dark");
+    } else {
+      wrapper.setBlendMode(BlendMode.SRC_OVER);
     }
-    else wrapper.setBlendMode(BlendMode.SRC_OVER);
   }
 
-  private void initTitle(Book book){
-    if(book==null)return;
-    if(book.getTitle()==null)return;
+  /**
+   * set up title of book.
+   */
+  private void initTitle(Book book) {
+    if (book == null) {
+      return;
+    }
+    if (book.getTitle() == null) {
+      return;
+    }
     titleTextField.setText(book.getTitle());
   }
 
-  private void initId(Book book){
-      if(book.getId()!=-1) {
-        idLabel.setText("#" + book.getId());
-        return;
-      }
-      initDefaultId();
+  /**
+   * set up id of book.
+   */
+  private void initId(Book book) {
+    if (book.getId() != -1) {
+      idLabel.setText("#" + book.getId());
+      return;
+    }
+    initDefaultId();
   }
 
-  private void initDefaultId(){
-    int id=-1;
-    Connection connection= JDBC.getConnection();
-    try{
-      String query="select max(id_book) as id "+
+  /**
+   * set up default id.
+   */
+  private void initDefaultId() {
+    int id = -1;
+    Connection connection = JDBC.getConnection();
+    try {
+      String query = "select max(id_book) as id " +
           "from books ";
-      PreparedStatement statement=connection.prepareStatement(query);
-      ResultSet resultSet=statement.executeQuery();
-      if(resultSet.next()){
-        id=resultSet.getInt("id")+1;
+      PreparedStatement statement = connection.prepareStatement(query);
+      ResultSet resultSet = statement.executeQuery();
+      if (resultSet.next()) {
+        id = resultSet.getInt("id") + 1;
       }
-    }
-    catch (Exception e){
+    } catch (Exception e) {
       e.printStackTrace();
     }
     JDBC.closeConnection(connection);
-    idLabel.setText("#"+id);
+    idLabel.setText("#" + id);
   }
 
-  private void initAuthors(Book book){
-    authorList.getChildren().add(newTextField(authorList,"Tác giả "));
-      if (book.getAuthors() != null) {
-        for(String at:book.getAuthors()){
-          ((TextField)authorList.getChildren().getLast()).setText(at);
-        }
+  /**
+   * set up all authors of book.
+   */
+  private void initAuthors(Book book) {
+    authorList.getChildren().add(newTextField(authorList, "Tác giả "));
+    if (book.getAuthors() != null) {
+      for (String at : book.getAuthors()) {
+        ((TextField) authorList.getChildren().getLast()).setText(at);
       }
+    }
   }
 
-  private void initPublisher(Book book){
-    if(book==null)return;
-    if(book.getPublisher()==null)return;
+  /**
+   * set up publisher of book.
+   */
+  private void initPublisher(Book book) {
+    if (book == null) {
+      return;
+    }
+    if (book.getPublisher() == null) {
+      return;
+    }
     publisherTextField.setText(book.getPublisher());
   }
 
-  private void initPublishedDate(Book book){
-    if(book==null)return;
-    if(book.getPublishedDate()<=0)return;
+  /**
+   * set up published date of book.
+   */
+  private void initPublishedDate(Book book) {
+    if (book == null) {
+      return;
+    }
+    if (book.getPublishedDate() <= 0) {
+      return;
+    }
     publishedDateTextField.setText(String.valueOf(book.getPublishedDate()));
   }
 
-  private void initDescription(Book book){
-    if(book==null)return;
-    if(book.getDescription()==null)return;
+  /**
+   * set up description of book.
+   */
+  private void initDescription(Book book) {
+    if (book == null) {
+      return;
+    }
+    if (book.getDescription() == null) {
+      return;
+    }
     descriptionTextArea.setText(book.getDescription());
   }
 
-  private void initCategories(Book book){
-    categoryList.getChildren().add(newTextField(categoryList,"Thể loại "));
-      if (book.getCategories() != null) {
-        for(String ct:book.getCategories()){
-          ((TextField)categoryList.getChildren().getLast()).setText(ct);
-        }
+  /**
+   * set up all categories of book.
+   */
+  private void initCategories(Book book) {
+    categoryList.getChildren().add(newTextField(categoryList, "Thể loại "));
+    if (book.getCategories() != null) {
+      for (String ct : book.getCategories()) {
+        ((TextField) categoryList.getChildren().getLast()).setText(ct);
       }
+    }
   }
 
-  private void initPageCount(Book book){
-    if(book==null)return;
-    if(book.getPageCount()<0)return;
+  /**
+   * set up page count of book.
+   */
+  private void initPageCount(Book book) {
+    if (book == null) {
+      return;
+    }
+    if (book.getPageCount() < 0) {
+      return;
+    }
     countPageTextField.setText(String.valueOf(book.getPageCount()));
   }
 
-  private void initQuantity(Book book){
-    if(book==null)return;
-    if(book.getQuantity()<0)return;
+  /**
+   * set up quantity of book.
+   */
+  private void initQuantity(Book book) {
+    if (book == null) {
+      return;
+    }
+    if (book.getQuantity() < 0) {
+      return;
+    }
     quantityTextField.setText(String.valueOf(book.getQuantity()));
   }
 
-  private TextField newTextField(VBox list, String promptText){
-    TextField tf=new TextField();
-    tf.setPromptText(promptText+(list.getChildren().size()+1));
+  /**
+   * set up text field.
+   * when entered, a new text field will created.
+   */
+  private TextField newTextField(VBox list, String promptText) {
+    TextField tf = new TextField();
+    tf.setPromptText(promptText + (list.getChildren().size() + 1));
     tf.setFont(Font.font(14));
     tf.textProperty().addListener(new ChangeListener<String>() {
       @Override
       public void changed(ObservableValue<? extends String> observableValue, String oldValue,
           String newValue) {
-        if(newValue.isEmpty()){
-          while(list.getChildren().size()>1){
-            int size=list.getChildren().size();
-            if(((TextField)list.getChildren().get(size-2)).getText().isEmpty()){
+        if (newValue.isEmpty()) {
+          while (list.getChildren().size() > 1) {
+            int size = list.getChildren().size();
+            if (((TextField) list.getChildren().get(size - 2)).getText().isEmpty()) {
               list.getChildren().removeLast();
+            } else {
+              break;
             }
-            else break;
           }
-        }
-        else {
-          if(list.getChildren().indexOf(tf)==list.getChildren().size()-1){
-            list.getChildren().add(newTextField(list,promptText));
+        } else {
+          if (list.getChildren().indexOf(tf) == list.getChildren().size() - 1) {
+            list.getChildren().add(newTextField(list, promptText));
           }
         }
       }
@@ -254,65 +346,71 @@ public class EditBookView extends ScrollPane implements MainInfo {
     return tf;
   }
 
-
-  private void initView(){
+  /**
+   * init view.
+   */
+  private void initView() {
     try {
       FXMLLoader fxmlLoader = new FXMLLoader(
           getClass().getResource("/org/example/demo/FXML/EditBookView.fxml"));
       fxmlLoader.setController(this);
       AnchorPane anchorPane = fxmlLoader.load();
       this.setContent(anchorPane);
-    }
-    catch (Exception e){
+    } catch (Exception e) {
       e.printStackTrace();
     }
 
     this.setPrefHeight(540);
     this.setPrefWidth(900);
-    this.getStylesheets().add(getClass().getResource("/org/example/demo/CSS/BookView.css").toExternalForm());
+    this.getStylesheets()
+        .add(getClass().getResource("/org/example/demo/CSS/BookView.css").toExternalForm());
     this.setId("FadedScrollPane");
 
   }
 
-
-
+  /**
+   * exit view.
+   * open confirm box.
+   */
   @FXML
-  public void ExitView(){
-    AnchorPane mainPane=(AnchorPane) this.getParent();
-    ConfirmBox confirmBox=new ConfirmBox(
+  public void ExitView() {
+    AnchorPane mainPane = (AnchorPane) this.getParent();
+    ConfirmBox confirmBox = new ConfirmBox(
         "Xác nhận hủy sự thay đổi?",
         "Nếu bạn chọn \"Hủy\", bạn sẽ được tiếp tục thay đổi nội dung sách muốn thêm.",
-        ()->{
+        () -> {
           mainPane.getChildren().removeLast();
           mainPane.getChildren().removeLast();
         },
-        ()->{
+        () -> {
           mainPane.getChildren().removeLast();
         }
     );
-    while (mainPane.getChildren().getLast() instanceof ConfirmBox){
+    while (mainPane.getChildren().getLast() instanceof ConfirmBox) {
       mainPane.getChildren().removeLast();
     }
     mainPane.getChildren().add(confirmBox);
   }
 
+  /**
+   * save book.
+   */
   @FXML
-  private void SaveBook(){
-    AnchorPane mainPane=(AnchorPane) this.getParent();
-    ConfirmBox confirmBox=new ConfirmBox(
+  private void SaveBook() {
+    AnchorPane mainPane = (AnchorPane) this.getParent();
+    ConfirmBox confirmBox = new ConfirmBox(
         "Xác nhận Lưu?",
         "Nếu bạn chọn \"Hủy\", bạn sẽ được tiếp tục thay đổi nội dung sách muốn thêm.",
-        ()->{
-          Node parent=mainPane.getParent();
-          if(parent!=null){
-            if(parent instanceof AnchorPane){
-              if(oldBook!=null){
+        () -> {
+          Node parent = mainPane.getParent();
+          if (parent != null) {
+            if (parent instanceof AnchorPane) {
+              if (oldBook != null) {
                 ((AnchorPane) parent).getChildren().add(new Warning(
                     "Thành công!",
                     "Đã thay đổi thông tin sách."
                 ));
-              }
-              else {
+              } else {
                 ((AnchorPane) parent).getChildren().add(new Warning(
                     "Thành công!",
                     "Sách đã được thêm thành công."
@@ -321,26 +419,26 @@ public class EditBookView extends ScrollPane implements MainInfo {
             }
           }
           mainPane.getChildren().removeLast();
-          Thread thread=new Thread(()->{
-            if(oldBook!=null){
-              if(oldBook.getId()!=-1) {
+          Thread thread = new Thread(() -> {
+            if (oldBook != null) {
+              if (oldBook.getId() != -1) {
                 Library.getInstance().deleteBook(oldBook);
               }
             }
-            Book newBook=createNewBook();
-            if(newBook!=null) {
+            Book newBook = createNewBook();
+            if (newBook != null) {
               Library.getInstance().insertBookWithID(newBook, newBook.getId());
 
               if (oldBook == null) {
-                Platform.runLater(()->{
+                Platform.runLater(() -> {
                   editController.addBookSuggestion(new Suggestion(newBook));
                 });
               } else if (oldBook.getId() == -1) {
-                Platform.runLater(()->{
+                Platform.runLater(() -> {
                   editController.addBookSuggestion(new Suggestion(newBook));
                 });
               } else {
-                Platform.runLater(()->{
+                Platform.runLater(() -> {
                   editController.fixBookSuggestion(new Suggestion(newBook));
                 });
               }
@@ -350,66 +448,85 @@ public class EditBookView extends ScrollPane implements MainInfo {
           thread.start();
           mainPane.getChildren().removeLast();
         },
-        ()->{
+        () -> {
           mainPane.getChildren().removeLast();
         }
     );
-    while (mainPane.getChildren().getLast() instanceof ConfirmBox){
+    while (mainPane.getChildren().getLast() instanceof ConfirmBox) {
       mainPane.getChildren().removeLast();
     }
     mainPane.getChildren().add(confirmBox);
   }
 
-  private Book createNewBook(){
-    Book book=new Book();
+  /**
+   * create book with info of all field.
+   */
+  private Book createNewBook() {
+    Book book = new Book();
 
-    if(oldBook!=null)book.setImageLink(oldBook.getImageLink());
-    else book.setImageLink(null);
+    if (oldBook != null) {
+      book.setImageLink(oldBook.getImageLink());
+    } else {
+      book.setImageLink(null);
+    }
 
     book.setTitle(titleTextField.getText());
 
     book.setId(Integer.parseInt(idLabel.getText().substring(1)));
 
-    ArrayList<String> authors=new ArrayList<>();
-    for(int i=0;i<authorList.getChildren().size()-1;i++){
-      authors.add(((TextField)authorList.getChildren().get(i)).getText());
+    ArrayList<String> authors = new ArrayList<>();
+    for (int i = 0; i < authorList.getChildren().size() - 1; i++) {
+      authors.add(((TextField) authorList.getChildren().get(i)).getText());
     }
-    if(authors.isEmpty())authors=null;
+    if (authors.isEmpty()) {
+      authors = null;
+    }
     book.setAuthors(authors);
 
     book.setPublisher(publisherTextField.getText());
 
-    if(!publishedDateTextField.getText().isEmpty()){
+    if (!publishedDateTextField.getText().isEmpty()) {
       book.setPublishedDate(Integer.parseInt(publishedDateTextField.getText()));
     }
 
     book.setDescription(descriptionTextArea.getText());
 
-    ArrayList<String> categories=new ArrayList<>();
-    for(int i=0;i<categoryList.getChildren().size()-1;i++){
-      categories.add(((TextField)categoryList.getChildren().get(i)).getText());
+    ArrayList<String> categories = new ArrayList<>();
+    for (int i = 0; i < categoryList.getChildren().size() - 1; i++) {
+      categories.add(((TextField) categoryList.getChildren().get(i)).getText());
     }
-    if(categories.isEmpty())categories=null;
+    if (categories.isEmpty()) {
+      categories = null;
+    }
     book.setCategories(categories);
 
-    if(!countPageTextField.getText().isEmpty()){
+    if (!countPageTextField.getText().isEmpty()) {
       book.setPageCount(Integer.parseInt(countPageTextField.getText()));
     }
 
-    if(!quantityTextField.getText().isEmpty()){
+    if (!quantityTextField.getText().isEmpty()) {
       book.setQuantity(Integer.parseInt(quantityTextField.getText()));
     }
 
-    if(oldBook!=null)book.setRatingsCount(oldBook.getRatingsCount());
-    else book.setRatingsCount(0);
+    if (oldBook != null) {
+      book.setRatingsCount(oldBook.getRatingsCount());
+    } else {
+      book.setRatingsCount(0);
+    }
 
-    if(oldBook!=null)book.setAverageRating(oldBook.getAverageRating());
-    else book.setAverageRating(0);
+    if (oldBook != null) {
+      book.setAverageRating(oldBook.getAverageRating());
+    } else {
+      book.setAverageRating(0);
+    }
 
     return book;
 
   }
 
+  /**
+   * start transition.
+   */
   private void initLoadingTransition() {
     Arc arc1 = (Arc) loadingPane.getChildren().getFirst();
     Arc arc2 = (Arc) loadingPane.getChildren().get(1);
@@ -434,28 +551,32 @@ public class EditBookView extends ScrollPane implements MainInfo {
     loadingTransition.play();
   }
 
-
+  /**
+   * set dark/light mode.
+   */
   @Override
   public void applyDarkMode(boolean isDark) {
-    if(isDark){
+    if (isDark) {
       this.wrapper.setBlendMode(BlendMode.DIFFERENCE);
       wrapper.setId("wrapper_dark");
-    }
-    else {
+    } else {
       this.wrapper.setBlendMode(BlendMode.SRC_OVER);
       wrapper.setId("wrapper_light");
     }
   }
 
+  /**
+   * translate en/vi language for some text.
+   */
   @Override
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
       boolean isTranslate) {
-    if(isTranslate){
+    if (isTranslate) {
       titleTextField.setPromptText("Name");
 
-      for(int i=0;i<authorList.getChildren().size();i++){
-        if(authorList.getChildren().get(i) instanceof TextField){
-          ((TextField) authorList.getChildren().get(i)).setPromptText("Author "+(i+1));
+      for (int i = 0; i < authorList.getChildren().size(); i++) {
+        if (authorList.getChildren().get(i) instanceof TextField) {
+          ((TextField) authorList.getChildren().get(i)).setPromptText("Author " + (i + 1));
         }
       }
 
@@ -469,9 +590,9 @@ public class EditBookView extends ScrollPane implements MainInfo {
       descriptionTextArea.setPromptText("Description");
 
       categoryTag.setText("Categories: ");
-      for(int i=0;i<categoryList.getChildren().size();i++){
-        if(categoryList.getChildren().get(i) instanceof TextField){
-          ((TextField)categoryList.getChildren().get(i)).setPromptText("Category "+(i+1));
+      for (int i = 0; i < categoryList.getChildren().size(); i++) {
+        if (categoryList.getChildren().get(i) instanceof TextField) {
+          ((TextField) categoryList.getChildren().get(i)).setPromptText("Category " + (i + 1));
         }
       }
 
@@ -482,13 +603,12 @@ public class EditBookView extends ScrollPane implements MainInfo {
       quantityTextField.setPromptText("Quantity");
 
       saveButton.setText("Save");
-    }
-    else {
+    } else {
       titleTextField.setPromptText("Tên sách");
 
-      for(int i=0;i<authorList.getChildren().size();i++){
-        if(authorList.getChildren().get(i) instanceof TextField){
-          ((TextField) authorList.getChildren().get(i)).setPromptText("Tác giả "+(i+1));
+      for (int i = 0; i < authorList.getChildren().size(); i++) {
+        if (authorList.getChildren().get(i) instanceof TextField) {
+          ((TextField) authorList.getChildren().get(i)).setPromptText("Tác giả " + (i + 1));
         }
       }
 
@@ -502,9 +622,9 @@ public class EditBookView extends ScrollPane implements MainInfo {
       descriptionTextArea.setPromptText("Mô tả");
 
       categoryTag.setText("Categories: ");
-      for(int i=0;i<categoryList.getChildren().size();i++){
-        if(categoryList.getChildren().get(i) instanceof TextField){
-          ((TextField)categoryList.getChildren().get(i)).setPromptText("Thể loại "+(i+1));
+      for (int i = 0; i < categoryList.getChildren().size(); i++) {
+        if (categoryList.getChildren().get(i) instanceof TextField) {
+          ((TextField) categoryList.getChildren().get(i)).setPromptText("Thể loại " + (i + 1));
         }
       }
 
@@ -518,6 +638,9 @@ public class EditBookView extends ScrollPane implements MainInfo {
     }
   }
 
+  /**
+   * set up en/vi language.
+   */
   @Override
   public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
   }

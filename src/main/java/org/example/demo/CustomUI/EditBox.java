@@ -23,7 +23,7 @@ import org.example.demo.Models.Suggestion.Suggestion;
 
 public class EditBox extends HBox implements MainInfo {
 
-  public enum TypeBox{
+  public enum TypeBox {
     BOOK,
     USER;
   }
@@ -35,13 +35,17 @@ public class EditBox extends HBox implements MainInfo {
   private JFXButton removeButton;
   private EditController editController;
 
-  public EditBox(Suggestion suggestion,TypeBox typeBox, EditController editController, int height,int width){
-    this.suggestion=suggestion;
-    this.editController=editController;
+  /**
+   * constructor.
+   */
+  public EditBox(Suggestion suggestion, TypeBox typeBox, EditController editController, int height,
+      int width) {
+    this.suggestion = suggestion;
+    this.editController = editController;
 
-    initImage(suggestion,height);
-    initLabel(suggestion,height,width);
-    initRemoveButton(height,typeBox);
+    initImage(suggestion, height);
+    initLabel(suggestion, height, width);
+    initRemoveButton(height, typeBox);
 
     this.getChildren().addAll(
         wrapper,
@@ -50,7 +54,8 @@ public class EditBox extends HBox implements MainInfo {
     );
 
     this.getStylesheets().add(
-        Objects.requireNonNull(getClass().getResource("/org/example/demo/CSS/Pagination.css")).toExternalForm());
+        Objects.requireNonNull(getClass().getResource("/org/example/demo/CSS/Pagination.css"))
+            .toExternalForm());
     this.setPrefHeight(height);
     this.setPrefWidth(width);
     this.setAlignment(Pos.CENTER);
@@ -58,48 +63,60 @@ public class EditBox extends HBox implements MainInfo {
 
   }
 
-  private void initImage(Suggestion suggestion,int height){
-    wrapper=new StackPane();
+  /**
+   * init image.
+   */
+  private void initImage(Suggestion suggestion, int height) {
+    wrapper = new StackPane();
     wrapper.setPrefHeight(height);
-    wrapper.setPrefWidth(height/1.5);
+    wrapper.setPrefWidth(height / 1.5);
     wrapper.setAlignment(Pos.CENTER);
 
-    image=new ImageView(suggestion.getIcon());
+    image = new ImageView(suggestion.getIcon());
     image.setPreserveRatio(true);
-    image.setFitHeight(height-10);
+    image.setFitHeight(height - 10);
     image.setId("IconOfContent");
 
-    if(BaseController.isDark) wrapper.setBlendMode(BlendMode.DIFFERENCE);
-    else wrapper.setBlendMode(BlendMode.SRC_OVER);
+    if (BaseController.isDark) {
+      wrapper.setBlendMode(BlendMode.DIFFERENCE);
+    } else {
+      wrapper.setBlendMode(BlendMode.SRC_OVER);
+    }
     wrapper.getChildren().add(image);
   }
 
-  private void initLabel(Suggestion suggestion,int height,int width){
-    Label contentLabel =new Label(suggestion.getContent());
-    contentLabel.setPrefWidth(width - 2*height/1.5-15);
-    contentLabel.setPrefHeight(2.0*height/3);
+  /**
+   * init label with width and height.
+   */
+  private void initLabel(Suggestion suggestion, int height, int width) {
+    Label contentLabel = new Label(suggestion.getContent());
+    contentLabel.setPrefWidth(width - 2 * height / 1.5 - 15);
+    contentLabel.setPrefHeight(2.0 * height / 3);
     contentLabel.setWrapText(true);
     contentLabel.setAlignment(Pos.TOP_LEFT);
     contentLabel.setId("ContentOfSuggestion");
 
-    Label idLabel=new Label("#"+suggestion.getId());
-    idLabel.setPrefHeight(width - 2*height/1.5-15);
-    idLabel.setPrefHeight(1.0*height/3);
+    Label idLabel = new Label("#" + suggestion.getId());
+    idLabel.setPrefHeight(width - 2 * height / 1.5 - 15);
+    idLabel.setPrefHeight(1.0 * height / 3);
     idLabel.setWrapText(true);
     idLabel.setAlignment(Pos.TOP_LEFT);
     idLabel.setId("ContentOfSuggestion");
 
-    content=new VBox(contentLabel,idLabel);
+    content = new VBox(contentLabel, idLabel);
   }
 
-  private void initRemoveButton(int height,TypeBox typeBox){
-    removeButton=new JFXButton();
-    removeButton.setPrefWidth(height/1.5);
-    removeButton.setPrefHeight(height/1.5);
+  /**
+   * init remove button. open confirm box when click.
+   */
+  private void initRemoveButton(int height, TypeBox typeBox) {
+    removeButton = new JFXButton();
+    removeButton.setPrefWidth(height / 1.5);
+    removeButton.setPrefHeight(height / 1.5);
     removeButton.setContentDisplay(ContentDisplay.CENTER);
     removeButton.setOnAction(event -> {
-      if(typeBox==TypeBox.BOOK){
-        AnchorPane mainPane=editController.getMainPane();
+      if (typeBox == TypeBox.BOOK) {
+        AnchorPane mainPane = editController.getMainPane();
         ConfirmBox confirmBox = new ConfirmBox(
             "Xác nhận xóa sách khỏi thư viện?",
             "",
@@ -113,9 +130,8 @@ public class EditBox extends HBox implements MainInfo {
             }
         );
         mainPane.getChildren().add(confirmBox);
-      }
-      else {
-        AnchorPane mainPane=editController.getMainPane();
+      } else {
+        AnchorPane mainPane = editController.getMainPane();
         ConfirmBox confirmBox = new ConfirmBox(
             "Xác nhận xóa nguười mượn khỏi thư viện?",
             "",
@@ -131,31 +147,44 @@ public class EditBox extends HBox implements MainInfo {
         mainPane.getChildren().add(confirmBox);
       }
     });
-    FontAwesomeIconView viewButton=new FontAwesomeIconView(FontAwesomeIcon.TRASH);
+    FontAwesomeIconView viewButton = new FontAwesomeIconView(FontAwesomeIcon.TRASH);
     viewButton.setFill(Color.RED);
-    viewButton.setSize(String.valueOf(height/2));
+    viewButton.setSize(String.valueOf(height / 2));
     removeButton.setGraphic(viewButton);
 
   }
 
-  public int getID(){
+  /**
+   * get id.
+   */
+  public int getID() {
     return suggestion.getId();
   }
 
+  /**
+   * set dark/light mode.
+   */
   @Override
   public void applyDarkMode(boolean isDark) {
-    if(isDark){
+    if (isDark) {
       wrapper.setBlendMode(BlendMode.DIFFERENCE);
+    } else {
+      wrapper.setBlendMode(BlendMode.SRC_OVER);
     }
-    else wrapper.setBlendMode(BlendMode.SRC_OVER);
   }
 
+  /**
+   * translate en/vi language for some text.
+   */
   @Override
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
       boolean isTranslate) {
 
   }
 
+  /**
+   * set up en/vi language.
+   */
   @Override
   public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
 

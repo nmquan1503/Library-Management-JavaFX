@@ -25,34 +25,39 @@ import org.example.demo.Models.Language;
 
 public class Warning extends VBox implements MainInfo {
 
-  private HashMap<Object,String> enLang;
-  private HashMap<Object,String> viLang;
+  private HashMap<Object, String> enLang;
+  private HashMap<Object, String> viLang;
 
   private Label topicLabel;
   private Label contentLabel;
 
   private Transition transition;
 
+  /**
+   * constructor with topic and content.
+   */
   public Warning(String topic, String content) {
-    topicLabel=new Label(topic);
+    topicLabel = new Label(topic);
     topicLabel.setWrapText(true);
-    topicLabel.setFont(Font.font("System",FontWeight.BOLD,24));
+    topicLabel.setFont(Font.font("System", FontWeight.BOLD, 24));
 
-    contentLabel=new Label(content);
+    contentLabel = new Label(content);
     contentLabel.setWrapText(true);
     contentLabel.setFont(Font.font(18));
 
-    JFXButton button=new JFXButton("OK");
+    JFXButton button = new JFXButton("OK");
     button.setFont(Font.font(16));
     button.setStyle("-fx-border-radius:8px;"
         + "-fx-background-radius:8px;"
         + "-fx-background-color:#FA8072;");
     button.setPrefWidth(50);
-    button.setOnAction(e->{removeWarning();});
-    HBox buttonBox=new HBox(button);
+    button.setOnAction(e -> {
+      removeWarning();
+    });
+    HBox buttonBox = new HBox(button);
     buttonBox.setAlignment(Pos.CENTER_RIGHT);
 
-    this.getChildren().addAll(topicLabel,contentLabel,buttonBox);
+    this.getChildren().addAll(topicLabel, contentLabel, buttonBox);
     this.setPrefWidth(350);
     this.setStyle("-fx-background-color:#FFFFFF;"
         + "-fx-background-radius:8px;"
@@ -64,38 +69,44 @@ public class Warning extends VBox implements MainInfo {
     this.setLayoutX(365);
     playTransition();
 
-    enLang=new HashMap<>();
-    viLang=new HashMap<>();
-    setUpLanguage(viLang,enLang);
+    enLang = new HashMap<>();
+    viLang = new HashMap<>();
+    setUpLanguage(viLang, enLang);
 
-    if(BaseController.isTranslate){
-      applyTranslate(null,null,true);
+    if (BaseController.isTranslate) {
+      applyTranslate(null, null, true);
     }
 
   }
 
-  private void playTransition(){
-    TranslateTransition translateTransition=new TranslateTransition(Duration.millis(200),this);
+  /**
+   * start transition(translate from up to bottom).
+   */
+  private void playTransition() {
+    TranslateTransition translateTransition = new TranslateTransition(Duration.millis(200), this);
     translateTransition.setToY(120);
-    PauseTransition pauseTransition=new PauseTransition(Duration.millis(4000));
-    transition=new SequentialTransition(translateTransition,pauseTransition);
-    transition.setOnFinished(e->{
+    PauseTransition pauseTransition = new PauseTransition(Duration.millis(4000));
+    transition = new SequentialTransition(translateTransition, pauseTransition);
+    transition.setOnFinished(e -> {
       removeWarning();
     });
     transition.play();
   }
 
-  private void removeWarning(){
-    if(transition!=null){
+  /**
+   * remove this.
+   */
+  private void removeWarning() {
+    if (transition != null) {
       transition.stop();
-      transition=null;
+      transition = null;
     }
-    TranslateTransition translateTransition=new TranslateTransition(Duration.millis(200),this);
+    TranslateTransition translateTransition = new TranslateTransition(Duration.millis(200), this);
     translateTransition.setToY(-100);
-    translateTransition.setOnFinished(e->{
-      Node node=this.getParent();
-      if(node!=null){
-        if(node instanceof AnchorPane){
+    translateTransition.setOnFinished(e -> {
+      Node node = this.getParent();
+      if (node != null) {
+        if (node instanceof AnchorPane) {
           ((AnchorPane) node).getChildren().remove(this);
         }
       }
@@ -103,30 +114,40 @@ public class Warning extends VBox implements MainInfo {
     translateTransition.play();
   }
 
+  /**
+   * set dark/light mode.
+   */
   @Override
   public void applyDarkMode(boolean isDark) {
 
   }
 
+  /**
+   * translate en/vi language for some text.
+   */
   @Override
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
       boolean isTranslate) {
-    if(isTranslate){
+    if (isTranslate) {
       this.topicLabel.setText(this.enLang.get(this.topicLabel));
       this.contentLabel.setText(this.enLang.get(this.contentLabel));
-    }
-    else {
+    } else {
       this.topicLabel.setText(this.viLang.get(this.topicLabel));
       this.contentLabel.setText(this.viLang.get(this.contentLabel));
     }
   }
 
+  /**
+   * set up en/vi language.
+   */
   @Override
   public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
-    viLang.put(this.topicLabel,topicLabel.getText());
-    viLang.put(this.contentLabel,contentLabel.getText());
+    viLang.put(this.topicLabel, topicLabel.getText());
+    viLang.put(this.contentLabel, contentLabel.getText());
 
-    enLang.put(this.topicLabel, Translate.translate(this.topicLabel.getText(), Language.VIETNAMESE,Language.ENGLISH));
-    enLang.put(this.contentLabel, Translate.translate(this.contentLabel.getText(),Language.VIETNAMESE,Language.ENGLISH));
+    enLang.put(this.topicLabel,
+        Translate.translate(this.topicLabel.getText(), Language.VIETNAMESE, Language.ENGLISH));
+    enLang.put(this.contentLabel,
+        Translate.translate(this.contentLabel.getText(), Language.VIETNAMESE, Language.ENGLISH));
   }
 }

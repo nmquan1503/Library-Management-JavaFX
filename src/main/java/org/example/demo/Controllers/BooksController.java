@@ -39,19 +39,13 @@ import javafx.util.Duration;
 import org.example.demo.API.Network;
 import org.example.demo.CustomUI.BookView;
 import org.example.demo.CustomUI.ConfirmBox;
-import org.example.demo.CustomUI.EditBox;
-import org.example.demo.CustomUI.EditBox.TypeBox;
-import org.example.demo.CustomUI.NotificationView;
 import org.example.demo.CustomUI.SuggestionView;
-import org.example.demo.CustomUI.Warning;
 import org.example.demo.Database.JDBC;
 import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.BookShelf.Book;
-import org.example.demo.Models.Borrowing.Borrowing;
 import org.example.demo.Models.Library;
 import org.example.demo.Models.Suggestion.Suggestion;
 import org.example.demo.Models.Trie.Trie;
-import org.example.demo.Models.Users.Date;
 
 public class BooksController implements MainInfo {
 
@@ -211,6 +205,9 @@ public class BooksController implements MainInfo {
     return loadingTransition;
   }
 
+  /**
+   * init view.
+   */
   @FXML
   private void initialize() {
     advertisementTransitions = new LinkedList<>();
@@ -229,6 +226,9 @@ public class BooksController implements MainInfo {
     Right;
   }
 
+  /**
+   * transition of a three hot book.
+   */
   private Transition advertisementTransition(Direction direction) {
     ParallelTransition transition = new ParallelTransition(
         transitionOfContent(content1, direction),
@@ -269,6 +269,9 @@ public class BooksController implements MainInfo {
 
   }
 
+  /**
+   * transition of each book advertised.
+   */
   private Transition transitionOfContent(ImageView content, Direction direction) {
     TranslateTransition translateTransition = new TranslateTransition();
     translateTransition.setNode(content);
@@ -361,6 +364,9 @@ public class BooksController implements MainInfo {
     return new ParallelTransition(translateTransition, scaleTransition);
   }
 
+  /**
+   * transition of each book advertised when we click but it is moving.
+   */
   private Transition undoTransitionOfContent(ImageView content) {
     TranslateTransition translateTransition = new TranslateTransition();
     translateTransition.setNode(content);
@@ -377,6 +383,9 @@ public class BooksController implements MainInfo {
     return new ParallelTransition(translateTransition, scaleTransition);
   }
 
+  /**
+   * transition of three book advertised when we click but they are moving.
+   */
   private Transition undoTransition() {
     ParallelTransition parallelTransition = new ParallelTransition(
         undoTransitionOfContent(content1),
@@ -397,6 +406,9 @@ public class BooksController implements MainInfo {
     return parallelTransition;
   }
 
+  /**
+   * time line to repeat transition of three book.
+   */
   private void startTimeLine() {
     PauseTransition pauseTransition = new PauseTransition(Duration.seconds(2));
     pauseTransition.setOnFinished(e -> {
@@ -429,6 +441,9 @@ public class BooksController implements MainInfo {
     timeline.play();
   }
 
+  /**
+   * stop time line. call undo transition to put three book image to right place.
+   */
   private void stopTimeLine() {
     Transition currentTransition = advertisementTransitions.peek();
     if (currentTransition != null) {
@@ -447,6 +462,9 @@ public class BooksController implements MainInfo {
     }
   }
 
+  /**
+   * action when click to first toggle button. put first book image on top.
+   */
   @FXML
   private void switchToContent1() {
     stopTimeLine();
@@ -468,6 +486,9 @@ public class BooksController implements MainInfo {
     startTimeLine();
   }
 
+  /**
+   * action when click to second toggle button. put second book image on top.
+   */
   @FXML
   private void switchToContent2() {
     stopTimeLine();
@@ -489,6 +510,9 @@ public class BooksController implements MainInfo {
     startTimeLine();
   }
 
+  /**
+   * action when click to third toggle button. put third book image on top.
+   */
   @FXML
   private void switchToContent3() {
     stopTimeLine();
@@ -510,6 +534,10 @@ public class BooksController implements MainInfo {
     startTimeLine();
   }
 
+  /**
+   * action when press enter key (when press key on number of page text field). if page number is
+   * invalid, fix page number. render 20 suggestions of book based on page number.
+   */
   @FXML
   private void changePage() {
     int pageNumber = Integer.parseInt(pageNumberTextField.getText());
@@ -527,6 +555,10 @@ public class BooksController implements MainInfo {
     setListBooks(pageNumber);
   }
 
+  /**
+   * action when click to next page button. switch to next page. if current page number is max, set
+   * visible (false) for this button.
+   */
   @FXML
   private void switchToNextPage() {
     int pageNumber = Integer.parseInt(pageNumberTextField.getText());
@@ -536,6 +568,10 @@ public class BooksController implements MainInfo {
     prevPageButton.setVisible(pageNumber + 1 != 1);
   }
 
+  /**
+   * action when click to prev page button. switch to previous page. if current page number is 1,
+   * set visible (false) for this button.
+   */
   @FXML
   private void switchToPrevPage() {
     int pageNumber = Integer.parseInt(pageNumberTextField.getText());
@@ -545,12 +581,21 @@ public class BooksController implements MainInfo {
     prevPageButton.setVisible(pageNumber - 1 != 1);
   }
 
-  private void setListBooks(int pageNumber) {
+  /**
+   * render 20 suggestions of book based on page number.
+   */
+  public void setListBooks(int pageNumber) {
     if (pageNumber > (listSuggestions.size() - 1) / 20 + 1) {
       pageNumber = (listSuggestions.size() - 1) / 20 + 1;
       pageNumberTextField.setText(String.valueOf(pageNumber));
       nextPageButton.setVisible(pageNumber != (listSuggestions.size() - 1) / 20 + 1);
       prevPageButton.setVisible(pageNumber != 1);
+    }
+    if (pageNumber < 1) {
+      pageNumber = 1;
+      pageNumberTextField.setText("1");
+      nextPageButton.setVisible(pageNumber != (listSuggestions.size() - 1) / 20 + 1);
+      prevPageButton.setVisible(false);
     }
     int start = pageNumber * 20 - 20;
     int end = Math.min(start + 19, listSuggestions.size() - 1);
@@ -566,6 +611,9 @@ public class BooksController implements MainInfo {
     thread.start();
   }
 
+  /**
+   * set up for text field that only accept number.
+   */
   private void setUpPageNumberTextField() {
     pageNumberTextField.textProperty().addListener(new ChangeListener<String>() {
       @Override
@@ -579,12 +627,18 @@ public class BooksController implements MainInfo {
   }
 
 
+  /**
+   * action when choose a category from combobox.
+   */
   @FXML
   private void SelectCategoryFromComboBox() {
     String category = categoryComboBox.getValue();
     categoryTextField.setText(category);
   }
 
+  /**
+   * action create category suggestions when u press key in category text field.
+   */
   @FXML
   private void CreateCategorySuggestions() {
     String prefix = categoryTextField.getText();
@@ -610,6 +664,9 @@ public class BooksController implements MainInfo {
     thread.start();
   }
 
+  /**
+   * set up focus property of text field. when text field is not focused, hide all suggestions.
+   */
   private void setupFocusTextField() {
     categoryTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
       if (newValue && !categoryTextField.getText().isEmpty()) {
@@ -646,6 +703,9 @@ public class BooksController implements MainInfo {
     });
   }
 
+  /**
+   * open book view to show all info of book u clicked. get book by id.
+   */
   private void showBook(int idBook) {
     Thread thread = new Thread(() -> {
       BookView bookView = new BookView();
@@ -674,7 +734,10 @@ public class BooksController implements MainInfo {
     thread.start();
   }
 
-  private void showBook(Book book){
+  /**
+   * open book view to show all info of book u clicked. get book by object book.
+   */
+  private void showBook(Book book) {
     Thread thread = new Thread(() -> {
       BookView bookView = new BookView();
       Platform.runLater(() -> {
@@ -686,17 +749,20 @@ public class BooksController implements MainInfo {
         transition.setToX(1);
         transition.setToY(1);
         transition.play();
-            PauseTransition pauseTransition = new PauseTransition(Duration.millis(700));
-            pauseTransition.setOnFinished(e -> {
-              bookView.setBook(book);
-            });
-            pauseTransition.play();
+        PauseTransition pauseTransition = new PauseTransition(Duration.millis(700));
+        pauseTransition.setOnFinished(e -> {
+          bookView.setBook(book);
+        });
+        pauseTransition.play();
 
       });
     });
     thread.start();
   }
 
+  /**
+   * create book suggestion from pre-entered title book.
+   */
   private void CreateBookSuggestions() {
     String prefix = titleTextField.getText();
     if (prefix.isEmpty()) {
@@ -723,6 +789,9 @@ public class BooksController implements MainInfo {
     thread.start();
   }
 
+  /**
+   * open book view when click a suggestion book.
+   */
   @FXML
   private void SelectBookFromListBook() {
     SuggestionView suggestionView = ListBooks.getSelectionModel().getSelectedItem();
@@ -731,6 +800,9 @@ public class BooksController implements MainInfo {
     }
   }
 
+  /**
+   * init combobox of categories.
+   */
   private void initCategories() {
     categories = new Trie();
     Connection connection = JDBC.getConnection();
@@ -750,7 +822,10 @@ public class BooksController implements MainInfo {
     JDBC.closeConnection(connection);
   }
 
-  private void initTopChoicesBook(){
+  /**
+   * init view of three hot book.
+   */
+  private void initTopChoicesBook() {
     content1.setImage(new Image(Objects.requireNonNull(
         getClass().getResourceAsStream("/org/example/demo/Assets/basic.jpg"))));
     content2.setImage(new Image(Objects.requireNonNull(
@@ -758,33 +833,36 @@ public class BooksController implements MainInfo {
     content3.setImage(new Image(Objects.requireNonNull(
         getClass().getResourceAsStream("/org/example/demo/Assets/basic.jpg"))));
 
-    ArrayList<Book> list=Library.getInstance().getTop3Book();
-    if(!list.isEmpty()){
-      if(list.getFirst().getImageLink() != null && Network.isConnected() ){
+    ArrayList<Book> list = Library.getInstance().getTop3Book();
+    if (!list.isEmpty()) {
+      if (list.getFirst().getImageLink() != null && Network.isConnected()) {
         content1.setImage(new Image(list.getFirst().getImageLink()));
       }
-      content1.setOnMouseClicked(e->{
+      content1.setOnMouseClicked(e -> {
         showBook(list.getFirst());
       });
     }
-    if(list.size()>1){
-      if(list.getFirst().getImageLink() != null && Network.isConnected() ){
+    if (list.size() > 1) {
+      if (list.getFirst().getImageLink() != null && Network.isConnected()) {
         content2.setImage(new Image(list.get(1).getImageLink()));
       }
-      content2.setOnMouseClicked(e->{
+      content2.setOnMouseClicked(e -> {
         showBook(list.get(1));
       });
     }
-    if(list.size()>2){
-      if(list.getFirst().getImageLink() != null && Network.isConnected() ){
+    if (list.size() > 2) {
+      if (list.getFirst().getImageLink() != null && Network.isConnected()) {
         content3.setImage(new Image(list.get(2).getImageLink()));
       }
-      content3.setOnMouseClicked(e->{
+      content3.setOnMouseClicked(e -> {
         showBook(list.get(2));
       });
     }
   }
 
+  /**
+   * init view. set first page of list book view.
+   */
   private void initView() {
     Thread thread = new Thread(() -> {
       listSuggestions = Library.getInstance().getBookSuggestions("");
@@ -804,7 +882,9 @@ public class BooksController implements MainInfo {
             CreateBookSuggestions();
           }
         });
-        mainPane.setOnMouseClicked(e->{mainPane.requestFocus();});
+        mainPane.setOnMouseClicked(e -> {
+          mainPane.requestFocus();
+        });
       });
     });
     thread.start();
@@ -817,8 +897,11 @@ public class BooksController implements MainInfo {
     thread1.start();
   }
 
+  /**
+   * search books with pre-entered title and category.
+   */
   @FXML
-  private void Search() {
+  public void Search() {
     loadingPane.setVisible(true);
     loadingTransition.play();
     String category = categoryTextField.getText();
@@ -882,6 +965,9 @@ public class BooksController implements MainInfo {
     thread.start();
   }
 
+  /**
+   * create loading transition when search book.
+   */
   private void initLoadingTransition() {
     Arc arc1 = (Arc) loadingPane.getChildren().getFirst();
     Arc arc2 = (Arc) loadingPane.getChildren().get(1);
@@ -906,42 +992,50 @@ public class BooksController implements MainInfo {
 
   }
 
+  /**
+   * remove title textfield when click remove button.
+   */
   @FXML
   private void RemoveTitleTextField() {
     titleTextField.clear();
   }
 
-  public void deleteBookSuggestion(Suggestion suggestion){
+  /**
+   * delete suggestion of book when it deleted.
+   */
+  public void deleteBookSuggestion(Suggestion suggestion) {
 
-    if(titleListView!=null){
-      for(int i=0;i<titleListView.getItems().size();i++){
-        if(titleListView.getItems().get(i).getID()==suggestion.getId()){
+    if (titleListView != null) {
+      for (int i = 0; i < titleListView.getItems().size(); i++) {
+        if (titleListView.getItems().get(i).getID() == suggestion.getId()) {
           titleListView.getItems().remove(i);
           int heightOfListView = Math.min(titleListView.getItems().size(), 5) * 40;
           titleListView.setMinHeight(heightOfListView);
           titleListView.setMaxHeight(heightOfListView);
-          if(titleListView.getItems().isEmpty())titleListView.setVisible(false);
+          if (titleListView.getItems().isEmpty()) {
+            titleListView.setVisible(false);
+          }
           break;
         }
       }
     }
 
     int pageNumber = Integer.parseInt(pageNumberTextField.getText());
-    for(int i=0;i<listSuggestions.size();i++){
-      if(listSuggestions.get(i).getId()==suggestion.getId()){
+    for (int i = 0; i < listSuggestions.size(); i++) {
+      if (listSuggestions.get(i).getId() == suggestion.getId()) {
         listSuggestions.remove(i);
-        if(i+1>=pageNumber*20-19 && i+1<=pageNumber*20){
-          ListBooks.getItems().remove(i%20);
-        }
-        else if(i+1<pageNumber*20-19){
+        if (i + 1 >= pageNumber * 20 - 19 && i + 1 <= pageNumber * 20) {
+          ListBooks.getItems().remove(i % 20);
+        } else if (i + 1 < pageNumber * 20 - 19) {
           ListBooks.getItems().removeFirst();
         }
-        if(20*pageNumber<listSuggestions.size()){
-          ListBooks.getItems().add(new SuggestionView(listSuggestions.get(pageNumber*20),80,400));
+        if (20 * pageNumber < listSuggestions.size()) {
+          ListBooks.getItems()
+              .add(new SuggestionView(listSuggestions.get(pageNumber * 20), 80, 400));
         }
-        if(ListBooks.getItems().isEmpty()){
-          if(pageNumber-1>=1){
-            setListBooks(pageNumber-1);
+        if (ListBooks.getItems().isEmpty()) {
+          if (pageNumber - 1 >= 1) {
+            setListBooks(pageNumber - 1);
           }
         }
         return;
@@ -949,45 +1043,55 @@ public class BooksController implements MainInfo {
     }
   }
 
-  public void fixBookSuggestion(Suggestion suggestion){
-    if(titleListView!=null){
-      for(int i=0;i<titleListView.getItems().size();i++){
-        if(titleListView.getItems().get(i).getID()==suggestion.getId()){
-          titleListView.getItems().set(i,new SuggestionView(suggestion,35,230));
+  /**
+   * delete a book suggestion when u delete a book.
+   */
+  public void fixBookSuggestion(Suggestion suggestion) {
+    if (titleListView != null) {
+      for (int i = 0; i < titleListView.getItems().size(); i++) {
+        if (titleListView.getItems().get(i).getID() == suggestion.getId()) {
+          titleListView.getItems().set(i, new SuggestionView(suggestion, 35, 230));
           break;
         }
       }
     }
     int pageNumber = Integer.parseInt(pageNumberTextField.getText());
-    for(int i=0;i<listSuggestions.size();i++){
-      if(listSuggestions.get(i).getId()==suggestion.getId()){
-        listSuggestions.set(i,suggestion);
-        if(i+1>=pageNumber*20-19 && i+1<=pageNumber*20){
-          ListBooks.getItems().set(i%20,new SuggestionView(suggestion,80,400));
+    for (int i = 0; i < listSuggestions.size(); i++) {
+      if (listSuggestions.get(i).getId() == suggestion.getId()) {
+        listSuggestions.set(i, suggestion);
+        if (i + 1 >= pageNumber * 20 - 19 && i + 1 <= pageNumber * 20) {
+          ListBooks.getItems().set(i % 20, new SuggestionView(suggestion, 80, 400));
         }
         return;
       }
     }
   }
 
-  public void addBookSuggestion(Suggestion suggestion){
-    if(titleListView!=null){
-      if(suggestion.getContent().startsWith(titleTextField.getText()) && !titleTextField.getText().isEmpty()){
-        titleListView.getItems().add(new SuggestionView(suggestion,35,230));
+  /**
+   * add a book suggestion when u add user completely.
+   */
+  public void addBookSuggestion(Suggestion suggestion) {
+    if (titleListView != null) {
+      if (suggestion.getContent().startsWith(titleTextField.getText()) && !titleTextField.getText()
+          .isEmpty()) {
+        titleListView.getItems().add(new SuggestionView(suggestion, 35, 230));
         int heightOfListView = Math.min(titleListView.getItems().size(), 5) * 40;
         titleListView.setMinHeight(heightOfListView);
         titleListView.setMaxHeight(heightOfListView);
       }
     }
     listSuggestions.add(suggestion);
-    if(ListBooks.getItems().size()<20){
-      ListBooks.getItems().add(new SuggestionView(suggestion,80,400));
+    if (ListBooks.getItems().size() < 20) {
+      ListBooks.getItems().add(new SuggestionView(suggestion, 80, 400));
     }
   }
 
-  public void refresh(){
+  /**
+   * refresh screen. set page 1 for book list. clear edit book view.
+   */
+  public void refresh() {
 
-    while (mainPane.getChildren().getLast() instanceof BookView){
+    while (mainPane.getChildren().getLast() instanceof BookView) {
       ((BookView) mainPane.getChildren().getLast()).stopSpeak();
       mainPane.getChildren().removeLast();
     }
@@ -1008,7 +1112,9 @@ public class BooksController implements MainInfo {
     Search();
   }
 
-  // set BlendMode của các ImageView là DIFFERENCE nếu isDark = true và SRC_OVER trong th còn lại
+  /**
+   * set dark/light mode.
+   */
   @Override
   public void applyDarkMode(boolean isDark) {
 
@@ -1036,7 +1142,9 @@ public class BooksController implements MainInfo {
 
   }
 
-  // Không gọi setUpLanguage ở đây
+  /**
+   * translate en/vi language for some text.
+   */
   @Override
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
       boolean isTranslate) {
@@ -1061,7 +1169,9 @@ public class BooksController implements MainInfo {
     }
   }
 
-  // viLang lưu nội dung tiếng Việt gắn với Object, enLang lưu tiếng Anh
+  /**
+   * set up en/vi language.
+   */
   @Override
   public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
   }
