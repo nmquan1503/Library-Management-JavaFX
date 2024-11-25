@@ -539,6 +539,8 @@ public class BaseController {
       moveBorrowBook();
     } else if (idx == 4) {
       moveReturnBook();
+      returnBookController.applyTranslate(viLang,enLang,isTranslate);
+
     } else if (idx == 5) {
       moveEdit();
     } else if (idx == 6) {

@@ -23,13 +23,13 @@
 
   <AnchorPane id="mainPane" fx:id="mainPane" prefHeight="540.0" prefWidth="900.0" stylesheets="@../CSS/BorrowBook.css">
     <children>
-      <Label alignment="CENTER" layoutX="55.0" layoutY="57.0" prefHeight="18.0" prefWidth="216.0" styleClass="label-sort" text="Sắp Xếp Theo" />
-      <Label layoutX="93.0" layoutY="7.0" prefHeight="34.0" prefWidth="419.0" text="Lịch Sử Mượn Sách" textFill="#584f58">
+      <Label fx:id="sortByLabel" alignment="CENTER" layoutX="55.0" layoutY="57.0" prefHeight="18.0" prefWidth="216.0" styleClass="label-sort" text="Sắp Xếp Theo" />
+      <Label fx:id="borrowHistoryLabel" layoutX="93.0" layoutY="7.0" prefHeight="34.0" prefWidth="419.0" text="Lịch Sử Mượn Sách" textFill="#584f58">
         <font>
           <Font name="HYWenHei 85W" size="22.0" />
         </font>
       </Label>
-      <ImageView fitHeight="44.0" fitWidth="41.0" layoutX="43.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="starImage1" fitHeight="44.0" fitWidth="41.0" layoutX="43.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
         <image>
           <Image url="@../../../../images/Screenshot_2024-10-19_143451-removebg-preview.png" />
         </image>
@@ -74,10 +74,10 @@
          <Line endX="40.39996337890625" endY="327.0" layoutX="785.0" layoutY="121.0" startX="40.39996337890625" startY="0.9999847412109375" stroke="#e464c0" />
     </children>
   </AnchorPane>
-  <AnchorPane id="mainPane" fx:id="secondPane" disable="true" prefHeight="540.0" prefWidth="900.0" styleClass="Anchor-Pane-mainPane" stylesheets="@../CSS/BorrowBookProcessing.css">
+  <AnchorPane id="mainPane" fx:id="secondPane" disable="true" prefHeight="540.0" prefWidth="900.0" styleClass="Anchor-Pane-mainPane" stylesheets="@../CSS/BorrowBookProcessing.css" visible="false">
     <children>
       <Button id="CreateButton" fx:id="CreateButton" layoutX="450.0" layoutY="460.0" mnemonicParsing="false" onAction="#CreateAction" prefHeight="40.0" prefWidth="146.0" text="Tạo" />
-      <ImageView fitHeight="44.0" fitWidth="41.0" layoutX="43.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="starImage" fitHeight="44.0" fitWidth="41.0" layoutX="43.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
         <image>
           <Image url="@../../../../images/Screenshot_2024-10-19_143451-removebg-preview.png" />
         </image>
@@ -161,7 +161,7 @@
          <Button id="CreateButton" fx:id="CancelButton" layoutX="215.0" layoutY="460.0" mnemonicParsing="false" onAction="#CancelAction" prefHeight="40.0" prefWidth="146.0" text="Hủy" />
     </children>
   </AnchorPane>
-   <VBox id="alert" fx:id="alert" disable="true" layoutX="296.0" layoutY="102.0" prefHeight="300.0" prefWidth="250.0" stylesheets="@../CSS/BorrowBookProcessing.css">
+   <VBox id="alert" fx:id="alert" disable="true" layoutX="296.0" layoutY="102.0" prefHeight="300.0" prefWidth="250.0" stylesheets="@../CSS/BorrowBookProcessing.css" visible="false">
       <children>
          <HBox id="hbox" alignment="CENTER" prefHeight="142.0" prefWidth="250.0">
             <children>

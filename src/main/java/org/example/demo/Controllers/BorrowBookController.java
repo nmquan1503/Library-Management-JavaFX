@@ -32,6 +32,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -200,6 +201,16 @@ public class BorrowBookController implements MainInfo {
   @FXML
   private Button backButton;
 
+  @FXML
+  private ImageView starImage;
+
+  @FXML
+  private ImageView starImage1;
+  @FXML
+  private Label borrowHistoryLabel;
+  @FXML
+  private Label sortByLabel;
+
   public static BooleanProperty listenUpdate = new SimpleBooleanProperty(false);
 
   @FXML
@@ -251,7 +262,8 @@ public class BorrowBookController implements MainInfo {
   }
 
   private void addBox() {
-    sortBox.getItems().addAll(
+    if (!sortBox.getItems().isEmpty()) return;
+     sortBox.getItems().addAll(
         "Sách Chưa Trả",
         "Sách Đã Trả",
         "Toàn Bộ Lịch Sử"
@@ -528,9 +540,9 @@ public class BorrowBookController implements MainInfo {
 
   public void updateHistory(String type) {
 
-    while (pageNow > 1) {
-      leftController();
-    }
+    pageNow = 1;
+    left.setDisable(true);
+    pageNumber.setText(""+1);
     dataList.clear();
     ArrayList<Borrowing> allBorrowing;
     sortBox.setValue(""+type);
@@ -972,7 +984,6 @@ public class BorrowBookController implements MainInfo {
   }
 
   public void refresh() {
-    sortBox.setValue("Toàn Bộ Lịch Sử");
     resetBookSearch();
     resetUserSearch();
     secondPane.setVisible(false);
@@ -988,19 +999,35 @@ public class BorrowBookController implements MainInfo {
     mainPane.getChildren().forEach(node -> {
       node.setDisable(false);
     });
+
     mainPane.setEffect(null);
     secondPane.getChildren().forEach(node -> {
       node.setDisable(false);
     });
     secondPane.setEffect(null);
     secondPane.setDisable(true);
+    if (sortByLabel.getText().equals("Sort By")){
+      sortBox.setValue("Full History");
+    }
+    else {
+      sortBox.setValue("Toàn Bộ Lịch Sử");
+    }
     updateHistory("Toàn Bộ Lịch Sử");
+
     book = null;
     npc = null;
   }
 
   @Override
   public void applyDarkMode(boolean isDark) {
+    if ( isDark ) {
+      starImage1.setBlendMode(BlendMode.DIFFERENCE);
+      starImage.setBlendMode(BlendMode.DIFFERENCE);
+    }
+    else {
+      starImage1.setBlendMode(BlendMode.SRC_OVER);
+      starImage.setBlendMode(BlendMode.SRC_OVER);
+    }
     for (SuggestionView suggestionView : suggestionUser.getItems()) {
       suggestionView.applyDarkMode(isDark);
     }
@@ -1012,7 +1039,40 @@ public class BorrowBookController implements MainInfo {
   @Override
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
       boolean isTranslate) {
-
+    if ( isTranslate) {
+      borrowHistoryLabel.setText("Book Borrowing History");
+      sortByLabel.setText("Sort By");
+      sortBox.getItems().set(0, "Unreturned Books");
+      sortBox.getItems().set(1, "Returned Books");
+      sortBox.getItems().set(2, "Full History");
+      if (sortBox.getValue().equals("Sách Chưa Trả") ) {
+        sortBox.setValue("Unreturned Books");
+      }
+      else if (sortBox.getValue().equals("Sách Đã Trả"))
+      {
+        sortBox.setValue("Returned Books");
+      }
+      else {
+        sortBox.setValue("Full History");
+      }
+    }
+    else {
+      borrowHistoryLabel.setText("Lịch Sử Mượn Sách");
+      sortByLabel.setText("Sắp Xếp Theo");
+      sortBox.getItems().set(0, "Sách Chưa Trả");
+      sortBox.getItems().set(1, "Sách Đã Trả");
+      sortBox.getItems().set(2, "Toàn Bộ Lịch Sử");
+      if (sortBox.getValue().equals("Unreturned Books") ) {
+        sortBox.setValue("Sách Chưa Trả");
+      }
+      else if (sortBox.getValue().equals("Returned Books"))
+      {
+        sortBox.setValue("Sách Đã Trả");
+      }
+      else {
+        sortBox.setValue("Toàn Bộ Lịch Sử");
+      }
+    }
   }
 
   @Override

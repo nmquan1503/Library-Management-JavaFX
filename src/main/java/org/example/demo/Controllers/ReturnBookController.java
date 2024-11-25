@@ -41,11 +41,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
+import org.example.demo.API.Translate;
 import org.example.demo.CustomUI.SuggestionView;
 import org.example.demo.Interfaces.MainInfo;
 import org.example.demo.Models.BookShelf.Book;
 import org.example.demo.Models.BookShelf.BookShelf;
 import org.example.demo.Models.Borrowing.Borrowing;
+import org.example.demo.Models.Language;
 import org.example.demo.Models.Library;
 import org.example.demo.Models.Suggestion.Suggestion;
 import org.example.demo.Models.Users.Date;
@@ -202,8 +204,22 @@ public class ReturnBookController implements MainInfo {
   @FXML
   private Pane bookPane;
 
+  @FXML
+  private ImageView starImage;
 
+  @FXML
+  private Label titleLabel;
+
+  @FXML
+  private Label borrowedDateLabel;
+
+  @FXML
+  private Label dueDateLabel;
+
+  @FXML
+  private Label successLabel;
   private void addBox() {
+    if ( !sortBox.getItems().isEmpty()) return;
     sortBox.getItems().addAll(
         "Tìm Kiếm Theo Người Mượn",
         "Tìm Kiếm Theo Sách"
@@ -389,8 +405,14 @@ public class ReturnBookController implements MainInfo {
   }
 
   private void createErrorText(String content) {
+
     if (wrongNotification.isVisible()) {
       return;
+    }
+    if (!titleLabel.getText().equals("Giao Diện Trả Sách")) {
+      if ( content.equals("Hạn trả không được sớm hơn hôm nay") ) content = "Due date can't earlier than today";
+      else if ( content.equals("User ID không tồn tại") ) content = "User ID is not available";
+      else content = "Book ID is not available";
     }
     wrongNotification.setVisible(true);
     ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(0.2),
@@ -421,9 +443,11 @@ public class ReturnBookController implements MainInfo {
       if (userIdBox.getText().isEmpty()) {
         return;
       }
+
       int id = Integer.parseInt(userIdBox.getText());
       User user = userList.getUser(id);
       if (user == null) {
+        System.out.println("YES");
         userSearchBox.setText("");
         createErrorText("User ID không tồn tại");
         return;
@@ -547,7 +571,18 @@ public class ReturnBookController implements MainInfo {
       bookAvatar.setImage(
           new Image(getClass().getResource("/org/example/demo/Assets/basic.jpg").toExternalForm()));
     } else {
-      bookAvatar.setImage(new Image(getClass().getResource(s).toExternalForm()));
+      //System.out.println(s);
+      new Thread(() -> {
+        try {
+          // Tải ảnh trong một luồng khác
+          Image image1 = new Image(s);
+
+          // Cập nhật ImageView trên JavaFX Application Thread
+          Platform.runLater(() -> bookAvatar.setImage(image1));
+        } catch (Exception e) {
+
+        }
+      }).start();
     }
     borrowedDate.setText(returnProcessing.getBorrowedDate());
     datePicker.setValue(returnProcessing.getDue());
@@ -591,8 +626,14 @@ public class ReturnBookController implements MainInfo {
     alert.setDisable(false);
     closeButton.setDisable(false);
     closeButton.setVisible(true);
-    confirmTitle.setText("Thực Hiện Việc Trả Sách");
-    confirmMessage.setText("Xác Nhận Trả Sách Chứ?");
+    if ( titleLabel.getText().equals("Giao Diện Trả Sách")) {
+      confirmTitle.setText("Thực Hiện Việc Trả Sách");
+      confirmMessage.setText("Xác Nhận Trả Sách Chứ?");
+    }
+    else {
+      confirmTitle.setText("You Are Returning Book");
+      confirmMessage.setText("Confirm Return Book?");
+    }
     confirmButton.setText("Yes");
     declineButton.setText(" No");
   }
@@ -609,8 +650,14 @@ public class ReturnBookController implements MainInfo {
     alert.setDisable(false);
     closeButton.setDisable(false);
     closeButton.setVisible(true);
-    confirmTitle.setText("Thay Đổi Hạn Trả Sách");
-    confirmMessage.setText("Xác Nhận Thay Đổi Chứ?");
+    if ( titleLabel.getText().equals("Giao Diện Trả Sách")) {
+      confirmTitle.setText("Thay Đổi Hạn Trả Sách");
+      confirmMessage.setText("Xác Nhận Thay Đổi Chứ?");
+    }
+    else {
+      confirmTitle.setText("Changing Book's Due Date");
+      confirmMessage.setText("Confirm Changing?");
+    }
     confirmButton.setText("Yes");
     declineButton.setText(" No");
   }
@@ -639,7 +686,7 @@ public class ReturnBookController implements MainInfo {
 
     sortBox.valueProperty().addListener((observable, oldValue, newValue) -> {
       if (oldValue != newValue) {
-        if (newValue.equals("Tìm Kiếm Theo Người Mượn")) {
+        if (newValue.equals("Tìm Kiếm Theo Người Mượn") || newValue.equals("Search By Borrower")) {
           bookIdBox.clear();
           bookSearchBox.clear();
           userIdBox.setVisible(true);
@@ -1043,7 +1090,7 @@ public class ReturnBookController implements MainInfo {
 
   @FXML
   private void confirmButtonAction() {
-    if (confirmTitle.getText().equals("Thay Đổi Hạn Trả Sách")) {
+    if (confirmTitle.getText().equals("Thay Đổi Hạn Trả Sách") || confirmTitle.getText().equals("Changing Book's Due Date")) {
       LocalDate date = datePicker.getValue();
       Date x = new Date(date.getYear(), date.getMonthValue(), date.getDayOfMonth());
       if (x.isBefore(Date.today())) {
@@ -1056,10 +1103,19 @@ public class ReturnBookController implements MainInfo {
         });
         return;
       }
-
-      successTitle.setText("Thay đổi hạn trả thành công!!!");
+      if ( titleLabel.getText().equals("Giao Diện Trả Sách")) {
+        successTitle.setText("Thay đổi hạn trả thành công!!!");
+      }
+      else {
+        successTitle.setText("Change due date successfully!!!");
+      }
     } else {
-      successTitle.setText("Giao dịch thực hiện thành công");
+      if ( titleLabel.getText().equals("Giao Diện Trả Sách")) {
+        successTitle.setText("Giao dịch thực hiện thành công");
+      }
+      else {
+        successTitle.setText("Transaction performed successfully");
+      }
     }
     successPane.setDisable(false);
     successPane.setVisible(true);
@@ -1113,7 +1169,6 @@ public class ReturnBookController implements MainInfo {
   }
 
   public void refresh() {
-    sortBox.setValue("Tìm Kiếm Theo Người Mượn");
     returnPane.setVisible(false);
     returnPane.setDisable(true);
     successPane.setVisible(false);
@@ -1135,6 +1190,13 @@ public class ReturnBookController implements MainInfo {
     });
     returnPane.setEffect(null);
     returnPane.setDisable(true);
+    if ( userIdBox.getPromptText().equals("ID Người")) {
+      sortBox.setValue("Tìm Kiếm Theo Người Mượn");
+    }
+    else {
+      sortBox.setValue("Search By Borrower");
+
+    }
     updateHistory(-1);
     updateVisibleReturnButton();
   }
@@ -1150,6 +1212,7 @@ public class ReturnBookController implements MainInfo {
       userAvatar.setBlendMode(BlendMode.DIFFERENCE);
       bookAvatar.setBlendMode(BlendMode.DIFFERENCE);
       borrowImage.setBlendMode(BlendMode.DIFFERENCE);
+      starImage.setBlendMode(BlendMode.DIFFERENCE);
     }
     else {
       userPane.setStyle("-fx-background-color: transparent;");
@@ -1159,6 +1222,7 @@ public class ReturnBookController implements MainInfo {
       bookAvatar.setBlendMode(BlendMode.SRC_OVER);
       userAvatar.setBlendMode(BlendMode.SRC_OVER);
       borrowImage.setBlendMode(BlendMode.SRC_OVER);
+      starImage.setBlendMode(BlendMode.SRC_OVER);
     }
     for (SuggestionView suggestionView : suggestionUser.getItems()) {
       suggestionView.applyDarkMode(isDark);
@@ -1169,7 +1233,81 @@ public class ReturnBookController implements MainInfo {
   @Override
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
       boolean isTranslate) {
+    if ( isTranslate ) {
+      titleLabel.setText("Return Book Interface");
 
+      sortBox.getItems().set(0, "Search By Borrower");
+      sortBox.getItems().set(1, "Search By Book");
+      if (sortBox.getValue().equals("Tìm Kiếm Theo Người Mượn") || !mainPane.isVisible() ) {
+        sortBox.setValue("Search By Borrower");
+      }
+      else sortBox.setValue("Search By Book");
+      userIdBox.setPromptText("User ID");
+      userSearchBox.setPromptText("User Name");
+      bookIdBox.setPromptText("Book ID");
+      bookSearchBox.setPromptText("Book Name");
+      userColumn.setText("User");
+      bookColumn.setText("Book");
+      borrowedDateColumn.setText("Borrowed Date");
+      dueDateColumn.setText("Due Date");
+      dueDateLabel.setText("Due Date:");
+      borrowedDateLabel.setText("Borrowed Date:");
+      returnButton.setText("  Return Book");
+      changeButton.setText("      Change");
+      if ( confirmTitle.getText().equals("Thay Đổi Hạn Trả Sách")) {
+        confirmTitle.setText("Changing Book's Due Date");
+        confirmMessage.setText("Confirm Changing?");
+      }
+      else if ( confirmTitle.getText().equals("Thực Hiện Việc Trả Sách")) {
+        confirmTitle.setText("You Are Returning Book");
+        confirmMessage.setText("Confirm Return Book?");
+      }
+      if ( successTitle.getText().equals("Giao dịch thực hiện thành công") ) {
+        successTitle.setText("Transaction performed successfully");
+      }
+      else {
+        successTitle.setText("Change due date successfully!!!");
+      }
+      successLabel.setText("Success!");
+      backButton.setText("Go Back");
+    }
+    else {
+      titleLabel.setText("Giao Diện Trả Sách");
+      sortBox.getItems().set(0, "Tìm Kiếm Theo Người Mượn");
+      sortBox.getItems().set(1, "Tìm Kiếm Theo Sách");
+      if (sortBox.getValue().equals("Search By Borrower")  || !mainPane.isVisible()) {
+        sortBox.setValue("Tìm Kiếm Theo Người Mượn");
+      }
+      else sortBox.setValue("Tìm Kiếm Theo Sách");
+      userIdBox.setPromptText("ID Người");
+      userSearchBox.setPromptText("Tên Người Dùng");
+      bookIdBox.setPromptText("ID Sách");
+      bookSearchBox.setPromptText("Tên Sách");
+      userColumn.setText("Người Dùng");
+      bookColumn.setText("Sách");
+      borrowedDateColumn.setText("Ngày Mượn");
+      dueDateColumn.setText("Hạn Trả");
+      dueDateLabel.setText("Hạn Trả:");
+      borrowedDateLabel.setText("Ngày Mượn:");
+      returnButton.setText("     Trả Sách");
+      changeButton.setText("     Thay Đổi");
+      if ( confirmTitle.getText().equals("Changing Book's Due Date")) {
+        confirmTitle.setText("Thay Đổi Hạn Trả Sách");
+        confirmMessage.setText("Xác Nhận Thay Đổi Chứ?");
+      }
+      else if ( confirmTitle.getText().equals("You Are Returning Book")) {
+        confirmTitle.setText("Thực Hiện Việc Trả Sách");
+        confirmMessage.setText("Xác Nhận Trả Sách Chứ?");
+      }
+      if ( successTitle.getText().equals("Transaction performed successfully") ) {
+        successTitle.setText("Giao dịch thực hiện thành công");
+      }
+      else {
+        successTitle.setText("Thay đổi hạn trả thành công!!!");
+      }
+      successLabel.setText("Thành công!");
+      backButton.setText("Quay Về");
+    }
   }
 
   // viLang lưu nội dung tiếng Việt gắn với Object, enLang lưu tiếng Anh
