@@ -271,68 +271,90 @@ public class ReturnBookController implements MainInfo {
     }
     left.setDisable(true);
     dataList.clear();
-    ArrayList<Borrowing> allBorrowing;
-
-    if (userID == -1) {
-      allBorrowing = Library.getInstance().getListBorrowingFromUserName("");
-    } else if (userID == -2) {
-      String prefixName = userSearchBox.getText();
-      allBorrowing = Library.getInstance().getListBorrowingFromUserName(prefixName);
-
-    } else {
-      allBorrowing = Library.getInstance().getListBorrowingFromUser(userID);
-    }
-    for (Borrowing x : allBorrowing) {
-      String action = "";
-      if (x.getReturnedDate() == null) {
-        action = "Mượn";
-      } else {
-        action = "Trả";
-      }
-      String user = userList.getUser(x.getIdUser()).getName();
-      String nameBook = bookList.getBook(x.getIdBook()).getTitle();
-      LocalDate now;
-      now = x.getBorrowedDate().toLocalDate();
-      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-      String Today = now.format(formatter);
-      LocalDate now1 = x.getDueDate().toLocalDate();
-      String Today1 = now1.format(formatter);
-      returnTableData y = new returnTableData(user, nameBook, Today, Today1);
-      y.setIdUser(userList.getUser(x.getIdUser()).getId());
-      y.setIdBook(bookList.getBook(x.getIdBook()).getId());
-      y.setDue(now1);
-      y.setIdBorrowing(x.getIdBorrowing());
-      dataList.add(y);
-    }
-
-    for (returnTableData x : dataList) {
-      String s = x.getBook();
-      if (s.length() >= 20) {
-        String t = "";
-        boolean check = false;
-        for (int i = 0; i < s.length(); i++) {
-          t = t + s.charAt(i);
-          if (i >= 20 && s.charAt(i) == ' ' && check == false) {
-            check = true;
-            t = t + "\n";
-          }
+    Task<ObservableList<returnTableData>> loadHistoryTask = new Task<>() {
+      @Override
+      protected ObservableList<returnTableData> call() throws Exception {
+        ArrayList<Borrowing> allBorrowing;
+        if (userID == -1) {
+          allBorrowing = Library.getInstance().getListBorrowingFromUserName("");
+        } else if (userID == -2) {
+          String prefixName = userSearchBox.getText();
+          allBorrowing = Library.getInstance().getListBorrowingFromUserName(prefixName);
+        } else {
+          allBorrowing = Library.getInstance().getListBorrowingFromUser(userID);
         }
-        x.setBook(t);
+
+        ObservableList<returnTableData> tempDataList = FXCollections.observableArrayList();
+
+        for (Borrowing x : allBorrowing) {
+          String action = (x.getReturnedDate() == null) ? "Mượn" : "Trả";
+          String user = userList.getUser(x.getIdUser()).getName();
+          String nameBook = bookList.getBook(x.getIdBook()).getTitle();
+
+          LocalDate borrowedDate = x.getBorrowedDate().toLocalDate();
+          DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+          String borrowedDateFormatted = borrowedDate.format(formatter);
+
+          LocalDate dueDate = x.getDueDate().toLocalDate();
+          String dueDateFormatted = dueDate.format(formatter);
+
+          returnTableData tableData = new returnTableData(user, nameBook, borrowedDateFormatted, dueDateFormatted);
+          tableData.setIdUser(userList.getUser(x.getIdUser()).getId());
+          tableData.setIdBook(bookList.getBook(x.getIdBook()).getId());
+          tableData.setDue(dueDate);
+          tableData.setIdBorrowing(x.getIdBorrowing());
+
+          if (nameBook.length() >= 20) {
+            StringBuilder shortenedBookName = new StringBuilder();
+            boolean insertedNewline = false;
+            for (int i = 0; i < nameBook.length(); i++) {
+              shortenedBookName.append(nameBook.charAt(i));
+              if (i >= 20 && nameBook.charAt(i) == ' ' && !insertedNewline) {
+                shortenedBookName.append("\n");
+                insertedNewline = true;
+              }
+            }
+            tableData.setBook(shortenedBookName.toString());
+          }
+
+          tempDataList.add(tableData);
+        }
+
+        return tempDataList;
       }
-    }
-    if (dataList.size() > pageNow * 5) {
-      right.setDisable(false);
-    }
-    int x = Math.min(dataList.size(), pageNow * 5);
-    tableView.setItems(
-        FXCollections.observableArrayList(dataList.subList(5 * (pageNow - 1), x)));
-    if (dataList.size() > 5) {
-      right.setDisable(false);
-    } else {
-      right.setDisable(true);
-    }
-    updateVisibleReturnButton();
+
+      @Override
+      protected void succeeded() {
+        super.succeeded();
+
+        ObservableList<returnTableData> result = getValue();
+        dataList.setAll(result);
+
+        if (dataList.size() > pageNow * 5) {
+          right.setDisable(false);
+        }
+        int x = Math.min(dataList.size(), pageNow * 5);
+        tableView.setItems(
+                FXCollections.observableArrayList(dataList.subList(5 * (pageNow - 1), x))
+        );
+
+        right.setDisable(dataList.size() <= 5);
+        updateVisibleReturnButton();
+      }
+
+      @Override
+      protected void failed() {
+        super.failed();
+        Throwable exception = getException();
+        exception.printStackTrace();
+      }
+    };
+
+    Thread backgroundThread = new Thread(loadHistoryTask);
+    backgroundThread.setDaemon(true);
+    backgroundThread.start();
   }
+
 
   public void updateHistory1(int bookID) {
     pageNow = 1;
@@ -1096,6 +1118,8 @@ public class ReturnBookController implements MainInfo {
       if (x.isBefore(Date.today())) {
         alert.setVisible(false);
         alert.setDisable(true);
+        closeButton.setVisible(false);
+        closeButton.setDisable(true);
         createErrorText("Hạn trả không được sớm hơn hôm nay");
         returnPane.setEffect(null);
         returnPane.getChildren().forEach(node -> {
@@ -1198,7 +1222,6 @@ public class ReturnBookController implements MainInfo {
 
     }
     updateHistory(-1);
-    updateVisibleReturnButton();
   }
 
 
@@ -1245,7 +1268,7 @@ public class ReturnBookController implements MainInfo {
       userIdBox.setPromptText("User ID");
       userSearchBox.setPromptText("User Name");
       bookIdBox.setPromptText("Book ID");
-      bookSearchBox.setPromptText("Book Name");
+      bookSearchBox.setPromptText("Book Title");
       userColumn.setText("User");
       bookColumn.setText("Book");
       borrowedDateColumn.setText("Borrowed Date");
