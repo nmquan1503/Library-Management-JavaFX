@@ -29,7 +29,7 @@
     </Label>
     <JFXButton layoutX="92.0" layoutY="17.0" onAction="#moveToBase" prefHeight="46.0" prefWidth="144.0" styleClass="edit-account-btn" text="⬅  Return" />
     <Circle fx:id="avatarCircle" fill="#bdd5eb" layoutX="480.0" layoutY="181.0" radius="101.0" stroke="BLACK" strokeType="INSIDE" />
-    <JFXButton layoutX="430.0" layoutY="284.0" onAction="#resetDefaultAvt" prefWidth="100.0" styleClass="select-avatar-btn" text="Reset" />
+    <JFXButton fx:id="btnReset" layoutX="430.0" layoutY="284.0" onAction="#resetDefaultAvt" prefWidth="100.0" styleClass="select-avatar-btn" text="Reset" />
     <StackPane layoutX="391.0" layoutY="231.0">
       <Arc fx:id="chooseAvtFileBtn" centerX="480.0" centerY="199.0" length="120" radiusX="101.0" radiusY="101.0" startAngle="210" styleClass="select-avatar-arc" />
       <FontAwesomeIconView fx:id="cameraIcon" fill="#f2f2f2" glyphName="CAMERA" opacity="0.6" size="25" styleClass="camera-icon">
@@ -59,7 +59,7 @@
             <Insets />
           </opaqueInsets>
         </TextField>
-        <JFXButton onAction="#saveName" prefHeight="32.0" prefWidth="38.0" styleClass="save-btn">
+        <JFXButton fx:id="btnName" onAction="#saveName" prefHeight="32.0" prefWidth="38.0" styleClass="save-btn">
           <HBox.margin>
             <Insets left="7.0" />
           </HBox.margin>
@@ -98,7 +98,7 @@
           </font>
         </Label>
         <DatePicker fx:id="promptBirth" prefHeight="32.0" prefWidth="220.0" styleClass="date-field" />
-        <JFXButton onAction="#saveBirthday" prefHeight="32.0" prefWidth="110.0" styleClass="save-btn">
+        <JFXButton fx:id="btnBirth" onAction="#saveBirthday" prefHeight="32.0" prefWidth="110.0" styleClass="save-btn">
           <HBox.margin>
             <Insets left="7.0" />
           </HBox.margin>
@@ -159,7 +159,7 @@
             <Insets />
           </opaqueInsets>
         </TextField>
-        <JFXButton onAction="#saveEmail" prefHeight="32.0" prefWidth="38.0" styleClass="save-btn">
+        <JFXButton fx:id="btnEmail" onAction="#saveEmail" prefHeight="32.0" prefWidth="38.0" styleClass="save-btn">
           <HBox.margin>
             <Insets left="7.0" />
           </HBox.margin>
@@ -180,7 +180,7 @@
           </font>
         </Label>
         <ComboBox fx:id="promptAddress" prefHeight="32.0" prefWidth="217.0" styleClass="combo-box" />
-        <JFXButton onAction="#saveAddress" prefHeight="32.0" prefWidth="38.0" styleClass="save-btn">
+        <JFXButton fx:id="btnAddr" onAction="#saveAddress" prefHeight="32.0" prefWidth="38.0" styleClass="save-btn">
           <HBox.margin>
             <Insets left="7.0" />
           </HBox.margin>
@@ -215,7 +215,7 @@
             </JFXButton>
           </children>
         </HBox>
-        <JFXButton onAction="#savePassword" prefHeight="32.0" prefWidth="38.0" styleClass="save-btn">
+        <JFXButton fx:id="btnPass" onAction="#savePassword" prefHeight="32.0" prefWidth="38.0" styleClass="save-btn">
           <HBox.margin>
             <Insets left="7.0" />
           </HBox.margin>

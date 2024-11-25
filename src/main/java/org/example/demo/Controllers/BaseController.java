@@ -1323,7 +1323,7 @@ public class BaseController {
     popup.show(bell, popupX, popupY);
   }
 
-  private void showQRCodeWindow(String email, String subject, String body) {
+  protected static void showQRCodeWindow(String email, String subject, String body) {
     String mailtoLink = "mailto:" + email + "?subject=" + subject + "&body=" + body;
     WritableImage qrImage = generateQRCodeImage(mailtoLink, 300, 300);
 
@@ -1336,7 +1336,7 @@ public class BaseController {
     qrStage.show();
   }
 
-  private WritableImage generateQRCodeImage(String text, int width, int height) {
+  protected static WritableImage generateQRCodeImage(String text, int width, int height) {
     Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
     hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
 

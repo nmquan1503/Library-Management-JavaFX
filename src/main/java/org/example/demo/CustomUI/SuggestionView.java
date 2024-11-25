@@ -25,18 +25,22 @@ public class SuggestionView extends HBox implements MainInfo {
   private Label content;
 
 
-  public SuggestionView(Suggestion suggestion,int height,int width){
-    this.id=suggestion.getId();
+  /**
+   * constructor.
+   */
+  public SuggestionView(Suggestion suggestion, int height, int width) {
+    this.id = suggestion.getId();
 
-    initImage(suggestion,height,width);
+    initImage(suggestion, height, width);
 
-    initContent(suggestion,height,width);
+    initContent(suggestion, height, width);
 
     this.getChildren().add(wrapper);
     this.getChildren().add(content);
 
     this.getStylesheets().add(
-        Objects.requireNonNull(getClass().getResource("/org/example/demo/CSS/Pagination.css")).toExternalForm());
+        Objects.requireNonNull(getClass().getResource("/org/example/demo/CSS/Pagination.css"))
+            .toExternalForm());
     this.setPrefHeight(height);
     this.setPrefWidth(width);
     this.setAlignment(Pos.CENTER);
@@ -44,56 +48,81 @@ public class SuggestionView extends HBox implements MainInfo {
 
   }
 
-  private void initImage(Suggestion suggestion,int height,int width){
+  /**
+   * init image width height.
+   */
+  private void initImage(Suggestion suggestion, int height, int width) {
     wrapper = new StackPane();
     wrapper.setPrefHeight(height);
-    wrapper.setPrefWidth(height/1.5);
+    wrapper.setPrefWidth(height / 1.5);
     wrapper.setAlignment(Pos.CENTER);
     wrapper.setStyle("-fx-effect: dropshadow(gaussian, #E464C0, 20, 0, 3, 3);");
 
-    image=new ImageView(suggestion.getIcon());
+    image = new ImageView(suggestion.getIcon());
     image.setPreserveRatio(true);
-    image.setFitHeight(height-10);
+    image.setFitHeight(height - 10);
     image.setId("IconOfContent");
 
     wrapper.getChildren().add(image);
-    if(BaseController.isDark) wrapper.setBlendMode(BlendMode.DIFFERENCE);
-    else wrapper.setBlendMode(BlendMode.SRC_OVER);
+    if (BaseController.isDark) {
+      wrapper.setBlendMode(BlendMode.DIFFERENCE);
+    } else {
+      wrapper.setBlendMode(BlendMode.SRC_OVER);
+    }
   }
-  
-  private void initContent(Suggestion suggestion,int height,int width){
-    content=new Label(suggestion.getContent());
-    content.setPrefWidth(width - height/1.5-5);
-    content.setPrefHeight(height-10);
+
+  /**
+   * init content.
+   */
+  private void initContent(Suggestion suggestion, int height, int width) {
+    content = new Label(suggestion.getContent());
+    content.setPrefWidth(width - height / 1.5 - 5);
+    content.setPrefHeight(height - 10);
     content.setWrapText(true);
     content.setAlignment(Pos.TOP_LEFT);
     content.setId("ContentOfSuggestion");
   }
 
-  public int getID(){
+  /**
+   * get id.
+   */
+  public int getID() {
     return id;
   }
+
+  /**
+   * get content.
+   */
   public String getContent() {
     return content.getText();
   }
+
+  /**
+   * set dark/light mode.
+   */
   @Override
   public void applyDarkMode(boolean isDark) {
-    if(isDark){
+    if (isDark) {
       wrapper.setBlendMode(BlendMode.DIFFERENCE);
       wrapper.setStyle("-fx-effect: dropshadow(gaussian, #1B9B3F, 20, 0, 3, 3);");
-    }
-    else{
+    } else {
       wrapper.setStyle("-fx-effect: dropshadow(gaussian, #E464C0, 20, 0, 3, 3);");
       wrapper.setBlendMode(BlendMode.SRC_OVER);
     }
   }
 
+  /**
+   * translate en/vi language for some text.
+   */
   @Override
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
       boolean isTranslate) {
 
   }
 
+  /**
+   * set up en/vi language.
+   */
   @Override
   public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
 
