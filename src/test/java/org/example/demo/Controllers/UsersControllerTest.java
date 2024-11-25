@@ -75,13 +75,13 @@ public class UsersControllerTest extends ApplicationTest {
   void testVisibleNextPageButton() {
     int maxPageNumber = (usersController.getListUser().size() - 1) / 20 + 1;
     usersController.setListUsers(maxPageNumber);
-    assertTrue(usersController.getNextPageButton().isVisible());
+    assertFalse(usersController.getNextPageButton().isVisible());
   }
 
   @Test
   void testVisiblePrevPageButton() {
     usersController.setListUsers(1);
-    assertTrue(usersController.getPrevPageButton().isVisible());
+    assertFalse(usersController.getPrevPageButton().isVisible());
   }
 
   @Test
