@@ -1323,6 +1323,34 @@ public class HomeController implements MainInfo {
 
   }
 
+  public Label getBanStuTxt() {
+    return banStuTxt;
+  }
+
+  public Label getBorrowRateTxt() {
+    return borrowRateTxt;
+  }
+
+  public Label getHelloTxt() {
+    return helloTxt;
+  }
+
+  public Label getNumBookTxt() {
+    return numBookTxt;
+  }
+
+  public Label getNumStuTxt() {
+    return numStuTxt;
+  }
+
+  public Label getOverDueTxt() {
+    return overDueTxt;
+  }
+
+  public Label getTableLibTxt() {
+    return tableLibTxt;
+  }
+
   private void renameSeries(ScatterChart<String, Number> scatter) {
     for (Series<String, Number> series : scatter.getData()) {
       String currentName = series.getName();

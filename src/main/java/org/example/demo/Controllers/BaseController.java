@@ -272,6 +272,13 @@ public class BaseController {
     }
 
     avtMenuSetup();
+    if (Network.isConnected()) {
+      if (!isTranSetUp) {
+        setUpLang();
+        isTranSetUp = true;
+      }
+    }
+
     initNotificationList();
     mainPane.setVisible(true);
     bookPane.setVisible(false);
