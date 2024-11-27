@@ -86,8 +86,10 @@ public class UsersControllerTest extends ApplicationTest {
 
   @Test
   void testLoadingTransition1() {
-    usersController.loadUserList();
-    assertTrue(usersController.getLoadingPane().isVisible());
+    Platform.runLater(()->{
+      usersController.loadUserList();
+      assertTrue(usersController.getLoadingPane().isVisible());
+    });
   }
 
   @Test
