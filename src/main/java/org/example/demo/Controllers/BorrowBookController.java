@@ -32,6 +32,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -200,6 +201,44 @@ public class BorrowBookController implements MainInfo {
   @FXML
   private Button backButton;
 
+  @FXML
+  private ImageView starImage;
+
+  @FXML
+  private ImageView starImage1;
+  @FXML
+  private Label borrowHistoryLabel;
+  @FXML
+  private Label borrowHistoryLabel1;
+  @FXML
+  private Label sortByLabel;
+  @FXML
+  private Button borrowButton;
+  @FXML
+  private Label birthdayLabel;
+  @FXML
+  private Label phoneLabel;
+
+  @FXML
+  private Label locateLabel;
+  @FXML
+  private Label banLabel;
+  @FXML
+  private Label publishedDateLabel;
+  @FXML
+  private Label borrowedDateLabel;
+  @FXML
+  private Label dueDateLabel;
+  @FXML
+  private Label leftLabel;
+  @FXML
+  private Label publisherLabel;
+  @FXML
+  private Label successLabel;
+  @FXML
+  private Label sucessMessageLabel;
+
+
   public static BooleanProperty listenUpdate = new SimpleBooleanProperty(false);
 
   @FXML
@@ -251,7 +290,8 @@ public class BorrowBookController implements MainInfo {
   }
 
   private void addBox() {
-    sortBox.getItems().addAll(
+    if (!sortBox.getItems().isEmpty()) return;
+     sortBox.getItems().addAll(
         "Sách Chưa Trả",
         "Sách Đã Trả",
         "Toàn Bộ Lịch Sử"
@@ -319,7 +359,12 @@ public class BorrowBookController implements MainInfo {
       if (wrongNotification.isVisible()) {
         return;
       }
-      createErrorText("User ID không tồn tại !!!");
+      if ( borrowHistoryLabel1.getText().equals("Yêu Cầu Mượn Sách")) {
+        createErrorText("User ID không tồn tại !!!");
+      }
+      else {
+        createErrorText("User ID is not available !!!");
+      }
       resetUserSearch();
 
     } else {
@@ -353,7 +398,12 @@ public class BorrowBookController implements MainInfo {
       if (wrongNotification.isVisible()) {
         return;
       }
-      createErrorText("Book ID không tồn tại !!!");
+      if ( borrowHistoryLabel1.getText().equals("Yêu Cầu Mượn Sách")) {
+        createErrorText("Book ID không tồn tại !!!");
+      }
+      else {
+        createErrorText("Book ID is not available !!!");
+      }
       resetBookSearch();
 
     } else {
@@ -383,8 +433,14 @@ public class BorrowBookController implements MainInfo {
     
     alert.setDisable(false);
 
-    confirmTitle.setText("Hủy Yêu Cầu Mượn Sách");
-    confirmMessage.setText("Xác Nhận Hủy Chứ?");
+    if ( !userIdBox.getPromptText().equals("User ID")) {
+      confirmTitle.setText("Hủy Yêu Cầu Mượn Sách");
+      confirmMessage.setText("Xác Nhận Hủy Chứ?");
+    }
+    else {
+      confirmTitle.setText("Cancel Borrowing Request");
+      confirmMessage.setText("Confirm Cancel?");
+    }
     confirmButton.setText("Yes");
     declineButton.setText(" No");
     closeButton.setVisible(true);
@@ -406,7 +462,7 @@ public class BorrowBookController implements MainInfo {
 
   @FXML
   private void confirmButtonAction() {
-    if (!confirmTitle.getText().equals("Thêm Yêu Cầu Mượn Sách")) {
+    if (!confirmTitle.getText().equals("Thêm Yêu Cầu Mượn Sách") && !confirmTitle.getText().equals("Add Borrow Request")) {
       secondPane.setDisable(true);
       secondPane.setVisible(false);
       mainPane.setVisible(true);
@@ -422,21 +478,49 @@ public class BorrowBookController implements MainInfo {
       Date today = new Date(new java.sql.Date(System.currentTimeMillis()));
       LocalDate localDate = today.toLocalDate();
       if (npc == null) {
-        createErrorText("Thiếu thông tin người mượn!!!");
+        if (borrowHistoryLabel1.getText().equals("Yêu Cầu Mượn Sách")) {
+          createErrorText("Thiếu thông tin người mượn!!!");
+        } else {
+          createErrorText("Missing borrower information!!!");
+        }
       } else if (book == null) {
-        createErrorText("Thiếu thông tin sách!!!");
+        if (borrowHistoryLabel1.getText().equals("Yêu Cầu Mượn Sách")) {
+          createErrorText("Thiếu thông tin sách!!!");
+        } else {
+          createErrorText("Missing book information!!!");
+        }
       } else if (Integer.parseInt(userIdBox.getText()) != npc.getId() || !userSearchBox.getText()
-          .equals(npc.getName())) {
-        createErrorText("Thông tin người mượn không chính xác!!!");
+              .equals(npc.getName())) {
+        if (borrowHistoryLabel1.getText().equals("Yêu Cầu Mượn Sách")) {
+          createErrorText("Thông tin người mượn không chính xác!!!");
+        } else {
+          createErrorText("Borrower information is incorrect!!!");
+        }
       } else if (Integer.parseInt(bookIdBox.getText()) != book.getId() || !bookSearchBox.getText()
-          .equals(book.getTitle())) {
-        createErrorText("Thông tin sách không chính xác!!!");
+              .equals(book.getTitle())) {
+        if (borrowHistoryLabel1.getText().equals("Yêu Cầu Mượn Sách")) {
+          createErrorText("Thông tin sách không chính xác!!!");
+        } else {
+          createErrorText("Book information is incorrect!!!");
+        }
       } else if (isBanLabel.getText().equals("Yes")) {
-        createErrorText("Người mượn đang bị cấm!!!");
+        if (borrowHistoryLabel1.getText().equals("Yêu Cầu Mượn Sách")) {
+          createErrorText("Người mượn đang bị cấm!!!");
+        } else {
+          createErrorText("The borrower is banned!!!");
+        }
       } else if (book.getQuantity() == 0) {
-        createErrorText("Số lượng sách không đủ!!!");
+        if (borrowHistoryLabel1.getText().equals("Yêu Cầu Mượn Sách")) {
+          createErrorText("Số lượng sách không đủ!!!");
+        } else {
+          createErrorText("Not enough book quantity!!!");
+        }
       } else if (DueDatePicker.getValue().isBefore(localDate)) {
-        createErrorText("Ngày trả không được sớm hơn ngày mượn!!!");
+        if (borrowHistoryLabel1.getText().equals("Yêu Cầu Mượn Sách")) {
+          createErrorText("Ngày trả không được sớm hơn ngày mượn!!!");
+        } else {
+          createErrorText("Return date cannot be earlier than borrow date!!!");
+        }
       } else {
         successPane.setDisable(false);
         successPane.setVisible(true);
@@ -517,9 +601,14 @@ public class BorrowBookController implements MainInfo {
       node.setDisable(true);
     });
     alert.setDisable(false);
-
-    confirmTitle.setText("Thêm Yêu Cầu Mượn Sách");
-    confirmMessage.setText("Xác Nhận Thêm Chứ?");
+    if ( userIdBox.getPromptText().equals("User ID")) {
+      confirmTitle.setText("Add Borrow Request");
+      confirmMessage.setText("Confirm Addition?");
+    }
+    else {
+      confirmTitle.setText("Thêm Yêu Cầu Mượn Sách");
+      confirmMessage.setText("Xác Nhận Thêm Chứ?");
+    }
     confirmButton.setText("Yes");
     declineButton.setText(" No");
     closeButton.setVisible(true);
@@ -527,67 +616,97 @@ public class BorrowBookController implements MainInfo {
   }
 
   public void updateHistory(String type) {
-
-    while (pageNow > 1) {
-      leftController();
-    }
+    pageNow = 1;
+    left.setDisable(true);
+    pageNumber.setText("" + 1);
     dataList.clear();
-    ArrayList<Borrowing> allBorrowing;
-    sortBox.setValue(""+type);
-    if (type.equals("Toàn Bộ Lịch Sử")) {
-      allBorrowing = Library.getInstance().getAllHistory();
-    } else if (type.equals("Sách Chưa Trả")) {
-      allBorrowing = Library.getInstance().getAllBorrowing();
-    } else {
-      allBorrowing = Library.getInstance().getAllReturning();
-    }
-    for (Borrowing x : allBorrowing) {
-      String action = "";
-      if (x.getReturnedDate() == null) {
-        action = "Mượn";
-      } else {
-        action = "Trả";
-      }
-      String user = userList.getUser(x.getIdUser()).getName();
-      String nameBook = bookList.getBook(x.getIdBook()).getTitle();
-      LocalDate now;
-      if (x.getReturnedDate() == null) {
-        now = x.getBorrowedDate().toLocalDate();
-      } else {
-        now = x.getReturnedDate().toLocalDate();
-      }
-      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-      String Today = now.format(formatter);
-      dataList.add(new TableData(action, user, nameBook, Today));
-    }
+    sortBox.setValue("" + type);
 
-    for (TableData x : dataList) {
-      String s = x.getBook();
-      if (s.length() >= 20) {
-        String t = "";
-        boolean check = false;
-        for (int i = 0; i < s.length(); i++) {
-          t = t + s.charAt(i);
-          if (i >= 20 && s.charAt(i) == ' ' && check == false) {
-            check = true;
-            t = t + "\n";
-          }
+    // Tạo một Task để xử lý công việc nặng
+    Task<ObservableList<TableData>> loadHistoryTask = new Task<>() {
+      @Override
+      protected ObservableList<TableData> call() {
+        ArrayList<Borrowing> allBorrowing;
+        if (type.equals("Toàn Bộ Lịch Sử") || type.equals("Full History")) {
+          allBorrowing = Library.getInstance().getAllHistory();
+        } else if (type.equals("Sách Chưa Trả") || type.equals("Unreturned Books")) {
+          allBorrowing = Library.getInstance().getAllBorrowing();
+        } else {
+          allBorrowing = Library.getInstance().getAllReturning();
         }
-        x.setBook(t);
+
+        ObservableList<TableData> tempDataList = FXCollections.observableArrayList();
+
+        for (Borrowing x : allBorrowing) {
+          String action = (x.getReturnedDate() == null) ? "Mượn" : "Trả";
+          if ( x.getReturnedDate() == null ) {
+            if ( sortByLabel.getText().equals("Sort By") ) {
+              action = "Borrow";
+            }
+          }
+          else if ( sortByLabel.getText().equals("Sort By")) {
+            action = "Return";
+          }
+          String user = userList.getUser(x.getIdUser()).getName();
+          String nameBook = bookList.getBook(x.getIdBook()).getTitle();
+          LocalDate now = (x.getReturnedDate() == null) ? x.getBorrowedDate().toLocalDate() : x.getReturnedDate().toLocalDate();
+          DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+          String today = now.format(formatter);
+
+          TableData tableData = new TableData(action, user, nameBook, today);
+
+          // Cắt chuỗi nếu cần
+          if (tableData.getBook().length() >= 20) {
+            String s = tableData.getBook();
+            StringBuilder t = new StringBuilder();
+            boolean check = false;
+            for (int i = 0; i < s.length(); i++) {
+              t.append(s.charAt(i));
+              if (i >= 20 && s.charAt(i) == ' ' && !check) {
+                check = true;
+                t.append("\n");
+              }
+            }
+            tableData.setBook(t.toString());
+          }
+
+          tempDataList.add(tableData);
+        }
+        return tempDataList;
       }
-    }
-    if (dataList.size() > pageNow * 5) {
-      right.setDisable(false);
-    }
-    int x = Math.min(dataList.size(), pageNow * 5);
-    tableView.setItems(
-        FXCollections.observableArrayList(dataList.subList(5 * (pageNow - 1), x)));
-    if (dataList.size() > 5) {
-      right.setDisable(false);
-    } else {
-      right.setDisable(true);
-    }
+
+      @Override
+      protected void succeeded() {
+        super.succeeded();
+        ObservableList<TableData> result = getValue();
+
+        // Cập nhật giao diện trên UI thread
+        dataList.setAll(result);
+
+        if (dataList.size() > pageNow * 5) {
+          right.setDisable(false);
+        }
+        int x = Math.min(dataList.size(), pageNow * 5);
+        tableView.setItems(
+                FXCollections.observableArrayList(dataList.subList(5 * (pageNow - 1), x))
+        );
+
+        right.setDisable(dataList.size() <= 5);
+      }
+
+      @Override
+      protected void failed() {
+        super.failed();
+
+      }
+    };
+
+    // Chạy Task trong một thread riêng biệt
+    Thread backgroundThread = new Thread(loadHistoryTask);
+    backgroundThread.setDaemon(true);
+    backgroundThread.start();
   }
+
 
   @FXML
   private void initialize() {
@@ -972,7 +1091,6 @@ public class BorrowBookController implements MainInfo {
   }
 
   public void refresh() {
-    sortBox.setValue("Toàn Bộ Lịch Sử");
     resetBookSearch();
     resetUserSearch();
     secondPane.setVisible(false);
@@ -988,19 +1106,35 @@ public class BorrowBookController implements MainInfo {
     mainPane.getChildren().forEach(node -> {
       node.setDisable(false);
     });
+
     mainPane.setEffect(null);
     secondPane.getChildren().forEach(node -> {
       node.setDisable(false);
     });
     secondPane.setEffect(null);
     secondPane.setDisable(true);
+
     updateHistory("Toàn Bộ Lịch Sử");
+    if (sortByLabel.getText().equals("Sort By")){
+      sortBox.setValue("Full History");
+    }
+    else {
+      sortBox.setValue("Toàn Bộ Lịch Sử");
+    }
     book = null;
     npc = null;
   }
 
   @Override
   public void applyDarkMode(boolean isDark) {
+    if ( isDark ) {
+      starImage1.setBlendMode(BlendMode.DIFFERENCE);
+      starImage.setBlendMode(BlendMode.DIFFERENCE);
+    }
+    else {
+      starImage1.setBlendMode(BlendMode.SRC_OVER);
+      starImage.setBlendMode(BlendMode.SRC_OVER);
+    }
     for (SuggestionView suggestionView : suggestionUser.getItems()) {
       suggestionView.applyDarkMode(isDark);
     }
@@ -1012,7 +1146,104 @@ public class BorrowBookController implements MainInfo {
   @Override
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
       boolean isTranslate) {
-
+    if ( isTranslate) {
+      borrowHistoryLabel.setText("Book Borrowing History");
+      sortByLabel.setText("Sort By");
+      sortBox.getItems().set(0, "Unreturned Books");
+      sortBox.getItems().set(1, "Returned Books");
+      sortBox.getItems().set(2, "Full History");
+      if (sortBox.getValue().equals("Sách Chưa Trả") ) {
+        sortBox.setValue("Unreturned Books");
+      }
+      else if (sortBox.getValue().equals("Sách Đã Trả"))
+      {
+        sortBox.setValue("Returned Books");
+      }
+      else {
+        sortBox.setValue("Full History");
+      }
+      typeColumn.setText("Action");
+      userColumn.setText("User");
+      bookColumn.setText("Book");
+      timeColumn.setText("Time");
+      borrowButton.setText("Create A Request");
+      borrowHistoryLabel1.setText("Book Borrowing Request");
+      userIdBox.setPromptText("User ID");
+      userSearchBox.setPromptText("User Name");
+      bookIdBox.setPromptText("Book ID");
+      bookSearchBox.setPromptText("Book Title");
+      birthdayLabel.setText("BirthDay");
+      phoneLabel.setText("Phone Number");
+      locateLabel.setText("Location");
+      banLabel.setText("Is Banned?");
+      publisherLabel.setText("Publisher");
+      publishedDateLabel.setText("Published Date");
+      borrowedDateLabel.setText("Borrowed Date");
+      dueDateLabel.setText("Due Date");
+      leftLabel.setText("Remain");
+      CancelButton.setText("Cancel");
+      CreateButton.setText("Create");
+      if ( confirmTitle.getText().equals("Thêm Yêu Cầu Mượn Sách")) {
+        confirmTitle.setText("Add Borrow Request");
+        confirmMessage.setText("Confirm Addition?");
+      }
+      else {
+        confirmTitle.setText("Cancel Borrowing Request");
+        confirmMessage.setText("Confirm Cancel?");
+      }
+      successLabel.setText("Success!");
+      sucessMessageLabel.setText("Transaction performed successfully");
+      backButton.setText("Go Back");
+    }
+    else {
+      borrowHistoryLabel.setText("Lịch Sử Mượn Sách");
+      sortByLabel.setText("Sắp Xếp Theo");
+      sortBox.getItems().set(0, "Sách Chưa Trả");
+      sortBox.getItems().set(1, "Sách Đã Trả");
+      sortBox.getItems().set(2, "Toàn Bộ Lịch Sử");
+      if (sortBox.getValue().equals("Unreturned Books") ) {
+        sortBox.setValue("Sách Chưa Trả");
+      }
+      else if (sortBox.getValue().equals("Returned Books"))
+      {
+        sortBox.setValue("Sách Đã Trả");
+      }
+      else {
+        sortBox.setValue("Toàn Bộ Lịch Sử");
+      }
+      typeColumn.setText("Hành Động");
+      userColumn.setText("Người Dùng");
+      bookColumn.setText("Sách");
+      timeColumn.setText("Thời Gian");
+      borrowButton.setText("Tạo Yêu Cầu");
+      userIdBox.setPromptText("ID Người");
+      userSearchBox.setPromptText("Tên Người Dùng");
+      borrowHistoryLabel1.setText("Yêu Cầu Mượn Sách");
+      bookIdBox.setPromptText("ID Book");
+      bookSearchBox.setPromptText("Tên Sách");
+      birthdayLabel.setText("Sinh Nhật");
+      phoneLabel.setText("Số Điện Thoại");
+      locateLabel.setText("Địa Chỉ");
+      banLabel.setText("Bị Cấm?");
+      publisherLabel.setText("Nhà Xuất Bản");
+      publishedDateLabel.setText("Ngày Xuất Bản");
+      borrowedDateLabel.setText("Ngày Mượn");
+      dueDateLabel.setText("Hạn Trả");
+      leftLabel.setText("Còn Lại");
+      CancelButton.setText("Hủy");
+      CreateButton.setText("Tạo");
+      if ( confirmTitle.getText().equals("Add Borrow Request")) {
+        confirmTitle.setText("Thêm Yêu Cầu Mượn Sách");
+        confirmMessage.setText("Xác Nhận Thêm Chứ?");
+      }
+      else {
+        confirmTitle.setText("Hủy Yêu Cầu Mượn Sách");
+        confirmMessage.setText("Xác Nhận Hủy Chứ?");
+      }
+      successLabel.setText("Thành công!");
+      sucessMessageLabel.setText("Giao dịch thực hiện thành công");
+      backButton.setText("Quay Về");
+    }
   }
 
   @Override

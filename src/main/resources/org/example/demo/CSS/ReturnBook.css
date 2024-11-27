@@ -153,12 +153,12 @@
     -fx-pref-height: 0;
 }
 #ListView .list-cell{
-    -fx-background-color: #f9a0e0;
+    -fx-background-color: #f5e6f1;
 
     -fx-font-size: 14;
 }
 #ListView .list-cell:hover {
-    -fx-background-color: #f9dff2; /* Màu nền khi hover */
+    -fx-background-color: #f7f2f6; /* Màu nền khi hover */
 }
 #pinkPane{
     -fx-border-width: 1px;
@@ -321,5 +321,5 @@
 }
 
 #whitePane{
-  -fx-background-color: white;
+  -fx-background-color: transparent;
 }

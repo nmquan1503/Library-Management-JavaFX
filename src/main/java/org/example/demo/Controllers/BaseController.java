@@ -272,6 +272,13 @@ public class BaseController {
     }
 
     avtMenuSetup();
+    if (Network.isConnected()) {
+      if (!isTranSetUp) {
+        setUpLang();
+        isTranSetUp = true;
+      }
+    }
+
     initNotificationList();
     mainPane.setVisible(true);
     bookPane.setVisible(false);
@@ -539,6 +546,8 @@ public class BaseController {
       moveBorrowBook();
     } else if (idx == 4) {
       moveReturnBook();
+      returnBookController.applyTranslate(viLang, enLang, isTranslate);
+
     } else if (idx == 5) {
       moveEdit();
     } else if (idx == 6) {
@@ -1264,7 +1273,11 @@ public class BaseController {
               } else {
                 Alert emailAlert = new Alert(Alert.AlertType.WARNING);
                 emailAlert.setTitle("Email");
-                emailAlert.setHeaderText("Không có thông tin email!");
+                if (isTranslate) {
+                  emailAlert.setHeaderText("No information!");
+                } else {
+                  emailAlert.setHeaderText("Không có thông tin email!");
+                }
                 emailAlert.showAndWait();
               }
             }

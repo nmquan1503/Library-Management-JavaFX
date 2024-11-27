@@ -165,7 +165,7 @@ public class EditController implements MainInfo {
         setPageBook(1);
         pageBookNumberTextField.setText("1");
         prevPageBookButton.setVisible(false);
-        nextPageBookButton.setVisible(1 != (listBooks.size() - 1) / 20 + 1);
+        nextPageBookButton.setVisible(1 < (listBooks.size() - 1) / 20 + 1);
       });
     });
     threadCreateBooks.start();
@@ -176,7 +176,7 @@ public class EditController implements MainInfo {
         setPageUser(1);
         pageUserNumberTextField.setText("1");
         prevPageUserButton.setVisible(false);
-        nextPageUserButton.setVisible(1 != (listUsers.size() - 1) / 20 + 1);
+        nextPageUserButton.setVisible(1 < (listUsers.size() - 1) / 20 + 1);
       });
     });
     threadCreateUsers.start();
@@ -191,8 +191,8 @@ public class EditController implements MainInfo {
     int pageNumber = Integer.parseInt(pageBookNumberTextField.getText());
     pageBookNumberTextField.setText(String.valueOf(pageNumber + 1));
     setPageBook(pageNumber + 1);
-    nextPageBookButton.setVisible(pageNumber + 1 != (listBooks.size() - 1) / 20 + 1);
-    prevPageBookButton.setVisible(pageNumber + 1 != 1);
+    nextPageBookButton.setVisible(pageNumber + 1 < (listBooks.size() - 1) / 20 + 1);
+    prevPageBookButton.setVisible(pageNumber + 1 > 1);
   }
 
   /**
@@ -204,8 +204,8 @@ public class EditController implements MainInfo {
     int pageNumber = Integer.parseInt(pageBookNumberTextField.getText());
     pageBookNumberTextField.setText(String.valueOf(pageNumber - 1));
     setPageBook(pageNumber - 1);
-    nextPageBookButton.setVisible(pageNumber - 1 != (listBooks.size() - 1) / 20 + 1);
-    prevPageBookButton.setVisible(pageNumber - 1 != 1);
+    nextPageBookButton.setVisible(pageNumber - 1 < (listBooks.size() - 1) / 20 + 1);
+    prevPageBookButton.setVisible(pageNumber - 1 > 1);
   }
 
   /**
@@ -223,8 +223,8 @@ public class EditController implements MainInfo {
       pageBookNumberTextField.setText(String.valueOf(pageNumber));
     }
 
-    nextPageBookButton.setVisible(pageNumber != (listBooks.size() - 1) / 20 + 1);
-    prevPageBookButton.setVisible(pageNumber != 1);
+    nextPageBookButton.setVisible(pageNumber < (listBooks.size() - 1) / 20 + 1);
+    prevPageBookButton.setVisible(pageNumber > 1);
 
     setPageBook(pageNumber);
   }
@@ -238,8 +238,8 @@ public class EditController implements MainInfo {
     int pageNumber = Integer.parseInt(pageUserNumberTextField.getText());
     pageUserNumberTextField.setText(String.valueOf(pageNumber + 1));
     setPageUser(pageNumber + 1);
-    nextPageUserButton.setVisible(pageNumber + 1 != (listUsers.size() - 1) / 20 + 1);
-    prevPageUserButton.setVisible(pageNumber + 1 != 1);
+    nextPageUserButton.setVisible(pageNumber + 1 < (listUsers.size() - 1) / 20 + 1);
+    prevPageUserButton.setVisible(pageNumber + 1 > 1);
   }
 
   /**
@@ -251,8 +251,8 @@ public class EditController implements MainInfo {
     int pageNumber = Integer.parseInt(pageUserNumberTextField.getText());
     pageUserNumberTextField.setText(String.valueOf(pageNumber - 1));
     setPageUser(pageNumber - 1);
-    nextPageUserButton.setVisible(pageNumber - 1 != (listUsers.size() - 1) / 20 + 1);
-    prevPageUserButton.setVisible(pageNumber - 1 != 1);
+    nextPageUserButton.setVisible(pageNumber - 1 < (listUsers.size() - 1) / 20 + 1);
+    prevPageUserButton.setVisible(pageNumber - 1 > 1);
   }
 
   /**
@@ -270,8 +270,8 @@ public class EditController implements MainInfo {
       pageUserNumberTextField.setText(String.valueOf(pageNumber));
     }
 
-    nextPageUserButton.setVisible(pageNumber != (listUsers.size() - 1) / 20 + 1);
-    prevPageUserButton.setVisible(pageNumber != 1);
+    nextPageUserButton.setVisible(pageNumber < (listUsers.size() - 1) / 20 + 1);
+    prevPageUserButton.setVisible(pageNumber > 1);
 
     setPageUser(pageNumber);
   }
@@ -289,8 +289,8 @@ public class EditController implements MainInfo {
       pageNumber = 1;
       pageBookNumberTextField.setText("1");
     }
-    nextPageBookButton.setVisible(pageNumber != (listBooks.size() - 1) / 20 + 1);
-    prevPageBookButton.setVisible(pageNumber != 1);
+    nextPageBookButton.setVisible(pageNumber < (listBooks.size() - 1) / 20 + 1);
+    prevPageBookButton.setVisible(pageNumber > 1);
 
     int start = pageNumber * 20 - 20;
     int end = Math.min(start + 19, listBooks.size() - 1);
@@ -319,8 +319,8 @@ public class EditController implements MainInfo {
       pageNumber = 1;
       pageUserNumberTextField.setText("1");
     }
-    nextPageUserButton.setVisible(pageNumber != (listUsers.size() - 1) / 20 + 1);
-    prevPageUserButton.setVisible(pageNumber != 1);
+    nextPageUserButton.setVisible(pageNumber < (listUsers.size() - 1) / 20 + 1);
+    prevPageUserButton.setVisible(pageNumber > 1);
 
     int start = pageNumber * 20 - 20;
     int end = Math.min(start + 19, listUsers.size() - 1);

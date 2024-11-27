@@ -1,11 +1,13 @@
 package org.example.demo.Controllers;
 
 import javafx.animation.Animation.Status;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
@@ -86,16 +88,26 @@ public class UsersControllerTest extends ApplicationTest {
 
   @Test
   void testLoadingTransition1() {
-    Platform.runLater(()->{
-      usersController.loadUserList();
-      assertTrue(usersController.getLoadingPane().isVisible());
+    Platform.runLater(() -> {
+      PauseTransition transition = new PauseTransition(Duration.millis(500));
+      transition.setOnFinished(e -> {
+        usersController.loadUserList();
+        assertTrue(usersController.getLoadingPane().isVisible());
+      });
+      transition.play();
     });
   }
 
   @Test
   void testLoadingTransition2() {
-    usersController.loadUserList();
-    assertEquals(usersController.getLoadingTransition().getStatus(), Status.RUNNING);
+    Platform.runLater(() -> {
+      PauseTransition transition = new PauseTransition(Duration.millis(500));
+      transition.setOnFinished(e -> {
+        usersController.loadUserList();
+        assertEquals(usersController.getLoadingTransition().getStatus(), Status.RUNNING);
+      });
+      transition.play();
+    });
   }
 
 

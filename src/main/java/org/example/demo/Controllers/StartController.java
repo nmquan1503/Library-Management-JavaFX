@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import java.util.Random;
 import java.util.prefs.Preferences;
 import javafx.animation.AnimationTimer;
 import javafx.animation.PauseTransition;
@@ -90,11 +91,9 @@ public class StartController {
   private JFXCheckBox remember;
 
   @FXML
-  private StackPane loadingPane;
-
-  @FXML
-  private ProgressIndicator loadingIndicator;
+  private ImageView loadingIndicator;
   private Preferences prefs;
+
 
   private static int id;
 
@@ -232,13 +231,9 @@ public class StartController {
     boolean check = false;
 
     // Tạo một loading indicator
-    loadingPane.setVisible(true);
 
     loadingIndicator.setVisible(true);
-    loadingIndicator.setProgress(-1.0); // Chỉ định trạng thái loading
-
-    //loadingPane.getChildren().add(loadingIndicator);
-    loadingPane.setAlignment(Pos.CENTER); // Căn giữa
+    loadingIndicator.setImage(new Image(getClass().getResource("/images/Ripple@1x-1.0s-200px-200px.gif").toExternalForm()));
     LogIn.setRipplerFill(null);
     LogIn.setDisable(true);
     LogIn.setStyle(""); // Khôi phục màu mặc định nếu không đủ điều kiện;
@@ -263,6 +258,7 @@ public class StartController {
           if (resultSet.next()) {
             id = resultSet.getInt("id_librarian");
             JDBC.closeConnection(connection);
+
             return true; // Tài khoản hợp lệ
           }
           JDBC.closeConnection(connection);
@@ -285,15 +281,18 @@ public class StartController {
         // Ẩn loading indicator
         long endTime = System.currentTimeMillis(); // Lưu thời gian kết thúc
         long elapsedTime = endTime - startTime; // Tính thời gian thực hiện
-        long minLoadTime = 1300; // Thời gian tối thiểu (1 giây)
+        Random random = new Random();
+        long minLoadTime = 1500 + random.nextInt(2000 - 1500 + 1); // Thời gian tối thiểu (1 giây)
 
         // Dùng PauseTransition để đảm bảo thời gian chờ tối thiểu
         PauseTransition pause = new PauseTransition(
             Duration.millis(Math.max(elapsedTime, minLoadTime)));
         pause.setOnFinished(e -> {
-          loadingPane.setVisible(false);
-          updateLogin();
+
+
           if (!check) {
+            loadingIndicator.setVisible(false);
+            updateLogin();
             wrongNotification.setVisible(true);
             ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(0.2),
                 wrongNotification);
@@ -330,7 +329,6 @@ public class StartController {
             loadHomeScene(event);
           }
 
-          //loadingPane.getChildren().clear();
         });
         pause.play();
 
@@ -343,51 +341,46 @@ public class StartController {
   }
 
   private void loadHomeScene(ActionEvent event) {
-//    try {
-//      FXMLLoader loader = new FXMLLoader(
-//          getClass().getResource("/org/example/demo/FXML/Base.fxml"));
-//      root = loader.load();
-//      Scene mainScene = new Scene(root);
-//
-//      ((Node) event.getSource()).getScene().getWindow().hide();
-//      Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-//      stage.setScene(mainScene);
-//      stage.show();
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//
-//    }
-    if (StartController.getID() != BaseController.getLibId()) {
-      BaseController.setLibId(StartController.getID());
-    }
+    new Thread(() -> {
+      // Logic xử lý trong thread
+      if (StartController.getID() != BaseController.getLibId()) {
+        BaseController.setLibId(StartController.getID());
+      }
 
-    if (BaseController.getBookPane() != null) {
-      BaseController.getBookPane().setVisible(false);
-    }
+      Platform.runLater(() -> {
+        loadingIndicator.setVisible(false);
+        updateLogin();
+        // Cập nhật giao diện trên JavaFX Application Thread
+        if (BaseController.getBookPane() != null) {
+          BaseController.getBookPane().setVisible(false);
+        }
 
-    if (BaseController.getBorrowPane() != null) {
-      BaseController.getBorrowPane().setVisible(false);
-    }
+        if (BaseController.getBorrowPane() != null) {
+          BaseController.getBorrowPane().setVisible(false);
+        }
 
-    if (BaseController.getEditPane() != null) {
-      BaseController.getEditPane().setVisible(false);
-    }
+        if (BaseController.getEditPane() != null) {
+          BaseController.getEditPane().setVisible(false);
+        }
 
-    if (BaseController.getReturnPane() != null) {
-      BaseController.getReturnPane().setVisible(false);
-    }
+        if (BaseController.getReturnPane() != null) {
+          BaseController.getReturnPane().setVisible(false);
+        }
 
-    if (BaseController.getUserPane() != null) {
-      BaseController.getUserPane().setVisible(false);
-    }
+        if (BaseController.getUserPane() != null) {
+          BaseController.getUserPane().setVisible(false);
+        }
 
-    if (BaseController.getMainPane() != null) {
-      BaseController.getMainPane().setVisible(true);
-    }
+        if (BaseController.getMainPane() != null) {
+          BaseController.getMainPane().setVisible(true);
+        }
 
-    App.primaryStage.setScene(App.baseScene);
-    App.primaryStage.show();
+        App.primaryStage.setScene(App.baseScene);
+        App.primaryStage.show();
+      });
+    }).start();
   }
+
 
   @FXML
   public void initialize() {
@@ -396,7 +389,6 @@ public class StartController {
     setdefaultImage();
     loadingIndicator.setVisible(false);
     wrongNotification.setVisible(false);
-    loadingPane.setVisible(false);
     deletePassword.setVisible(false); // Ẩn icon ban đầu
     passwordText.setVisible(false);
     passwordField.setVisible(true);

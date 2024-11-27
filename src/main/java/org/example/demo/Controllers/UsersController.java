@@ -148,8 +148,8 @@ public class UsersController implements MainInfo {
       pageNumberTextField.setText(String.valueOf(pageNumber));
     }
 
-    nextPageButton.setVisible(pageNumber != (listUser.size() - 1) / 20 + 1);
-    prevPageButton.setVisible(pageNumber != 1);
+    nextPageButton.setVisible(pageNumber < (listUser.size() - 1) / 20 + 1);
+    prevPageButton.setVisible(pageNumber > 1);
 
     setListUsers(pageNumber);
   }
@@ -163,8 +163,8 @@ public class UsersController implements MainInfo {
     int pageNumber = Integer.parseInt(pageNumberTextField.getText());
     pageNumberTextField.setText(String.valueOf(pageNumber + 1));
     setListUsers(pageNumber + 1);
-    nextPageButton.setVisible(pageNumber + 1 != (listUser.size() - 1) / 20 + 1);
-    prevPageButton.setVisible(pageNumber + 1 != 1);
+    nextPageButton.setVisible(pageNumber + 1 < (listUser.size() - 1) / 20 + 1);
+    prevPageButton.setVisible(pageNumber + 1 > 1);
   }
 
   /**
@@ -176,8 +176,8 @@ public class UsersController implements MainInfo {
     int pageNumber = Integer.parseInt(pageNumberTextField.getText());
     pageNumberTextField.setText(String.valueOf(pageNumber - 1));
     setListUsers(pageNumber - 1);
-    nextPageButton.setVisible(pageNumber - 1 != (listUser.size() - 1) / 20 + 1);
-    prevPageButton.setVisible(pageNumber - 1 != 1);
+    nextPageButton.setVisible(pageNumber - 1 < (listUser.size() - 1) / 20 + 1);
+    prevPageButton.setVisible(pageNumber - 1 > 1);
   }
 
   /**
@@ -186,16 +186,13 @@ public class UsersController implements MainInfo {
   public void setListUsers(int pageNumber) {
     if (pageNumber > (listUser.size() - 1) / 20 + 1) {
       pageNumber = (listUser.size() - 1) / 20 + 1;
-      pageNumberTextField.setText(String.valueOf(pageNumber));
-      nextPageButton.setVisible(pageNumber != (listUser.size() - 1) / 20 + 1);
-      prevPageButton.setVisible(pageNumber != 1);
     }
     if (pageNumber < 1) {
       pageNumber = 1;
       pageNumberTextField.setText("1");
-      nextPageButton.setVisible(pageNumber != (listUser.size() - 1) / 20 + 1);
-      prevPageButton.setVisible(false);
     }
+    nextPageButton.setVisible(pageNumber < (listUser.size() - 1) / 20 + 1);
+    prevPageButton.setVisible(pageNumber > 1);
     int start = pageNumber * 20 - 20;
     int end = Math.min(start + 19, listUser.size() - 1);
     Thread thread = new Thread(() -> {
@@ -298,7 +295,7 @@ public class UsersController implements MainInfo {
         setListUsers(1);
         pageNumberTextField.setText("1");
         prevPageButton.setVisible(false);
-        nextPageButton.setVisible(1 != (listUser.size() - 1) / 20 + 1);
+        nextPageButton.setVisible(1 < (listUser.size() - 1) / 20 + 1);
         loadingThread.poll();
         if (!loadingThread.isEmpty()) {
           loadingThread.peek().start();
@@ -435,7 +432,7 @@ public class UsersController implements MainInfo {
       Platform.runLater(() -> {
         setListUsers(1);
         pageNumberTextField.setText("1");
-        nextPageButton.setVisible(1 != (listUser.size() - 1) / 20 + 1);
+        nextPageButton.setVisible(1 < (listUser.size() - 1) / 20 + 1);
         prevPageButton.setVisible(false);
         initLoadingTransition();
         initBannedUsersList();

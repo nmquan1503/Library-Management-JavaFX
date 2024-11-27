@@ -549,8 +549,8 @@ public class BooksController implements MainInfo {
       pageNumberTextField.setText(String.valueOf(pageNumber));
     }
 
-    nextPageButton.setVisible(pageNumber != (listSuggestions.size() - 1) / 20 + 1);
-    prevPageButton.setVisible(pageNumber != 1);
+    nextPageButton.setVisible(pageNumber < (listSuggestions.size() - 1) / 20 + 1);
+    prevPageButton.setVisible(pageNumber > 1);
 
     setListBooks(pageNumber);
   }
@@ -564,8 +564,8 @@ public class BooksController implements MainInfo {
     int pageNumber = Integer.parseInt(pageNumberTextField.getText());
     pageNumberTextField.setText(String.valueOf(pageNumber + 1));
     setListBooks(pageNumber + 1);
-    nextPageButton.setVisible(pageNumber + 1 != (listSuggestions.size() - 1) / 20 + 1);
-    prevPageButton.setVisible(pageNumber + 1 != 1);
+    nextPageButton.setVisible(pageNumber + 1 < (listSuggestions.size() - 1) / 20 + 1);
+    prevPageButton.setVisible(pageNumber + 1 > 1);
   }
 
   /**
@@ -577,8 +577,8 @@ public class BooksController implements MainInfo {
     int pageNumber = Integer.parseInt(pageNumberTextField.getText());
     pageNumberTextField.setText(String.valueOf(pageNumber - 1));
     setListBooks(pageNumber - 1);
-    nextPageButton.setVisible(pageNumber - 1 != (listSuggestions.size() - 1) / 20 + 1);
-    prevPageButton.setVisible(pageNumber - 1 != 1);
+    nextPageButton.setVisible(pageNumber - 1 < (listSuggestions.size() - 1) / 20 + 1);
+    prevPageButton.setVisible(pageNumber - 1 > 1);
   }
 
   /**
@@ -588,15 +588,13 @@ public class BooksController implements MainInfo {
     if (pageNumber > (listSuggestions.size() - 1) / 20 + 1) {
       pageNumber = (listSuggestions.size() - 1) / 20 + 1;
       pageNumberTextField.setText(String.valueOf(pageNumber));
-      nextPageButton.setVisible(pageNumber != (listSuggestions.size() - 1) / 20 + 1);
-      prevPageButton.setVisible(pageNumber != 1);
     }
     if (pageNumber < 1) {
       pageNumber = 1;
       pageNumberTextField.setText("1");
-      nextPageButton.setVisible(pageNumber != (listSuggestions.size() - 1) / 20 + 1);
-      prevPageButton.setVisible(false);
     }
+      nextPageButton.setVisible(pageNumber < (listSuggestions.size() - 1) / 20 + 1);
+      prevPageButton.setVisible(pageNumber > 1);
     int start = pageNumber * 20 - 20;
     int end = Math.min(start + 19, listSuggestions.size() - 1);
     Thread thread = new Thread(() -> {
@@ -869,7 +867,7 @@ public class BooksController implements MainInfo {
       Platform.runLater(() -> {
         setListBooks(1);
         pageNumberTextField.setText("1");
-        nextPageButton.setVisible(1 != (listSuggestions.size() - 1) / 20 + 1);
+        nextPageButton.setVisible(1 < (listSuggestions.size() - 1) / 20 + 1);
         prevPageButton.setVisible(false);
 
         initTopChoicesBook();

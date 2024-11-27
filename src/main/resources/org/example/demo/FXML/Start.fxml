@@ -5,9 +5,7 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -102,15 +100,12 @@
                   <Font name="Arial" size="15.0" />
                </font>
             </Label>
-            <StackPane fx:id="loadingPane" layoutX="173.0" layoutY="234.0" prefHeight="63.0" prefWidth="90.0">
-               <children>
-                  <ProgressIndicator fx:id="loadingIndicator" centerShape="false" prefHeight="53.0" prefWidth="71.0">
-                     <effect>
-                        <ColorAdjust brightness="1.0" />
-                     </effect>
-                  </ProgressIndicator>
-               </children></StackPane>
          </children>
       </AnchorPane>
+      <ImageView fx:id="loadingIndicator" blendMode="DARKEN" fitHeight="466.0" fitWidth="436.0" layoutX="262.0" layoutY="84.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../images/Ripple@1x-1.0s-200px-200px.gif" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>
