@@ -1116,8 +1116,15 @@ public class BaseController {
     }
   }
 
+  private void translateList() {
+    for (NotificationView notificationView : notificationList) {
+      notificationView.applyTranslate(viLang, enLang, isTranslate);
+    }
+  }
+
   @FXML
   private void notificationClick() {
+    translateList();
     setUpFirstRead();
 
     if (popup == null) {
