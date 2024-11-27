@@ -89,7 +89,7 @@ public class UsersControllerTest extends ApplicationTest {
   @Test
   void testLoadingTransition1() {
     Platform.runLater(() -> {
-      PauseTransition transition = new PauseTransition(Duration.millis(500));
+      PauseTransition transition = new PauseTransition(Duration.millis(1000));
       transition.setOnFinished(e -> {
         usersController.loadUserList();
         assertTrue(usersController.getLoadingPane().isVisible());
@@ -101,7 +101,7 @@ public class UsersControllerTest extends ApplicationTest {
   @Test
   void testLoadingTransition2() {
     Platform.runLater(() -> {
-      PauseTransition transition = new PauseTransition(Duration.millis(500));
+      PauseTransition transition = new PauseTransition(Duration.millis(1000));
       transition.setOnFinished(e -> {
         usersController.loadUserList();
         assertEquals(usersController.getLoadingTransition().getStatus(), Status.RUNNING);
