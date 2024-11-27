@@ -131,6 +131,30 @@ public class NotificationView extends HBox implements MainInfo {
   @Override
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
       boolean isTranslate) {
+    User user = Library.getInstance().getUser(borrowing.getIdUser());
+    Book book = Library.getInstance().getBook(borrowing.getIdBook());
+    Date dueDate = borrowing.getDueDate();
+    String bookTitle = book.getTitle();
+    int daysDiff = (int) Math.abs(dueDate.datediff(Date.today()));
+
+    if (!dueDate.isAfter(Date.today())) {
+      if (!BaseController.isTranslate) {
+        content.setText(
+            user.getName() + " đã quá hạn trả sách " + bookTitle + " " + daysDiff + " ngày!");
+      } else {
+        content.setText(
+            user.getName() + " is " + daysDiff + " days overdue for returning the book " + bookTitle
+                + "!");
+      }
+    } else {
+      if (!BaseController.isTranslate) {
+        content.setText(user.getName() + " còn " + daysDiff
+            + " ngày nữa phải trả sách " + bookTitle);
+      } else {
+        content.setText(user.getName() + " has " + daysDiff
+            + " days left to return the book " + bookTitle);
+      }
+    }
 
   }
 
