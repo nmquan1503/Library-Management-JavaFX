@@ -18,6 +18,9 @@ import org.example.demo.Models.Users.User;
 
 public class NotificationView extends HBox implements MainInfo {
 
+  /**
+   * oke.
+   */
   private boolean isSeen;
 
   private ImageView image;
@@ -33,6 +36,9 @@ public class NotificationView extends HBox implements MainInfo {
     return image;
   }
 
+  /**
+   * oke.
+   */
   public NotificationView(Borrowing borrowing, int width, int height) {
     isSeen = false;
 
@@ -56,6 +62,9 @@ public class NotificationView extends HBox implements MainInfo {
 
   }
 
+  /**
+   * oke.
+   */
   public void markSeen() {
     isSeen = true;
     if (!BaseController.isDark) {
@@ -65,10 +74,16 @@ public class NotificationView extends HBox implements MainInfo {
     }
   }
 
+  /**
+   * oke.
+   */
   public boolean isSeen() {
     return isSeen;
   }
 
+  /**
+   * oke.
+   */
   private void initImage(User user, int height, int width) {
 
     image = new ImageView();
@@ -88,6 +103,9 @@ public class NotificationView extends HBox implements MainInfo {
     }
   }
 
+  /**
+   * oke.
+   */
   private void initContent(User user, Book book, Date dueDate, int height, int width) {
 
     content = new Label();
@@ -124,10 +142,16 @@ public class NotificationView extends HBox implements MainInfo {
     }
   }
 
+  /**
+   * oke.
+   */
   @Override
   public void applyDarkMode(boolean isDark) {
   }
 
+  /**
+   * oke.
+   */
   @Override
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
       boolean isTranslate) {
@@ -158,6 +182,9 @@ public class NotificationView extends HBox implements MainInfo {
 
   }
 
+  /**
+   * oke.
+   */
   @Override
   public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
 

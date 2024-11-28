@@ -1,7 +1,6 @@
 package org.example.demo.Interfaces;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 public interface MainInfo {
 

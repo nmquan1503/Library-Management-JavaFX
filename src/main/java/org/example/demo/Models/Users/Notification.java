@@ -10,13 +10,25 @@ import org.example.demo.Database.JDBC;
 
 public class Notification {
 
+  /**
+   * oke.
+   */
   private int id;
   private String title;
   private String content;
   private Date time;
+  /**
+   * oke.
+   */
   private int id_user;
+  /**
+   * oke.
+   */
   private boolean isSeen;
 
+  /**
+   * oke.
+   */
   public Notification(String title, String content, Date time, int id_user) {
     this.title = title;
     this.content = content;
@@ -25,6 +37,9 @@ public class Notification {
     this.isSeen = false;
   }
 
+  /**
+   * oke.
+   */
   public Notification(String title, String content, Date time, int id_user,
       boolean isSeen) {
     this.title = title;
@@ -34,10 +49,16 @@ public class Notification {
     this.isSeen = isSeen;
   }
 
+  /**
+   * oke.
+   */
   public int getId() {
     return this.id;
   }
 
+  /**
+   * oke.
+   */
   public void setId(int id) {
     this.id = id;
   }
@@ -46,6 +67,9 @@ public class Notification {
     return title;
   }
 
+  /**
+   * oke.
+   */
   public void setTitle(String title) {
     this.title = title;
   }
@@ -54,6 +78,9 @@ public class Notification {
     return content;
   }
 
+  /**
+   * oke.
+   */
   public void setContent(String content) {
     this.content = content;
   }
@@ -62,30 +89,51 @@ public class Notification {
     return time;
   }
 
+  /**
+   * oke.
+   */
   public void setTime(Date time) {
     this.time = time;
   }
 
+  /**
+   * oke.
+   */
   public int getId_user() {
     return id_user;
   }
 
+  /**
+   * oke.
+   */
   public void setId_user(int id_user) {
     this.id_user = id_user;
   }
 
+  /**
+   * oke.
+   */
   public boolean isSeen() {
     return isSeen;
   }
 
+  /**
+   * oke.
+   */
   public void setSeen(boolean seen) {
     isSeen = seen;
   }
 
+  /**
+   * oke.
+   */
   public void setSeen() {
     isSeen = true;
   }
 
+  /**
+   * oke.
+   */
   public int SaveInfo() {
     // add to db:
     Connection conn = null;
