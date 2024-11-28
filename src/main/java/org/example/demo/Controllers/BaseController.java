@@ -717,7 +717,7 @@ public class BaseController {
   private void loadReturn() {
     try {
       FXMLLoader fxmlLoader = new FXMLLoader(
-          getClass().getResource("/org/example/demo/CSS/ReturnBook.fxml"));
+          getClass().getResource("/org/example/demo/FXML/ReturnBook.fxml"));
       returnPane = fxmlLoader.load();
 
       returnBookController = fxmlLoader.getController();
