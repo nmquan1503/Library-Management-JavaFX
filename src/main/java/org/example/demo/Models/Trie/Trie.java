@@ -2,7 +2,9 @@ package org.example.demo.Models.Trie;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 
 public class Trie {
 
@@ -25,6 +27,7 @@ public class Trie {
         root1 = root;
         for (char x : name.toCharArray()) {
             Character x1 = x;
+            x1=Character.toLowerCase(x1);
             HashMap<Character, TrieNode> children = root1.getChildren();
             TrieNode getNode = children.get(x1);
             if (getNode == null) {
@@ -80,7 +83,13 @@ public class Trie {
             boolean check = false;
             HashMap<Character, TrieNode> map = root1.getChildren();
             TrieNode nextNode = map.get(prefix.charAt(i));
-            if ( nextNode == null ) break;
+            if ( nextNode == null ) {
+                char x = prefix.charAt(i);
+                if ( Character.isUpperCase(x) ) x = Character.toLowerCase(x);
+                else x = Character.toUpperCase(x);
+                nextNode = map.get(x);
+                if ( nextNode == null ) break;
+            }
             root1=nextNode;
             i++;
         }
@@ -98,6 +107,26 @@ public class Trie {
         }
         for (Map.Entry<Character, TrieNode> entry : map.entrySet()) {
             printNode(entry.getValue(), s + (char) entry.getKey());
+        }
+    }
+    
+    public ArrayList<String> getAllNameStartWith(String prefix){
+        ArrayList<String> list=new ArrayList<>();
+        TrieNode tmpRoot=root;
+        for(int i=0;i<prefix.length();i++){
+            if(tmpRoot==null)return list;
+            tmpRoot=tmpRoot.getChildren().get(prefix.charAt(i));
+        }
+        if(tmpRoot==null)return list;
+        addNameToList(tmpRoot,list,prefix);
+        return list;
+    }
+    private void addNameToList(TrieNode trieNode,ArrayList<String> list,String name){
+        if(!trieNode.getListID().isEmpty()){
+            list.add(name);
+        }
+        for(Map.Entry<Character,TrieNode> entry:trieNode.getChildren().entrySet()){
+            addNameToList(entry.getValue(),list,name+entry.getKey());
         }
     }
 

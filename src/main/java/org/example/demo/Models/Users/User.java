@@ -44,7 +44,13 @@ public class User extends Person {
 
   // change with the UML:isUnBan->isBan
   public boolean isBan() {
-    return LocalDate.now().isAfter(this.banEndTime.toLocalDate());
+//    return LocalDate.now().isAfter(this.banEndTime.toLocalDate());
+    if (this.banEndTime == null) {
+      return false;
+    }
+    Date now = new Date(LocalDate.now().getYear(), LocalDate.now().getMonthValue(),
+        LocalDate.now().getDayOfMonth());
+    return banEndTime.isAfter(now);
   }
 
   // delete from database

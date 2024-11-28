@@ -1,0 +1,7 @@
+#FadedPane{
+  -fx-background-color:rgba(0,0,0,0.3);
+}
+
+#Content{
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 20, 0, 3, 3);
+}

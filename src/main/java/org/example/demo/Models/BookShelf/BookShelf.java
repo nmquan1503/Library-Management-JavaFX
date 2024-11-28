@@ -122,6 +122,24 @@ public class BookShelf {
     return id;
   }
 
+  public int insertBookWithID(Book book, int idBook){
+    int id=book.SaveInfo();
+      Connection connection=JDBC.getConnection();
+      try{
+        String query="update books set id_book=(?) where id_book=(?)";
+        PreparedStatement statement=connection.prepareStatement(query);
+        statement.setInt(1,idBook);
+        statement.setInt(2,id);
+        statement.executeUpdate();
+        book.setId(idBook);
+      }catch (Exception e){
+        e.printStackTrace();
+      }
+      JDBC.closeConnection(connection);
+    books.insertNode(book.getTitle(),book.getId());
+    return idBook;
+  }
+
   /**
    * delete book from trie and database.
    *
@@ -145,6 +163,32 @@ public class BookShelf {
       listBook.add(getBook(i));
     }
     return listBook;
+  }
+
+  public ArrayList<Book> getTop3Book(){
+    ArrayList<Book> list=new ArrayList<>();
+    String query = "select books.id_book "
+        + "from books "
+        + "left join borrowing on books.id_book = borrowing.id_book "
+        + "group by books.id_book "
+        + "order by count(*) desc "
+        + "limit 3;";
+    Connection connection=JDBC.getConnection();
+
+    try {
+      PreparedStatement statement=connection.prepareStatement(query);
+      ResultSet resultSet=statement.executeQuery();
+      while (resultSet.next()){
+        int id=resultSet.getInt(1);
+        list.add(getBook(id));
+      }
+    }
+    catch (Exception e){
+      e.printStackTrace();
+    }
+
+    JDBC.closeConnection(connection);
+    return list;
   }
 
 }

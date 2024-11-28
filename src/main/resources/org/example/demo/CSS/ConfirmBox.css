@@ -1,0 +1,29 @@
+#topic{
+  -fx-font-size:18;
+  -fx-font-weight:bold;
+  -fx-font-style: italic;
+  -fx-border-color:white;
+  -fx-background-color:white;
+}
+
+#content{
+  -fx-font-size:14;
+  -fx-border-color:white;
+  -fx-background-color:white;
+}
+
+#Button{
+
+}
+
+#FadedPane{
+  -fx-background-color:rgba(0,0,0,0.4);
+}
+
+#box{
+  -fx-background-color:white;
+  -fx-border-color:white;
+  -fx-padding:5;
+  -fx-border-radius:8;
+  -fx-background-radius:8;
+}

@@ -17,6 +17,7 @@ public class Borrowing {
     this.dueDate=dueDate;
     this.returnedDate=returnedDate;
   }
+
   
   public int getIdBorrowing(){
     return idBorrowing;

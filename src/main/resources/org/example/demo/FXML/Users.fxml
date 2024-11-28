@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Arc?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="mainPane" layoutX="60.0" layoutY="60.0" prefHeight="540.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21" fx:controller="org.example.demo.Controllers.UsersController">
+  <JFXListView id="ListView" fx:id="usersListView" layoutX="20.0" layoutY="90.0" onMouseClicked="#SelectUserFromUserListView" prefHeight="400.0" prefWidth="450.0" stylesheets="@../CSS/Pagination.css" />
+  <TextField fx:id="pageNumberTextField" alignment="CENTER" layoutX="225.0" layoutY="500.0" onAction="#changePage" prefHeight="30.0" prefWidth="40.0" text="1">
+    <font>
+      <Font size="14.0" />
+    </font>
+  </TextField>
+  <JFXButton fx:id="nextPageButton" contentDisplay="CENTER" ellipsisString="" layoutX="265.0" layoutY="501.0" onAction="#switchToNextPage" prefHeight="25.0" prefWidth="30.0">
+    <graphic>
+      <FontAwesomeIconView glyphName="ANGLE_DOUBLE_RIGHT" size="20" />
+    </graphic>
+  </JFXButton>
+  <JFXButton fx:id="prevPageButton" contentDisplay="CENTER" ellipsisString="" layoutX="195.0" layoutY="501.0" minWidth="30.0" onAction="#switchToPrevPage" prefHeight="25.0" prefWidth="30.0">
+    <graphic>
+      <FontAwesomeIconView glyphName="ANGLE_DOUBLE_LEFT" size="20" />
+    </graphic>
+  </JFXButton>
+  <VBox id="SearchBar" layoutX="20.0" layoutY="35.0" prefHeight="40.0" stylesheets="@../CSS/SearchTextField.css">
+    <children>
+      <HBox prefHeight="30.0">
+        <children>
+          <TextField id="TextField" fx:id="nameTextField" prefHeight="30.0" prefWidth="380.0" promptText="Nhập tên" />
+          <JFXButton id="Basic" fx:id="deleteButton" contentDisplay="CENTER" onAction="#DeleteContentOfTextField" prefHeight="30.0" prefWidth="11.0" visible="false">
+            <graphic>
+              <FontAwesomeIconView glyphName="REMOVE" size="20" />
+            </graphic>
+          </JFXButton>
+          <JFXButton id="Basic" contentDisplay="CENTER" onAction="#loadUserList" prefHeight="30.0" prefWidth="15.0">
+            <graphic>
+              <FontAwesomeIconView glyphName="SEARCH" size="20" />
+            </graphic>
+          </JFXButton>
+        </children>
+      </HBox>
+      <JFXListView id="ListView" fx:id="userSuggestionsListView" prefHeight="0.0" visible="false" />
+    </children>
+    <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+    </padding>
+  </VBox>
+   <VBox alignment="CENTER" layoutX="535.0" layoutY="104.0" prefWidth="300.0">
+      <children>
+        <Label fx:id="banListLabel" text="Danh sách người mượn bị cấm" textFill="RED">
+          <font>
+            <Font name="System Bold Italic" size="18.0" />
+          </font>
+        </Label>
+      </children>
+   </VBox>
+  <JFXListView id="ListView" fx:id="BanList" layoutX="560.0" layoutY="160.0" onMouseClicked="#SelectBannedUser" prefHeight="275.0" prefWidth="250.0" stylesheets="@../CSS/Pagination.css" />
+  <Pane id="Basic" fx:id="loadingPane" layoutX="20.0" layoutY="90.0" prefHeight="400.0" prefWidth="450.0" stylesheets="@../CSS/Pagination.css" visible="false">
+    <children>
+      <Arc fill="#ffffff00" layoutX="225.0" layoutY="195.0" length="270.0" radiusX="20.0" radiusY="20.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="5.0" />
+      <Arc fill="#ffffff00" layoutX="225.0" layoutY="195.0" length="270.0" radiusX="26.0" radiusY="26.0" startAngle="90.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="5.0" />
+      <Arc fill="#ffffff00" layoutX="225.0" layoutY="195.0" length="270.0" radiusX="32.0" radiusY="32.0" startAngle="180.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="5.0" />
+    </children>
+  </Pane>
+</AnchorPane>

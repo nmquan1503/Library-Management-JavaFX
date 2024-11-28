@@ -1,0 +1,325 @@
+* {
+    -fx-font-family: 'System';
+    -fx-font-weight: bold;
+    -fx-text-fill: #584f58;
+}
+* :disabled {
+    -fx-opacity: 1;
+}
+.button:hover{
+    -fx-cursor: hand;
+}
+.table-view {
+    -fx-border-color: #E464C0; /* Màu viền của TableView */
+    -fx-border-width: 0;    /* Độ rộng viền để rõ ràng hơn */
+    -fx-background-insets: 0; /* Xóa insets để không còn khoảng trống */
+     -fx-padding: 0; /* Xóa khoảng padding nếu có */
+     -fx-background-color: #F4F4F4;
+
+}
+.table-view .column-header {
+    -fx-pref-height: 50px;  /* Điều chỉnh chiều cao của header */
+    -fx-background-color: #F4F4F4;
+    -fx-text-fill: black; /* Màu chữ */
+    -fx-font-size: 17px;
+    -fx-border-color: transparent; /* Màu viền giữa các ô */
+    -fx-border-width: 0; /* Chỉ giữ viền dưới cho header */
+    -fx-padding: 0; /* Xóa khoảng padding nếu có */
+
+}
+
+.table-view .table-row-cell {
+    -fx-border-color: #d7bacf; /* Màu viền */
+        -fx-border-width: 1 0 0 0;
+    -fx-background-color:#F4F4F4;
+    -fx-border-style: dashed;
+}
+.table-row-cell {
+    -fx-cell-size: 55px; /* Điều chỉnh chiều cao dòng ở đây */
+    -fx-font-size: 17px;
+
+}
+
+.table-cell {
+    -fx-alignment: CENTER; /* Tùy chỉnh canh giữa nội dung */
+    -fx-border-color: #E464C0; /* Màu viền giữa các ô */
+    -fx-border-width: 0px;     /* Độ rộng viền để rõ ràng hơn */
+    -fx-text-fill: #8e8e8e;
+}
+.table-view .column-header .label {
+    -fx-border-width: 0px;
+    -fx-border-color: #E464C0;
+    -fx-alignment: center;
+}
+.combo-box {
+    -fx-background-color: #f7ebf3; /* Màu nền */
+    -fx-border-color: #E464C0; /* Màu viền */
+    -fx-border-width: 1px;
+
+    -fx-shape: "M 100 100 L 700 100 L 700 350 L 100 350 A 17 50 0 1 1 100 100 ";
+    -fx-background-insets: 0;
+
+}
+
+.combo-box:hover {
+    -fx-background-color: #f4f1f3; /* Thay đổi màu nền khi hover */
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: transparent; /* Mũi tên trong suốt */
+    -fx-padding: 0 10 0 0;
+}
+
+.combo-box .arrow {
+    -fx-shape: "M 0 0 L 4 4 L 8 0"; /* Tam giác cho mũi tên */
+    -fx-background-color: #8E7D4B; /* Màu mũi tên */
+
+}
+
+.custom-combo-box {
+    -fx-font-size: 16px; /* Thay đổi kích thước chữ cho ComboBox */
+
+}
+
+/* Tùy chỉnh cho các mục trong danh sách (ListCell) */
+.combo-box-popup .list-view {
+    -fx-background-color: rgba(0, 0, 0, 0.8); /* Màu nền đen với độ trong suốt 70% */
+    -fx-background-radius: 15; /* Bo góc cho toàn bộ nền */
+    -fx-border-color: transparent; /* Xóa viền của popup */
+}
+
+
+.combo-box-popup .list-cell {
+    -fx-background-color: rgba(0, 0, 0, 0.0); /* Màu nền */
+    -fx-text-fill: white; /* Màu chữ */
+    -fx-background-radius: 15 15 15 15; /* Bo góc tròn đều cho các mục */
+    -fx-border-radius: 30 30 30 30;
+
+    -fx-padding: 10px;
+}
+
+/* Hiệu ứng hover khi di chuột qua các mục trong danh sách */
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: rgba(113, 120, 135, 1.0); /* Màu đen nhạt khi hover */
+    -fx-text-fill: white; /* Màu chữ trắng khi hover */
+}
+
+/* Khi mục được chọn */
+.combo-box-popup .list-cell:selected {
+    -fx-background-color: rgba(113, 120, 135, 1.0); /* Màu đen nhạt khi hover */
+    -fx-text-fill: white; /* Màu chữ trắng khi hover */
+}
+
+#SearchText{
+  -fx-background-color:transparent;
+   -fx-prompt-text-fill: #8e8e8e;
+   -fx-border-width:0;
+   -fx-border-color: transparent;
+}
+#SearchBar {
+-fx-border-width: 1px;
+    -fx-border-color: #E464C0;
+    -fx-background-color: #f7ebf3;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-font-size: 14;
+    -fx-shape: "M 100 150 L 700 150 A 15 50 0 1 1 700 350 L 100 350 Z";
+}
+#SearchBar1 {
+-fx-border-width: 1px;
+    -fx-border-color: #E464C0;
+    -fx-background-color: #f9d0ee;
+    -fx-font-size: 14;
+}
+/* Hình dạng thay đổi */
+#SearchBar.newShape {
+    -fx-background-color: #f7ebf3;
+        -fx-background-radius: 8;
+        -fx-border-radius: 8;
+        -fx-font-size: 14;
+        -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 1, 1);
+    -fx-shape: "M 100 150 L 700 150 Q 739 150 739 250 L 739 350 L 100 350 Z ";
+}
+#ListView {
+
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+
+}
+#ListView .scroll-bar:horizontal,
+#ListView .scroll-bar:vertical {
+    -fx-opacity: 0;
+    -fx-pref-width: 0;
+    -fx-pref-height: 0;
+}
+#ListView .list-cell{
+    -fx-background-color: #f5e6f1;
+
+    -fx-font-size: 14;
+}
+#ListView .list-cell:hover {
+    -fx-background-color: #f7f2f6; /* Màu nền khi hover */
+}
+#pinkPane{
+    -fx-border-width: 1px;
+    -fx-border-color: #E464C0;
+    -fx-border-radius: 25px;
+    -fx-background-radius: 25px;
+    -fx-background-color:#F4F4F4;
+}
+#SearchIcon{
+    -fx-background-color: transparent;
+
+}
+#SearchIcon:hover {
+    -fx-cursor: hand; /* Chuyển đổi con trỏ thành hình bàn tay */
+}
+#SearchIcon:pressed {
+    -fx-cursor: hand; /* Con trỏ vẫn là hình bàn tay khi nhấn */
+}
+.button-rightButton {
+  -fx-shape: "M 350 200 A 50 50 0 1 1 350 400 A 50 50 0 1 1 350 200";
+  -fx-background-color: #f9d0ee;
+  -fx-border-color: #E464C0;
+}
+
+.button-rightButton:hover {
+  -fx-background-color: #f9e1f2; /* Thay đổi màu nền khi hover */
+}
+
+.button-rightButton:pressed {
+  -fx-background-color: #bba0b4; /* Thay đổi màu nền khi nhấn */
+}
+
+.button-rightButton:disabled{
+  -fx-opacity: 0.3;
+}
+#SearchBar {
+-fx-border-width: 1px;
+    -fx-border-color: #E464C0;
+    -fx-background-color: #f7ebf3;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-font-size: 14;
+    -fx-shape: "M 100 150 L 700 150 A 15 50 0 1 1 700 350 L 100 350 Z";
+}
+
+#SearchBar.newShape {
+    -fx-background-color: #f7ebf3;
+        -fx-background-radius: 8;
+        -fx-border-radius: 8;
+        -fx-font-size: 14;
+        -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 1, 1);
+    -fx-shape: "M 100 150 L 700 150 Q 739 150 739 250 L 739 350 L 100 350 Z ";
+}
+
+#returnButton{
+    -fx-font-size:18px;
+    -fx-background-color:transparent;
+}
+
+#returnButton:hover .font-icon {
+    -fx-fill: #ff66ff;
+}
+
+#icon{
+  -fx-fill: red;
+}
+
+#VBoxCustom{
+  -fx-spacing: 10;
+}
+#LINE{
+  -fx-stroke: #E464C0;            /* Màu của nét đứt */
+      -fx-stroke-width: 1;          /* Độ dày của nét */
+      -fx-stroke-dash-array: 3 3;   /* Tạo nét đứt, 5px đường nét - 5px khoảng trống */
+}
+#smallPane{
+    -fx-border-width: 1px;
+    -fx-border-color: #E464C0;
+    -fx-border-radius: 15px;
+    -fx-background-radius: 15px;
+    -fx-background-color: #f4cfea;
+    -fx-font-size: 15px;
+}
+
+.date-picker {
+  -fx-background-color: #fef7e7; /* Màu nền */
+      -fx-border-color: #d7bacf; /* Màu viền */
+      -fx-border-width: 0 0 0 0;
+      -fx-border-style: dashed;
+      /* Tạo phần lồi ra bằng cách giả lập hai đoạn vuông góc ở trên và dưới */
+      -fx-background-insets: 0;
+      -fx-font-size: 14px;
+}
+.date-picker .arrow-button {
+    -fx-background-color: transparent; /* Nền trong suốt */
+    -fx-background-radius: 0; /* Loại bỏ bo góc nếu cần */
+    -fx-border-color: transparent; /* Loại bỏ viền */
+}
+.date-picker .arrow-button:hover {
+    -fx-cursor: hand;
+}
+.date-picker .text-field {
+    -fx-background-color: #fef7e7; /* Đặt màu nền tùy ý */
+    -fx-background-insets: 0; /* Đảm bảo màu nền không bị ảnh hưởng bởi insets */
+}
+#titleLabel{
+  -fx-font-size:22px;
+}
+#pageLabel{
+  -fx-font-size: 21px;
+}
+#CreateButton1{
+    -fx-background-color: #4a5366; /* Màu nền */
+    -fx-border-color: #E464C0; /* Màu viền */
+    -fx-border-width: 1px;
+    -fx-text-fill: #f0f3f7;
+      -fx-background-insets: 0;
+      -fx-font-size: 17px; /* Thay đổi kích thước chữ cho ComboBox */
+      -fx-border-radius: 20;
+      -fx-background-radius: 20;
+      -fx-transition: all 0.2s ease-in-out;
+      -fx-scale-x: 1;
+          -fx-scale-y: 1;
+}
+
+#CreateButton1:hover{
+  -fx-background-color: #697387; /* Thay đổi màu nền khi hover */
+
+
+}
+#CreateButton1:pressed{
+  -fx-background-color: #e6e6da; /* Thay đổi màu nền khi hover */
+
+  -fx-text-fill: #aba073;
+}
+#smallPane1{
+  -fx-border-width: 1px;
+      -fx-border-color: #E464C0;
+      -fx-border-radius: 15px;
+      -fx-background-radius: 15px;
+      -fx-background-color: #fef7e7;
+      -fx-font-size: 15px;
+}
+#YellowPane{
+  -fx-background-color: rgba(231, 224, 142,0.3);
+  -fx-background-radius:20;
+  -fx-border-radius:20;
+
+}
+#dueDate{
+  -fx-font-size: 15px;
+}
+
+.table-view .scroll-bar:vertical,
+.table-view .scroll-bar:horizontal {
+    -fx-opacity: 0; /* Ẩn thanh cuộn */
+    -fx-padding: 0; /* Loại bỏ khoảng trống của thanh cuộn */
+    -fx-max-width: 0; /* Loại bỏ chiều rộng thanh cuộn ngang */
+    -fx-max-height: 0; /* Loại bỏ chiều cao thanh cuộn dọc */
+}
+
+#whitePane{
+  -fx-background-color: transparent;
+}

@@ -18,6 +18,9 @@ public class Translate {
    * @return translation of text
    */
   public static String translate(String text, Language srcLanguage, Language dstLanguage) {
+    if(!Network.isConnected()){
+      return text;
+    }
     try {
       String link = "https://clients5.google.com/translate_a/t?client=dict-chrome-ex&sl="
           + srcLanguage.getCode()
@@ -49,7 +52,7 @@ public class Translate {
     return text;
   }
 
-  public static void main(String[] args) {
-    System.out.println(translate("speak", Language.ENGLISH, Language.VIETNAMESE));
-  }
+//  public static void main(String[] args) {
+//    System.out.println(translate("speak", Language.ENGLISH, Language.VIETNAMESE));
+//  }
 }
