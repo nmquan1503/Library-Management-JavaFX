@@ -123,7 +123,6 @@ public abstract class Person {
   public static void deleteFromDb(int id) {
   }
 
-  ;
 
   protected static byte[] convertImageToBytes(Image fxImage) {
     if (fxImage == null) {

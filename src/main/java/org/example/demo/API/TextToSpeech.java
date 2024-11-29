@@ -81,71 +81,73 @@ public class TextToSpeech {
   private ArrayList<AdvancedPlayer> listVoices;
   private Thread threadSpeakPassage;
 
-  public void SpeakPassage(String passage, Language language){
+  public void SpeakPassage(String passage, Language language) {
     stopSpeak();
-    if (listVoices!=null){
-      while (!listVoices.isEmpty()){
+    if (listVoices != null) {
+      while (!listVoices.isEmpty()) {
         listVoices.getFirst().close();
         listVoices.removeFirst();
       }
     }
-    threadSpeakPassage = new Thread(()->{
-      boolean startSpeak=false;
-      listVoices=new ArrayList<>();
+    threadSpeakPassage = new Thread(() -> {
+      boolean startSpeak = false;
+      listVoices = new ArrayList<>();
 
-      String[] ps= passage.split("\n");
+      String[] ps = passage.split("\n");
 
-      ArrayList<String> texts=new ArrayList<>();
-      for(String s: ps){
-        if(threadSpeakPassage.isInterrupted()){
-          if (listVoices!=null){
-            while (!listVoices.isEmpty()){
+      ArrayList<String> texts = new ArrayList<>();
+      for (String s : ps) {
+        if (threadSpeakPassage.isInterrupted()) {
+          if (listVoices != null) {
+            while (!listVoices.isEmpty()) {
               listVoices.getFirst().close();
               listVoices.removeFirst();
             }
           }
           return;
         }
-        for(String tmp: s.split(" ")){
-          if(threadSpeakPassage.isInterrupted()){
-            if (listVoices!=null){
-              while (!listVoices.isEmpty()){
+        for (String tmp : s.split(" ")) {
+          if (threadSpeakPassage.isInterrupted()) {
+            if (listVoices != null) {
+              while (!listVoices.isEmpty()) {
                 listVoices.getFirst().close();
                 listVoices.removeFirst();
               }
             }
             return;
           }
-          if(texts.isEmpty())texts.add(tmp);
-          else if(texts.getLast().length()+tmp.length() < 198){
-            texts.set(texts.size()-1,texts.getLast()+" "+tmp);
+          if (texts.isEmpty()) {
+            texts.add(tmp);
+          } else if (texts.getLast().length() + tmp.length() < 198) {
+            texts.set(texts.size() - 1, texts.getLast() + " " + tmp);
+          } else {
+            texts.add(tmp);
           }
-          else texts.add(tmp);
         }
-        texts.set(texts.size()-1,texts.getLast()+"\n");
+        texts.set(texts.size() - 1, texts.getLast() + "\n");
       }
 
-      AdvancedPlayer firstPlayer =createPlayer(texts.getFirst(),language);
-      if(threadSpeakPassage.isInterrupted()){
-        if (listVoices!=null){
-          while (!listVoices.isEmpty()){
+      AdvancedPlayer firstPlayer = createPlayer(texts.getFirst(), language);
+      if (threadSpeakPassage.isInterrupted()) {
+        if (listVoices != null) {
+          while (!listVoices.isEmpty()) {
             listVoices.getFirst().close();
             listVoices.removeFirst();
           }
         }
         return;
       }
-      while (!listVoices.isEmpty()){
+      while (!listVoices.isEmpty()) {
         listVoices.getFirst().close();
         listVoices.removeFirst();
       }
       listVoices.add(firstPlayer);
-      Thread miniThread = new Thread(()->{
-        for(int i=1;i<texts.size();i++){
-          AdvancedPlayer newPlayer=createPlayer(texts.get(i),language);
-          if(threadSpeakPassage.isInterrupted()){
-            if (listVoices!=null){
-              while (!listVoices.isEmpty()){
+      Thread miniThread = new Thread(() -> {
+        for (int i = 1; i < texts.size(); i++) {
+          AdvancedPlayer newPlayer = createPlayer(texts.get(i), language);
+          if (threadSpeakPassage.isInterrupted()) {
+            if (listVoices != null) {
+              while (!listVoices.isEmpty()) {
                 listVoices.getFirst().close();
                 listVoices.removeFirst();
               }
@@ -158,10 +160,10 @@ public class TextToSpeech {
       miniThread.setDaemon(true);
       miniThread.start();
 
-      while (!listVoices.isEmpty()){
-        if(threadSpeakPassage.isInterrupted()){
-          if (listVoices!=null){
-            while (!listVoices.isEmpty()){
+      while (!listVoices.isEmpty()) {
+        if (threadSpeakPassage.isInterrupted()) {
+          if (listVoices != null) {
+            while (!listVoices.isEmpty()) {
               listVoices.getFirst().close();
               listVoices.removeFirst();
             }
@@ -172,8 +174,7 @@ public class TextToSpeech {
           listVoices.getFirst().play();
           listVoices.getFirst().close();
           listVoices.removeFirst();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
           System.out.println(e.toString());
         }
       }
@@ -182,7 +183,7 @@ public class TextToSpeech {
     threadSpeakPassage.start();
   }
 
-  public AdvancedPlayer createPlayer(String text,Language language){
+  public AdvancedPlayer createPlayer(String text, Language language) {
     try {
       String encodeText = URLEncoder.encode(text, "UTF-8");
 
@@ -200,21 +201,20 @@ public class TextToSpeech {
         InputStream inputStream = new BufferedInputStream(conn.getInputStream());
         return new AdvancedPlayer(inputStream);
       }
-    }
-    catch (Exception e){
+    } catch (Exception e) {
       System.out.println(e.toString());
     }
     return null;
   }
 
-  public void stopSpeak(){
-    if(listVoices!=null) {
+  public void stopSpeak() {
+    if (listVoices != null) {
       while (!listVoices.isEmpty()) {
         listVoices.getFirst().close();
         listVoices.removeFirst();
       }
     }
-    if(threadSpeakPassage!=null) {
+    if (threadSpeakPassage != null) {
       if (threadSpeakPassage.isAlive()) {
         threadSpeakPassage.interrupt();
       }
