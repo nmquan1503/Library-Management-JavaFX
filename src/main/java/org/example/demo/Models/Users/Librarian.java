@@ -16,11 +16,17 @@ public class Librarian extends Person {
   private String username_account;
   private String password_account;
 
+  /**
+   * oke.
+   */
   public Librarian() {
     super();
     notificationsList = new ArrayList<>();
   }
 
+  /**
+   * oke.
+   */
   public Librarian(ArrayList<Notification> notificationsList, String username_account,
       String password_account) {
     this.notificationsList = notificationsList;
@@ -28,6 +34,9 @@ public class Librarian extends Person {
     this.password_account = password_account;
   }
 
+  /**
+   * oke.
+   */
   public Librarian(String name, Date birthday, String address, String email, String phoneNumber,
       Image avatar, ArrayList<Notification> notificationsList, String username_account,
       String password_account) {
@@ -37,10 +46,16 @@ public class Librarian extends Person {
     this.password_account = password_account;
   }
 
+  /**
+   * oke.
+   */
   public Librarian(ArrayList<Notification> notificationsList) {
     this.notificationsList = notificationsList;
   }
 
+  /**
+   * oke.
+   */
   public Librarian(String name, Date birthday, String address, String email,
       String phoneNumber, Image avatar,
       ArrayList<Notification> notificationsList) {
@@ -48,6 +63,9 @@ public class Librarian extends Person {
     this.notificationsList = notificationsList;
   }
 
+  /**
+   * oke.
+   */
   public Librarian(String name, Date birthday, String address, String email, String phoneNumber,
       Image avatar, String username_account, String password_account) {
     super(name, birthday, address, email, phoneNumber, avatar);
@@ -55,36 +73,60 @@ public class Librarian extends Person {
     this.password_account = password_account;
   }
 
+  /**
+   * oke.
+   */
   public Librarian(String username_account, String password_account) {
     this.username_account = username_account;
     this.password_account = password_account;
   }
 
+  /**
+   * oke.
+   */
   public ArrayList<Notification> getNotificationsList() {
     return notificationsList;
   }
 
+  /**
+   * oke.
+   */
   public void setNotificationsList(
       ArrayList<Notification> notificationsList) {
     this.notificationsList = notificationsList;
   }
 
+  /**
+   * oke.
+   */
   public String getPassword_account() {
     return password_account;
   }
 
+  /**
+   * oke.
+   */
   public void setPassword_account(String password_account) {
     this.password_account = password_account;
   }
 
+  /**
+   * oke.
+   */
   public String getUsername_account() {
     return username_account;
   }
 
+  /**
+   * oke.
+   */
   public void setUsername_account(String username_account) {
     this.username_account = username_account;
   }
 
+  /**
+   * oke.
+   */
   public static void deleteFromDb(int id) {
     Connection conn = null;
     PreparedStatement pstmt = null;
@@ -107,6 +149,9 @@ public class Librarian extends Person {
     }
   }
 
+  /**
+   * oke.
+   */
   @Override
   public int SaveInfo() {
     // if phone number has already existed: return -1

@@ -297,7 +297,7 @@ public class EditUserView extends ScrollPane implements MainInfo {
    */
   private void initDefaultImage() {
     imageUser.setImage(new Image(Objects.requireNonNull(
-        getClass().getResourceAsStream("/org/example/demo/Assets/default_avatar.jpg"))));
+        getClass().getResourceAsStream("/org/example/demo/Assets/default_avt_user.jpg"))));
     if (BaseController.isDark) {
       wrapper.setBlendMode(BlendMode.DIFFERENCE);
       wrapper.setId("wrapper_dark");
