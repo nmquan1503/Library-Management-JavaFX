@@ -25,6 +25,9 @@ public class App extends Application {
 
   public static Scene accountEditScene;
 
+  /**
+   * start program.
+   */
   @Override
   public void start(Stage stage) throws Exception {
     Class.forName("org.example.demo.API.Network");
@@ -92,6 +95,9 @@ public class App extends Application {
     });
   }
 
+  /**
+   * main function
+   */
   public static void main(String[] args) {
     launch(args);
   }
