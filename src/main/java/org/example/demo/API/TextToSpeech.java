@@ -15,9 +15,6 @@ public class TextToSpeech {
   private AdvancedPlayer player;
   private Thread playThread; // Thread to control playback
 
-  /**
-   * oke.
-   */
   public void speak(String text, Language lang) {
     try {
       if (playThread != null && playThread.isAlive()) {
@@ -68,9 +65,6 @@ public class TextToSpeech {
     }
   }
 
-  /**
-   * oke.
-   */
   public void stop() {
     if (player != null) {
       player.close();
@@ -87,9 +81,6 @@ public class TextToSpeech {
   private ArrayList<AdvancedPlayer> listVoices;
   private Thread threadSpeakPassage;
 
-  /**
-   * oke.
-   */
   public void SpeakPassage(String passage, Language language) {
     stopSpeak();
     if (listVoices != null) {
@@ -192,9 +183,6 @@ public class TextToSpeech {
     threadSpeakPassage.start();
   }
 
-  /**
-   * oke.
-   */
   public AdvancedPlayer createPlayer(String text, Language language) {
     try {
       String encodeText = URLEncoder.encode(text, "UTF-8");
@@ -219,9 +207,6 @@ public class TextToSpeech {
     return null;
   }
 
-  /**
-   * oke.
-   */
   public void stopSpeak() {
     if (listVoices != null) {
       while (!listVoices.isEmpty()) {

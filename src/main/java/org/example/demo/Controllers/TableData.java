@@ -1,47 +1,48 @@
 package org.example.demo.Controllers;
 
 public class TableData {
-    private String action;
-    private String user;
-    private String book;
-    private String date;
 
-    public TableData(String action, String user, String book, String date) {
-        this.action = action;
-        this.user = user;
-        this.book = book;
-        this.date = date;
-    }
+  private String action;
+  private String user;
+  private String book;
+  private String date;
 
-    public String getAction() {
-        return action;
-    }
+  public TableData(String action, String user, String book, String date) {
+    this.action = action;
+    this.user = user;
+    this.book = book;
+    this.date = date;
+  }
 
-    public void setAction(String action) {
-        this.action = action;
-    }
+  public String getAction() {
+    return action;
+  }
 
-    public String getUser() {
-        return user;
-    }
+  public void setAction(String action) {
+    this.action = action;
+  }
 
-    public void setUser(String user) {
-        this.user = user;
-    }
+  public String getUser() {
+    return user;
+  }
 
-    public String getBook() {
-        return book;
-    }
+  public void setUser(String user) {
+    this.user = user;
+  }
 
-    public void setBook(String book) {
-        this.book = book;
-    }
+  public String getBook() {
+    return book;
+  }
 
-    public String getDate() {
-        return date;
-    }
+  public void setBook(String book) {
+    this.book = book;
+  }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
+  public String getDate() {
+    return date;
+  }
+
+  public void setDate(String date) {
+    this.date = date;
+  }
 }

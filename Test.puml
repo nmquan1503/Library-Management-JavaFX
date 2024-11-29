@@ -1,0 +1,1491 @@
+@startuml
+
+class JDBC {
+  + static Connection getConnection()
+  + static void closeConnection(Connection connection)
+}
+
+interface MainInfo {
+  + void applyDarkMode(boolean isDark)
+  + void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang, boolean isTranslate)
+  + void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang)
+}
+
+class TrieNode {
+  - ArrayList<Integer> listID
+  - HashMap<Character, TrieNode> children
+  + TrieNode()
+  + TrieNode(ArrayList<Integer> listID)
+  + TrieNode(ArrayList<Integer> listID, HashMap<Character, TrieNode> children)
+  + ArrayList<Integer> getListID()
+  + HashMap<Character, TrieNode> getChildren()
+  + void setListID(ArrayList<Integer> listID)
+  + void setChildren(HashMap<Character, TrieNode> children)
+  + void addChildren(Character x, TrieNode y)
+  + void addList(Integer id)
+  + void deleteList(Integer id)
+}
+
+class Trie {
+  - TrieNode root
+  + Trie()
+  + Trie(TrieNode root)
+  + TrieNode getRoot()
+  + void insertNode(String name, int id)
+  + void deleteNode(String name, int id)
+  + void dfs(TrieNode root1, ArrayList<Integer> res)
+  + ArrayList<Integer> getListIdStartWith(String prefix)
+  + void printNode(TrieNode root, String s)
+  + ArrayList<String> getAllNameStartWith(String prefix)
+  + void addNameToList(TrieNode trieNode, ArrayList<String> list, String name)
+}
+
+class Date extends java.sql.Date {
+  + Date(int year, int month, int day)
+  + Date(java.sql.Date date)
+  + Date add(int days)
+  + int getYear()
+  + int getMonth()
+  + int getDay()
+  + String toString()
+  + boolean isAfter(Date date)
+  + boolean isEqual(Date date)
+  + boolean isBefore(Date date)
+  + LocalDate toLocalDate()
+  + static Date today()
+  + long datediff(Date other)
+}
+
+abstract class Person {
+  # int id
+  # String name
+  # Date birthday
+  # String address
+  # String email
+  # String phoneNumber
+  # Image avatar
+  + Person()
+  + Person(String name, Date birthday, String address, String email, String phoneNumber)
+  + Person(String name, Date birthday, String address, String email, String phoneNumber, Image avatar)
+  + Person(int id, String name, Date birthday, String address, String email, Image avatar, String phoneNumber)
+  + int getId()
+  + void setId(int id)
+  + String getName()
+  + void setName(String name)
+  + Date getBirthday()
+  + void setBirthday(Date birthday)
+  + String getAddress()
+  + void setAddress(String address)
+  + String getEmail()
+  + void setEmail(String email)
+  + String getPhoneNumber()
+  + void setPhoneNumber(String phoneNumber)
+  + Image getAvatar()
+  + void setAvatar(Image avatar)
+  + abstract int SaveInfo()
+  + static void deleteFromDb(int id)
+  + static byte[] convertImageToBytes(Image fxImage)
+  + static byte[] downloadImageFromURL(String urlString) throws Exception
+  + static void retrieveImageFromDB(String outputImagePath) throws SQLException, IOException
+  + static int getAddressId(String address)
+  + static boolean isPhoneExist(String phone)
+}
+
+class User extends Person {
+  - Date banEndTime
+  + User(String name, Date birthday, String address, String email, String phoneNumber, Date banEndTime)
+  + User(String name, Date birthday, String address, String email, String phoneNumber, Image avatar, Date banEndTime)
+  + User(int id, String name, java.sql.Date birthday, String address, String email, Image avatar, String phoneNumber, Date banEndTime)
+  + Date getBanEndTime()
+  + void setBanEndTime(Date banEndTime)
+  + boolean isBan()
+  + static void deleteFromDb(int id)
+  + int SaveInfo()
+  + void removeInfo()
+}
+
+class Librarian extends Person {
+  - ArrayList<Notification> notificationsList
+  - String username_account
+  - String password_account
+  + Librarian()
+  + Librarian(ArrayList<Notification> notificationsList, String username_account, String password_account)
+  + Librarian(String name, Date birthday, String address, String email, String phoneNumber, Image avatar, ArrayList<Notification> notificationsList, String username_account, String password_account)
+  + Librarian(ArrayList<Notification> notificationsList)
+  + Librarian(String name, Date birthday, String address, String email, String phoneNumber, Image avatar, ArrayList<Notification> notificationsList)
+  + Librarian(String name, Date birthday, String address, String email, String phoneNumber, Image avatar, String username_account, String password_account)
+  + Librarian(String username_account, String password_account)
+  + ArrayList<Notification> getNotificationsList()
+  + void setNotificationsList(ArrayList<Notification> notificationsList)
+  + String getPassword_account()
+  + void setPassword_account(String password_account)
+  + String getUsername_account()
+  + void setUsername_account(String username_account)
+  + static void deleteFromDb(int id)
+  + int SaveInfo()
+}
+
+class UserList {
+  - Trie users
+  + UserList()
+  + User getUser(int id)
+  + Image createImageFromBlob(InputStream inputStream)
+  + int insertUser(User user)
+  + void deleteUser(User user)
+  + ArrayList<User> getListUser(String prefixName)
+  + int insertUserWithID(User user, int idUser)
+  + static void main(String[] args)
+}
+
+class Book {
+  - int idBook
+  - String title
+  - ArrayList<String> authors
+  - String publisher
+  - int publishedDate
+  - String description
+  - int pageCount
+  - ArrayList<String> categories
+  - double averageRating
+  - int ratingsCount
+  - String imageLink
+  - int quantity
+  + Book(int idBook, String title, ArrayList<String> authors, String publisher, int publishedDate, String description, int pageCount, ArrayList<String> categories, int ratingsCount, double averageRating, String imageLink, int quantity)
+  + Book()
+  + int getId()
+  + void setId(int id)
+  + String getTitle()
+  + void setTitle(String title)
+  + ArrayList<String> getAuthors()
+  + void setAuthors(ArrayList<String> authors)
+  + int getPublishedDate()
+  + void setPublishedDate(int publishedDate)
+  + String getPublisher()
+  + void setPublisher(String publisher)
+  + String getDescription()
+  + void setDescription(String description)
+  + int getPageCount()
+  + void setPageCount(int pageCount)
+  + ArrayList<String> getCategories()
+  + void setCategories(ArrayList<String> categories)
+  + double getAverageRating()
+  + void setAverageRating(double averageRating)
+  + int getRatingsCount()
+  + void setRatingsCount(int ratingsCount)
+  + String getImageLink()
+  + void setImageLink(String imageLink)
+  + int getQuantity()
+  + void setQuantity(int quantity)
+  + int SaveInfo()
+  + void removeInfo()
+}
+
+class BookShelf {
+  - Trie books
+  + BookShelf()
+  + Book getBook(int id)
+  + int insertBook(Book book)
+  + int insertBookWithID(Book book, int idBook)
+  + void deleteBook(Book book)
+  + ArrayList<Book> getListBook(String prefix)
+  + ArrayList<Book> getTop3Book()
+}
+
+UserList --> User : manages
+BookShelf --> Book : contains
+TrieNode --> TrieNode : contains children
+Trie --> TrieNode : root node
+
+class Borrowing {
+  - int idBorrowing
+  - int idBook
+  - int idUser
+  - Date borrowedDate
+  - Date dueDate
+  - Date returnedDate
+  + Borrowing(int idBorrowing, int idBook, int idUser, Date borrowedDate, Date dueDate, Date returnedDate)
+  + int getIdBorrowing()
+  + void setIdBorrowing(int idBorrowing)
+  + int getIdBook()
+  + void setIdBook(int idBook)
+  + int getIdUser()
+  + void setIdUser(int idUser)
+  + Date getBorrowedDate()
+  + void setBorrowedDate(Date borrowedDate)
+  + Date getDueDate()
+  + void setDueDate(Date dueDate)
+  + Date getReturnedDate()
+  + void setReturnedDate(Date returnedDate)
+}
+
+class BorrowHistory {
+  + BorrowHistory()
+  + ArrayList<Borrowing> getAllHistory()
+  + ArrayList<Borrowing> getAllReturning()
+  + ArrayList<Borrowing> getAllBorrowing()
+  + int addBorrowing(Borrowing borrowing)
+  + void updateReturnedDateOfBorrowing(int idBorrowing, Date returnedDate)
+  + void updateDueDateOfBorrowing(int idBorrowing, Date dueDate)
+  + Borrowing getBorrowing(int idBorrowing)
+  + ArrayList<Borrowing> getListBorrowingFromBook(int idBook)
+  + ArrayList<Borrowing> getListBorrowingFromUser(int idUser)
+  + ArrayList<Borrowing> getListBorrowingFromUserName(String prefixName)
+  + ArrayList<Borrowing> getListBorrowingFromBookName(String prefixName)
+  + ArrayList<Borrowing> getListBorrowingNearingDeadline()
+}
+
+class Suggestion {
+  - int id
+  - Image icon
+  - String content
+  + Suggestion(Book book)
+  + Suggestion(User user)
+  + int getId()
+  + void setId(int id)
+  + Image getIcon()
+  + void setIcon(Image icon)
+  + String getContent()
+  + void setContent(String content)
+}
+
+enum Language {
+  - final String code
+  - final String name
+  + Language(String code, String name)
+  + String getCode()
+  + static String getCode(String name)
+  + String getName()
+  + static String getName(String code)
+  + static Language getLanguage(String code_or_name)
+}
+
+class Library {
+  - static Library instance
+  - BookShelf bookShelf
+  - UserList userList
+  - BorrowHistory borrowHistory
+  + Library()
+  + static Library getInstance()
+  + int borrowBook(Book book, User user, Date borrowedDate)
+  + int borrowBook(Book book, User user, Date borrowedDate, Date dueDate)
+  + void returnBook(int id_borrowing, Date returnDate)
+  + void updateDueDate(int id, Date date)
+  + ArrayList<Borrowing> getListBorrowingFromBookName(String s)
+  + ArrayList<Suggestion> getBookSuggestions(String prefix)
+  + ArrayList<Suggestion> getUserSuggestions(String prefix)
+  + ArrayList<Suggestion> getBannedUserSuggestions(String prefix)
+  + Book getBook(int idBook)
+  + User getUser(int idUser)
+  + ArrayList<Borrowing> getAllHistory()
+  + ArrayList<Borrowing> getAllReturning()
+  + ArrayList<Borrowing> getAllBorrowing()
+  + ArrayList<Borrowing> getListBorrowingFromBook(int idBook)
+  + ArrayList<Borrowing> getListBorrowingFromUser(int idUser)
+  + ArrayList<Borrowing> getListBorrowingFromUserName(String prefixName)
+  + Borrowing getBorrowing(int idBorrowing)
+  + int insertUser(User user)
+  + int insertBook(Book book)
+  + void deleteBook(Book book)
+  + void deleteUser(User user)
+  + int insertBookWithID(Book book, int idBook)
+  + int insertUserWithID(User user, int idUser)
+  + ArrayList<Book> getTop3Book()
+  + ArrayList<Borrowing> getListBorrowingNearingDeadline()
+  + static void main(String[] args)
+}
+
+class Network {
+  - static boolean connection = false
+  - static Timer timer
+  + Network()
+  + static void close()
+  + static boolean isConnected()
+  + static boolean checkConnection()
+}
+
+class TextToSpeech {
+  - ArrayList<AdvancedPlayer> listVoices
+  - Thread threadSpeakPassage
+  + void SpeakPassage(String passage, Language language)
+  + AdvancedPlayer createPlayer(String text, Language language)
+  + void stopSpeak()
+}
+
+class Translate {
+  + static String translate(String text, Language srcLanguage, Language dstLanguage)
+}
+
+class GoogleBook {
+  + static ArrayList<Book> getBooks(String prefix)
+  + static Book createBookFromJson(JsonNode jsonNode)
+}
+
+BorrowHistory --> Borrowing : manages
+Borrowing --> Book : references
+Borrowing --> User : references
+Library --> BookShelf : uses
+Library --> UserList : uses
+Library --> BorrowHistory : uses
+Library --> Borrowing : manages
+Library --> Suggestion : provides
+Library --> Book : accesses
+Library --> User : accesses
+TextToSpeech --> Language : uses
+Translate --> Language : uses
+GoogleBook --> Book : creates
+
+abstract class ProgressCircleIndicator extends Control {
+  - static final int INDETERMINATE_PROGRESS = -1
+  - ReadOnlyIntegerWrapper progress = new ReadOnlyIntegerWrapper(0)
+  - ReadOnlyBooleanWrapper indeterminate = new ReadOnlyBooleanWrapper(false)
+  + ProgressCircleIndicator()
+  + int getProgress()
+  + void setProgress(int progressValue)
+  + ReadOnlyIntegerProperty progressProperty()
+  + boolean isIndeterminate()
+  + void makeIndeterminate()
+  + ReadOnlyBooleanProperty indeterminateProperty()
+  - int defaultToHundred(int value)
+  + void setInnerCircleRadius(int value)
+  + DoubleProperty innerCircleRadiusProperty()
+  + double getInnerCircleRadius()
+  - DoubleProperty innerCircleRadius = new StyleableDoubleProperty(60)
+  + static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData()
+  + List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData()
+}
+
+class RingProgressIndicator extends ProgressCircleIndicator {
+  + RingProgressIndicator()
+  + Skin<?> createDefaultSkin()
+  + void setRingWidth(int value)
+  + DoubleProperty ringWidthProperty()
+  + double getRingWidth()
+  - DoubleProperty ringWidth = new StyleableDoubleProperty(22)
+  + List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData()
+}
+
+class RingProgressIndicatorSkin implements Skin<RingProgressIndicator> {
+  - final RingProgressIndicator indicator
+  - final Label percentLabel = new Label()
+  - final Circle innerCircle = new Circle()
+  - final Circle outerCircle = new Circle()
+  - final StackPane container = new StackPane()
+  - final Arc fillerArc = new Arc()
+  - final RotateTransition transition = new RotateTransition(Duration.millis(2000), fillerArc)
+  + RingProgressIndicatorSkin(final RingProgressIndicator indicator)
+  - void setProgressLabel(int value)
+  - void initTransition()
+  - void initFillerArc()
+  - void initContainer(final RingProgressIndicator indicator)
+  - void updateRadii()
+  - void initLabel(int value)
+  - void initIndeterminate(boolean newVal)
+  + RingProgressIndicator getSkinnable()
+  + Node getNode()
+  + void dispose()
+}
+
+class SuggestionView extends HBox implements MainInfo {
+  - final int id
+  - StackPane wrapper
+  - ImageView image
+  - Label content
+  + SuggestionView(Suggestion suggestion, int height, int width)
+  - void initImage(Suggestion suggestion, int height, int width)
+  - void initContent(Suggestion suggestion, int height, int width)
+  + int getID()
+  + String getContent()
+  + void applyDarkMode(boolean isDark)
+  + void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang, boolean isTranslate)
+  + void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang)
+}
+
+class EditBox extends HBox implements MainInfo {
+  enum TypeBox { }
+  - final Suggestion suggestion
+  - StackPane wrapper
+  - ImageView image
+  - VBox content
+  - JFXButton removeButton
+  - EditController editController
+  + EditBox(Suggestion suggestion, TypeBox typeBox, EditController editController, int height, int width)
+  - void initImage(Suggestion suggestion, int height)
+  - void initLabel(Suggestion suggestion, int height, int width)
+  - void initRemoveButton(int height, TypeBox typeBox)
+  + int getID()
+  + void applyDarkMode(boolean isDark)
+  + void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang, boolean isTranslate)
+  + void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang)
+}
+
+class ConfirmBox extends HBox implements MainInfo {
+  - Label topicLabel
+  - Label contentLabel
+  - JFXButton yesButton
+  - JFXButton noButton
+  - HashMap<Object, String> enLang
+  - HashMap<Object, String> viLang
+  + ConfirmBox(String topic, String content, Runnable yes, Runnable no)
+  - void initTopicLabel(String topic)
+  - void initContentLabel(String content)
+  - void initButton(Runnable yes, Runnable no)
+  + void applyDarkMode(boolean isDark)
+  + void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang, boolean isTranslate)
+  + void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang)
+}
+
+class TableData {
+  - String action
+  - String user
+  - String book
+  - String date
+  + TableData(String action, String user, String book, String date)
+  + String getAction()
+  + void setAction(String action)
+  + String getUser()
+  + void setUser(String user)
+  + String getBook()
+  + void setBook(String book)
+  + String getDate()
+  + void setDate(String date)
+}
+
+class NotificationView extends HBox implements MainInfo {
+  - boolean isSeen
+  - ImageView image
+  - Label content
+  - final Borrowing borrowing
+  + NotificationView(Borrowing borrowing, int width, int height)
+  + Borrowing getBorrowing()
+  + ImageView getImage()
+  + void markSeen()
+  + boolean isSeen()
+  - void initImage(User user, int height, int width)
+  - void initContent(User user, Book book, Date dueDate, int height, int width)
+  + void applyDarkMode(boolean isDark)
+  + void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang, boolean isTranslate)
+  + void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang)
+}
+
+class Warning extends VBox implements MainInfo {
+  - HashMap<Object, String> enLang
+  - HashMap<Object, String> viLang
+  - Label topicLabel
+  - Label contentLabel
+  - Transition transition
+  + Warning(String topic, String content)
+  - void playTransition()
+  - void removeWarning()
+  + void applyDarkMode(boolean isDark)
+  + void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang, boolean isTranslate)
+  + void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang)
+}
+
+class returnTableData {
+  - String borrowedDate
+  - String user
+  - String book
+  - String dueDate
+  - int idUser
+  - int idBook
+  - LocalDate due
+  - int idBorrowing
+  + returnTableData(String user, String book, String borrowedDate, String dueDate)
+  + int getIdUser()
+  + LocalDate getDue()
+  + void setDue(LocalDate due)
+  + void setIdUser(int idUser)
+  + int getIdBook()
+  + void setIdBook(int idBook)
+  + String getBorrowedDate()
+  + void setBorrowedDate(String borrowedDate)
+  + String getUser()
+  + void setUser(String user)
+  + String getBook()
+  + void setBook(String book)
+  + String getDueDate()
+  + void setDueDate(String dueDate)
+  + int getIdBorrowing()
+  + void setIdBorrowing(int idBorrowing)
+}
+
+RingProgressIndicatorSkin --> RingProgressIndicator : uses
+RingProgressIndicatorSkin --> Label : contains
+RingProgressIndicatorSkin --> Circle : contains
+RingProgressIndicatorSkin --> StackPane : contains
+RingProgressIndicatorSkin --> Arc : contains
+RingProgressIndicatorSkin --> RotateTransition : uses
+SuggestionView --> Suggestion : contains
+EditBox --> Suggestion : contains
+EditBox --> EditController : uses
+NotificationView --> Borrowing : references
+NotificationView --> User : uses
+NotificationView --> Book : uses
+Warning --> Transition : uses
+returnTableData --> Book : references
+returnTableData --> User : references
+returnTableData --> Borrowing : references
+
+class BookView extends ScrollPane implements MainInfo {
+  - VBox wrapper
+  - ImageView imageBook
+  - Label titleLabel
+  - VBox authorList
+  - VBox infoBox
+  - HBox publisherBox
+  - Label publisherTag
+  - Label publisherLabel
+  - HBox publishedDateBox
+  - Label publishedDateTag
+  - Label publishedDateLabel
+  - HBox descriptionBox
+  - Label descriptionTag
+  - Label descriptionLabel
+  - HBox categoryBox
+  - Label categoryTag
+  - VBox categoryList
+  - HBox pageCountBox
+  - Label pageCountTag
+  - Label pageCountLabel
+  - HBox ratingCountBox
+  - Label ratingCountTag
+  - Label ratingCountLabel
+  - HBox averageRatingBox
+  - Label averageRatingLabel
+  - HBox starList
+  - ImageView star1
+  - ImageView star2
+  - ImageView star3
+  - ImageView star4
+  - ImageView star5
+  - HBox quantityBox
+  - Label quantityTag
+  - Label quantityLabel
+  - AnchorPane viewPane
+  - Pane loadingPane
+  - Transition loadingTransition
+  - HashMap<Object, String> viLang
+  - HashMap<Object, String> enLang
+  - TextToSpeech tts
+  + BookView()
+  + setBook(Book book)
+  - setImageBook(Book book)
+  - setTitle(Book book)
+  - setAuthorList(Book book)
+  - setPublisher(Book book)
+  - setPublishedDate(Book book)
+  - setDescription(Book book)
+  - setCategory(Book book)
+  - setPageCount(Book book)
+  - setRatingCount(Book book)
+  - setAverageRating(Book book)
+  - setStar(Book book)
+  - setQuantity(Book book)
+  + ExitView()
+  + stopSpeak()
+  - Speak()
+  - initLoadingTransition()
+  + applyDarkMode(boolean isDark)
+  + applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang, boolean isTranslate)
+  + setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang)
+}
+
+class UserView extends ScrollPane implements MainInfo {
+  - AnchorPane viewPane
+  - VBox wrapper
+  - ImageView imageUser
+  - Label nameLabel
+  - Label idLabel
+  - VBox infoBox
+  - HBox birthdayBox
+  - Label birthdayTag
+  - Label birthdayLabel
+  - HBox addressBox
+  - Label addressTag
+  - Label addressLabel
+  - HBox phoneNumberBox
+  - Label phoneNumberTag
+  - Label phoneNumberLabel
+  - HBox emailBox
+  - Label emailTag
+  - Label emailLabel
+  - HBox endBanDateBox
+  - Label endBanDateTag
+  - Label endBanDateLabel
+  - Pane loadingPane
+  - Transition loadingTransition
+  - HashMap<Object, String> viLang
+  - HashMap<Object, String> enLang
+  - TextToSpeech tts
+  + UserView()
+  + setUser(User user)
+  - setImage(User user)
+  - setName(User user)
+  - setID(User user)
+  - setBirthday(User user)
+  - setAddress(User user)
+  - setPhoneNumber(User user)
+  - setEmail(User user)
+  - setEndBanDate(User user)
+  + ExitView()
+  + stopSpeak()
+  - Speak()
+  - initLoadingTransition()
+  + applyDarkMode(boolean isDark)
+  + applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang, boolean isTranslate)
+  + setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang)
+}
+
+class EditBookView extends ScrollPane implements MainInfo {
+  - AnchorPane viewPane
+  - VBox wrapper
+  - ImageView imageBook
+  - TextField titleTextField
+  - Label idLabel
+  - VBox authorList
+  - Label publisherTag
+  - TextField publisherTextField
+  - Label publishedDateTag
+  - TextField publishedDateTextField
+  - Label descriptionTag
+  - TextArea descriptionTextArea
+  - Label categoryTag
+  - VBox categoryList
+  - Label pageCountTag
+  - TextField countPageTextField
+  - Label quantityTag
+  - TextField quantityTextField
+  - JFXButton saveButton
+  - Pane loadingPane
+  - Transition loadingTransition
+  - Book oldBook
+  - HashMap<Object, String> viLang
+  - HashMap<Object, String> enLang
+  - EditController editController
+  + EditBookView(EditController editController)
+  + setBook(Book book)
+  + completeSetup()
+  - initImage(Book book)
+  - initDefaultImage()
+  - initTitle(Book book)
+  - initId(Book book)
+  - initDefaultId()
+  - initAuthors(Book book)
+  - initPublisher(Book book)
+  - initPublishedDate(Book book)
+  - initDescription(Book book)
+  - initCategories(Book book)
+  - initPageCount(Book book)
+  - initQuantity(Book book)
+  - TextField newTextField(VBox list, String promptText)
+  - initView()
+  + ExitView()
+  - SaveBook()
+  - createNewBook()
+  - initLoadingTransition()
+  + applyDarkMode(boolean isDark)
+  + applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang, boolean isTranslate)
+  + setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang)
+}
+
+class EditUserView extends ScrollPane implements MainInfo {
+  - AnchorPane viewPane
+  - VBox wrapper
+  - ImageView imageUser
+  - TextField nameTextField
+  - Label idLabel
+  - Label birthdayTag
+  - TextField birthdayTextField
+  - Label addressTag
+  - JFXComboBox<String> addressComboBox
+  - Label phoneNumberTag
+  - TextField phoneNumberTextField
+  - Label emailTag
+  - TextField emailTextField
+  - Label endBanDateTag
+  - TextField endBanDateTextField
+  - JFXButton saveButton
+  - Pane loadingPane
+  - Transition loadingTransition
+  - User oldUser
+  - HashMap<Object, String> viLang
+  - HashMap<Object, String> enLang
+  - EditController editController
+  + EditUserView(EditController editController)
+  + setUser(User user)
+  + completeSetup()
+  - initEndBanDate(User user)
+  - initEmail(User user)
+  - initPhoneNumber(User user)
+  - setupPhoneNumberTextField()
+  - initAddress(User user)
+  - initDefaultAddress()
+  - initBirthday(User user)
+  - initName(User user)
+  - initId(User user)
+  - initDefaultId()
+  - initImage(User user)
+  - initDefaultImage()
+  - initView()
+  - setupDateTextField(TextField textField)
+  + ExitView()
+  - SaveUser()
+  - createNewUser()
+  - Date createDateFromString(String s)
+  - initLoadingTransition()
+  + applyDarkMode(boolean isDark)
+  + applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang, boolean isTranslate)
+  + setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang)
+}
+
+UserView --> Book : references
+BookView --> User : references
+BookView --> Book : contains
+UserView --> User : contains
+EditBookView --> Book : contains
+EditBookView --> User : references
+EditUserView --> User : contains
+EditUserView --> Book : references
+
+class BaseController {
+  - static final IntegerProperty checkState
+  + static int getBaseState()
+  + static void setBaseState(int val)
+  - static final IntegerProperty libId
+  + static int getLibId()
+  + static void setLibId(int val)
+  - HashMap<Object, String> viLang
+  - HashMap<Object, String> enLang
+  - static boolean isDark
+  - static boolean isTranslate
+  - Circle avatar
+  - AnchorPane bigPane
+  - JFXButton checkMode
+  - ContextMenu avatarMenu
+  - TextField searchBase
+  - Tooltip notiText
+  - Tooltip darkText
+  - Tooltip avtText
+  - static AnchorPane mainPane
+  - static AnchorPane bookPane
+  - static AnchorPane editPane
+  - static AnchorPane userPane
+  - static AnchorPane borrowPane
+  - static AnchorPane returnPane
+  - Button searchBtn
+  - Button deleteSearchBtn
+  - JFXButton bell
+  - HomeController homeController
+  - BooksController booksController
+  - EditController editController
+  - UsersController usersController
+  - BorrowBookController borrowBookController
+  - ReturnBookController returnBookController
+  - String libName
+  - Popup popup
+  - final ArrayList<NotificationView> notificationList
+  - static final IntegerProperty isBorrowingChanged
+  + static void setIsBorrowingChanged(int val)
+  + static int getIsBorrowingChanged()
+  + static AnchorPane getMainPane()
+  + static AnchorPane getBookPane()
+  + static AnchorPane getEditPane()
+  + static AnchorPane getUserPane()
+  + static AnchorPane getBorrowPane()
+  + static AnchorPane getReturnPane()
+  - boolean isTranSetUp
+  - final HashMap<Integer, String> firstRead
+  - static final IntegerProperty dueUpdate
+  + static int getDueUpdate()
+  + static void setDueUpdate(int val)
+  - JFXListView<String> suggestionListView
+  - final List<String> allSuggestions
+  + void initialize()
+  - void loadLibrarianInfo()
+  - void loadDefaultAvatar()
+  + void styleListViewScrollBars(JFXListView<?> listView)
+  + void setupListViewWithStyledScrollBars(JFXListView<?> listView)
+  - void setupAutocomplete()
+  - int getSuggestionIdx(String text)
+  - void performActionStr(String txt)
+  - void performAction(int idx)
+  - class LoadMainTask extends Task<Void>
+  - class LoadBookTask extends Task<Void>
+  - class LoadEditTask extends Task<Void>
+  - class LoadUserTask extends Task<Void>
+  - class LoadBorrowBookTask extends Task<Void>
+  - class LoadReturnBookTask extends Task<Void>
+  - void loadMain()
+  - void loadBook()
+  - void loadEdit()
+  - void loadUser()
+  - void loadBorrow()
+  - void loadReturn()
+  + void darkMode()
+  - void avtMenuSetup()
+  - void handleChangeAccountInfo()
+  - void handleLogout()
+  + void refresh()
+  - void setUpLang()
+  - void handleTranslate()
+  + void avatarClicked()
+  + void moveDashboard()
+  + void moveBooks()
+  + void moveUser()
+  + void moveEdit()
+  + void moveBorrowBook()
+  + void moveReturnBook()
+  - void initNotificationList()
+  - void refreshNotification()
+  - void putValueRead(int idBorrowing, String name)
+  - void setUpFirstRead()
+  - void translateList()
+  - void notificationClick()
+  + protected static void showQRCodeWindow(String email, String subject, String body)
+  + protected static WritableImage generateQRCodeImage(String text, int width, int height)
+}
+
+class AccountSettingController {
+  - static final String EMAIL_REGEX
+  - static final IntegerProperty checkState
+  + static int getAccState()
+  + static void setAccState(int val)
+  - Circle avatarCircle
+  - FontAwesomeIconView cameraIcon
+  - Arc chooseAvtFileBtn
+  - TextField promptName
+  - DatePicker promptBirth
+  - TextField promptPhone
+  - TextField promptEmail
+  - ComboBox<String> promptAddress
+  - PasswordField promptPassword
+  - TextField textField
+  - FontAwesomeIconView eyeIcon
+  - HBox passwordContainer
+  - AnchorPane succeedPane
+  - AnchorPane errorPane
+  - Timeline fadeOutTimeline
+  + void initialize()
+  + void updateAvatar(String path, int id)
+  - void loadDefaultAvatar()
+  - void loadInfo()
+  - void handleChooseAvatarClick(MouseEvent event)
+  + void resetDefaultAvt()
+  - void setCameraHoverEffect()
+  - void onHoverArc(boolean isHovered)
+  - void saveName()
+  - void saveBirthday()
+  - void saveEmail()
+  - void saveAddress()
+  - void eyeSee()
+  - void savePassword()
+  - JFXButton btnName
+  - JFXButton btnBirth
+  - JFXButton btnEmail
+  - JFXButton btnAddr
+  - JFXButton btnPass
+  - JFXButton btnReset
+  - void btnDisable()
+  - void btnEnable()
+  - void succeedNotification()
+  - void errorNotification()
+  - void loadAddress()
+  - void moveToBase()
+}
+
+BaseController --> HomeController : uses
+BaseController --> BooksController : uses
+BaseController --> EditController : uses
+BaseController --> UsersController : uses
+BaseController --> BorrowBookController : uses
+BaseController --> ReturnBookController : uses
+BaseController --> NotificationView : contains
+AccountSettingController --> BaseController : extends
+
+class BooksController implements MainInfo {
+  - Label topChoicesLabel
+  - AnchorPane advertisementPane
+  - ImageView content1
+  - ImageView content2
+  - ImageView content3
+  - RadioButton radioButton1
+  - RadioButton radioButton2
+  - RadioButton radioButton3
+  - Queue<Transition> advertisementTransitions
+  - Timeline timeline
+  - JFXComboBox<String> categoryComboBox
+  - TextField categoryTextField
+  - JFXListView<String> categoriesListView
+  - TextField titleTextField
+  - JFXButton removeTextFieldButton
+  - JFXListView<SuggestionView> titleListView
+  - TextField pageNumberTextField
+  - JFXButton nextPageButton
+  - JFXButton prevPageButton
+  - JFXListView<SuggestionView> ListBooks
+  - ArrayList<Suggestion> listSuggestions
+  - Trie categories
+  - AnchorPane mainPane
+  - Queue<Thread> loadingThread
+  - Pane loadingPane
+  - Transition loadingTransition
+  + Label getTopChoicesLabel()
+  + AnchorPane getAdvertisementPane()
+  + ImageView getContent1()
+  + ImageView getContent2()
+  + ImageView getContent3()
+  + RadioButton getRadioButton1()
+  + RadioButton getRadioButton2()
+  + RadioButton getRadioButton3()
+  + Queue<Transition> getAdvertisementTransitions()
+  + Timeline getTimeline()
+  + JFXComboBox<String> getCategoryComboBox()
+  + TextField getCategoryTextField()
+  + JFXListView<String> getCategoriesListView()
+  + TextField getTitleTextField()
+  + JFXButton getRemoveTextFieldButton()
+  + JFXListView<SuggestionView> getTitleListView()
+  + TextField getPageNumberTextField()
+  + JFXButton getNextPageButton()
+  + JFXButton getPrevPageButton()
+  + JFXListView<SuggestionView> getListBooks()
+  + ArrayList<Suggestion> getListSuggestions()
+  + Trie getCategories()
+  + AnchorPane getMainPane()
+  + Queue<Thread> getLoadingThread()
+  + Pane getLoadingPane()
+  + Transition getLoadingTransition()
+  - void initialize()
+  - enum Direction {  }
+  - Transition advertisementTransition(Direction direction)
+  - Transition transitionOfContent(ImageView content, Direction direction)
+  - Transition undoTransitionOfContent(ImageView content)
+  - Transition undoTransition()
+  - void startTimeLine()
+  - void stopTimeLine()
+  - void switchToContent1()
+  - void switchToContent2()
+  - void switchToContent3()
+  - void changePage()
+  - void switchToNextPage()
+  - void switchToPrevPage()
+  + void setListBooks(int pageNumber)
+  - void setUpPageNumberTextField()
+  - void SelectCategoryFromComboBox()
+  - void CreateCategorySuggestions()
+  - void setupFocusTextField()
+  - void showBook(int idBook)
+  - void showBook(Book book)
+  - void CreateBookSuggestions()
+  - void SelectBookFromListBook()
+  - void initCategories()
+  - void initTopChoicesBook()
+  - void initView()
+  + void Search()
+  - void initLoadingTransition()
+  - void RemoveTitleTextField()
+  + void deleteBookSuggestion(Suggestion suggestion)
+  + void fixBookSuggestion(Suggestion suggestion)
+  + void addBookSuggestion(Suggestion suggestion)
+  + void refresh()
+  + void applyDarkMode(boolean isDark)
+  + void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang, boolean isTranslate)
+  + void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang)
+}
+
+class BorrowBookController implements MainInfo {
+  - ReturnBookController returnBookController = new ReturnBookController()
+  - ObservableList<TableData> dataList = FXCollections.observableArrayList()
+  - int pageNow
+  - Pane Pane1
+  - VBox VBox1
+  - AnchorPane mainPane
+  - ComboBox sortBox
+  - TableView<TableData> tableView
+  - TableColumn<TableData, String> typeColumn
+  - TableColumn<TableData, String> userColumn
+  - TableColumn<TableData, String> bookColumn
+  - TableColumn<TableData, String> timeColumn
+  - Button right
+  - Button left
+  - Label pageNumber
+  - AnchorPane secondPane
+  - JFXListView<SuggestionView> suggestionUser
+  - TextField userSearchBox
+  - TextField userIdBox
+  - Button searchButton
+  - UserList userList
+  - BookShelf bookList
+  - Label BirthdayLabel
+  - Label PhoneLabel
+  - Label EmailLabel
+  - Label AddressLabel
+  - Label isBanLabel
+  - TextField bookIdBox
+  - Pane Pane2
+  - VBox VBox2
+  - TextField bookSearchBox
+  - JFXListView<SuggestionView> suggestionBook
+  - Label wrongNotification
+  - Label PublisherLabel
+  - Label PublishedDateLabel
+  - Label BorrowedDateLabel
+  - DatePicker DueDatePicker
+  - Label QuantityLeftLabel
+  - Button searchButton1
+  - Button CancelButton
+  - Button CreateButton
+  - VBox alert
+  - Label confirmTitle
+  - Label confirmMessage
+  - Button confirmButton
+  - Button declineButton
+  - Button closeButton
+  - User npc
+  - Book book
+  - Pane successPane
+  - ImageView gifView
+  - Button backButton
+  - ImageView starImage
+  - ImageView starImage1
+  - Label borrowHistoryLabel
+  - Label borrowHistoryLabel1
+  - Label sortByLabel
+  - Button borrowButton
+  - Label birthdayLabel
+  - Label phoneLabel
+  - Label locateLabel
+  - Label banLabel
+  - Label publishedDateLabel
+  - Label borrowedDateLabel
+  - Label dueDateLabel
+  - Label leftLabel
+  - Label publisherLabel
+  - Label successLabel
+  - Label sucessMessageLabel
+  - static BooleanProperty listenUpdate = new SimpleBooleanProperty(false)
+  - ObservableList<SuggestionView> suggestions
+  - ObservableList<SuggestionView> suggestions1
+  + void setReturnBookController(ReturnBookController returnBookController)
+  - void rightController()
+  - void leftController()
+  - void muonSachController()
+  - void addBox()
+  - void resetUserSearch()
+  - void resetBookSearch()
+  - void createErrorText(String content)
+  - void searchButtonController()
+  - void searchButtonController1()
+  - void CancelAction()
+  - void DeclineButtonAction()
+  - void confirmButtonAction()
+  - void backButtonAction()
+  - void CreateAction()
+  + void updateHistory(String type)
+  - void initialize()
+  - void CreateUserSuggestions()
+  - void CreateBookSuggestions()
+  - void setupTooltip()
+  + void refresh()
+  + void applyDarkMode(boolean isDark)
+  + void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang, boolean isTranslate)
+  + void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang)
+}
+
+BooksController --> Trie : uses
+BooksController --> Suggestion : contains
+BooksController --> Book : references
+BooksController --> SuggestionView : contains
+BorrowBookController --> ReturnBookController : contains
+BorrowBookController --> UserList : uses
+BorrowBookController --> BookShelf : uses
+BorrowBookController --> SuggestionView : contains
+BorrowBookController --> User : references
+BorrowBookController --> Book : references
+BorrowBookController --> TableData : contains
+
+
+class EditController implements MainInfo {
+  - BooksController booksController
+  - UsersController usersController
+  - AnchorPane mainPane
+  - TextField pageBookNumberTextField
+  - JFXButton nextPageBookButton
+  - JFXButton prevPageBookButton
+  - JFXButton addBookButton
+  - JFXListView<EditBox> listViewBooks
+  - ArrayList<Suggestion> listBooks
+  - TextField pageUserNumberTextField
+  - JFXButton nextPageUserButton
+  - JFXButton prevPageUserButton
+  - JFXButton addUserButton
+  - JFXListView<EditBox> listViewUsers
+  - ArrayList<Suggestion> listUsers
+  - TextField bookSuggestionsTextField
+  - JFXButton removeButton
+  - JFXListView<SuggestionView> googleBooksListView
+  + BooksController getBooksController()
+  + UsersController getUsersController()
+  + TextField getPageBookNumberTextField()
+  + JFXButton getNextPageBookButton()
+  + JFXButton getPrevPageBookButton()
+  + JFXButton getAddBookButton()
+  + JFXListView<EditBox> getListViewBooks()
+  + ArrayList<Suggestion> getListBooks()
+  + TextField getPageUserNumberTextField()
+  + JFXButton getNextPageUserButton()
+  + JFXButton getPrevPageUserButton()
+  + JFXButton getAddUserButton()
+  + JFXListView<EditBox> getListViewUsers()
+  + ArrayList<Suggestion> getListUsers()
+  + TextField getBookSuggestionsTextField()
+  + JFXButton getRemoveButton()
+  + JFXListView<SuggestionView> getGoogleBooksListView()
+  - void initialize()
+  - void initListView()
+  - void switchToNextPageBook()
+  - void switchToPrevPageBook()
+  - void changePageBook()
+  - void switchToNextPageUser()
+  - void switchToPrevPageUser()
+  - void changePageUser()
+  + void setPageBook(int pageNumber)
+  + void setPageUser(int pageNumber)
+  - void setUpPageNumberTextField(TextField textField)
+  + void AddBook()
+  - void FixBook()
+  + void openAddUserView()
+  - void FixUser()
+  + void addUserSuggestion(Suggestion suggestion)
+  + void addBookSuggestion(Suggestion suggestion)
+  + void deleteUserSuggestion(Suggestion suggestion)
+  + void deleteBookSuggestion(Suggestion suggestion)
+  + void fixUserSuggestion(Suggestion suggestion)
+  + void fixBookSuggestion(Suggestion suggestion)
+  - void SearchBooksFromGoogle()
+  - void setUpFocusTextField()
+  + void setBooksController(BooksController booksController)
+  + void setUsersController(UsersController usersController)
+  + AnchorPane getMainPane()
+  - void removeText()
+  + void refresh()
+  + void applyDarkMode(boolean isDark)
+  + void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang, boolean isTranslate)
+  + void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang)
+}
+
+class HomeController implements MainInfo {
+  - Label librarianName
+  - Label dayTime
+  - Label numBooks
+  - Label numUsers
+  - Label overDue
+  - Label numBan
+  - JFXTreeTableView<LibrarianTable> librarianView
+  - StackPane circleProgress
+  - ScatterChart<String, Number> scatter
+  - AreaChart<String, Number> areaChart
+  - AnchorPane homePane
+  - Label colon
+  - Label firstH
+  - Label firstM
+  - Label secH
+  - Label secM
+  - Label helloTxt
+  - Label numBookTxt
+  - Label numStuTxt
+  - Label overDueTxt
+  - Label banStuTxt
+  - Label tableLibTxt
+  - Label borrowRateTxt
+  - Button allBtn
+  - AnchorPane blur
+  - JFXTreeTableView<LibrarianTable> tempTable
+  - ScatterChart<String, Number> fullyScatterChart
+  - AreaChart<?, ?> fullyAreaChart
+  - Timeline shadowTimeline
+  - Timeline progressAnimation
+  - Timeline timeTimeline
+  - Timeline colonFlashTimeline
+  - Timeline animationTimeline
+  - Timeline shadowLabelTimeline
+  + void initialize()
+  + void refresh()
+  + void displayTime()
+  + void updateTime(Label[] digitLabels)
+  + void displayMiniPaneTotal()
+  + void displayHomeTable()
+  + void applyDarkMode(boolean isDark)
+  + void setLibName(String name)
+  - void displayCirclePro()
+  - void displayScatter()
+  - void displayArea()
+  + void scatterClick()
+  - void scaleUp(AnchorPane anchorPane)
+  - void scaleDown(AnchorPane anchorPane, AnchorPane blur)
+  - void shadowEffect(AnchorPane anchorPane)
+  - void shadowEffect(Label label)
+  - ScatterChart<String, Number> createScatterChartCopy(ScatterChart<String, Number> originalScatter)
+  - void customizeCopiedScatterLegend(ScatterChart<String, Number> scatterChart)
+  - void centerInParentDynamic(AnchorPane parent, AnchorPane child, double widthPercent, double heightPercent)
+  + void resetClick()
+  + void allOnClick()
+  + void areaClick()
+  - AreaChart<String, Number> createAreaChartCopy(AreaChart<String, Number> originalArea)
+  + void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang, boolean isTranslate)
+  + Label getBanStuTxt()
+  + Label getBorrowRateTxt()
+  + Label getHelloTxt()
+  + Label getNumBookTxt()
+  + Label getNumStuTxt()
+  + Label getOverDueTxt()
+  + Label getTableLibTxt()
+  - void renameSeries(ScatterChart<String, Number> scatter)
+  + void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang)
+  + void clearTimeline()
+}
+
+class LibrarianTable extends RecursiveTreeObject<LibrarianTable> {
+  - final IntegerProperty id
+  - final StringProperty name
+  - final StringProperty email
+  + LibrarianTable(int id, String name, String email)
+  + IntegerProperty idProperty()
+  + StringProperty nameProperty()
+  + StringProperty emailProperty()
+}
+
+HomeController "1" *-- "many" LibrarianTable: chứa
+LibrarianTable "1" -- "1" IntegerProperty: có
+LibrarianTable "1" -- "1" StringProperty: có
+
+EditController --> BooksController : uses
+EditController --> UsersController : uses
+EditController --> Suggestion : contains
+EditController --> SuggestionView : contains
+EditController --> Book : references
+EditController --> User : references
+HomeController --> LibrarianTable : contains
+HomeController --> Book : references
+HomeController --> User : references
+HomeController --> ScatterChart : uses
+HomeController --> AreaChart : uses
+HomeController --> Timeline : uses
+
+
+class ReturnBookController implements MainInfo {
+  - ObservableList<returnTableData> dataList = FXCollections.observableArrayList()
+  - UserList userList = new UserList()
+  - BookShelf bookList = new BookShelf()
+  - TableColumn<returnTableData, String> userColumn
+  - TableColumn<returnTableData, String> bookColumn
+  - TableColumn<returnTableData, String> borrowedDateColumn
+  - TableColumn<returnTableData, String> dueDateColumn
+  - Button left
+  - Button right
+  - TableView tableView
+  - Label pageNumber
+  - int pageNow = 1
+  - ComboBox sortBox
+  - JFXListView<SuggestionView> suggestionUser
+  - ObservableList<SuggestionView> suggestions
+  - TextField userIdBox
+  - TextField userSearchBox
+  - Button searchButton
+  - Pane Pane1
+  - Label wrongNotification
+  - VBox VBox1
+  - Pane returnPane
+  - AnchorPane mainPane
+  - Button button1
+  - Button button2
+  - Button button3
+  - Button button4
+  - Button button5
+  - Button changeButton
+  - Button returnButton
+  - Label nameUserLabel
+  - Label idUserLabel
+  - Label nameBookLabel
+  - Label idBookLabel
+  - ImageView userAvatar
+  - ImageView bookAvatar
+  - Label borrowedDate
+  - DatePicker datePicker
+  - VBox alert
+  - Button closeButton
+  - Label confirmMessage
+  - Label confirmTitle
+  - Button declineButton
+  - Button confirmButton
+  - Button backButton
+  - ImageView gifView
+  - Pane successPane
+  - Label successTitle
+  - TextField bookIdBox
+  - TextField bookSearchBox
+  - ImageView borrowImage
+  - Pane userPane
+  - Pane bookPane
+  - ImageView starImage
+  - Label titleLabel
+  - Label borrowedDateLabel
+  - Label dueDateLabel
+  - Label successLabel
+  - returnTableData returnProcessing
+  - Timer timer
+  - Timer timer1
+  + void addBox()
+  + void rightController()
+  + void leftController()
+  + void setPageNumber(int x)
+  + void updateHistory(int userID)
+  + void updateHistory1(int bookID)
+  + void createErrorText(String content)
+  + void searchButtonController()
+  + void searchButtonController1()
+  + void updateVisibleReturnButton()
+  + void createPaneTransition()
+  + void returnAction(ActionEvent actionEvent)
+  + void closeAction()
+  + void returnButtonAction()
+  + void changeButtonAction()
+  + void DeclineButtonAction()
+  + void initialize()
+  + void CreateUserSuggestions()
+  + void CreateBookSuggestions()
+  + void confirmButtonAction()
+  + void backButtonAction()
+  + void refresh()
+  + void applyDarkMode(boolean isDark)
+  + void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang, boolean isTranslate)
+  + void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang)
+}
+
+class StartController {
+  - Stage stage
+  - Parent root
+  - Scene scene
+  - Scene originalScene
+  - AnchorPane BackgroundPane
+  - AnchorPane mainPane
+  - TextField accountField
+  - PasswordField passwordField
+  - JFXButton hidePassword
+  - TextField passwordText
+  - FontAwesomeIconView eyeIcon
+  - JFXButton deleteAccount
+  - JFXButton deletePassword
+  - JFXButton LogIn
+  - ImageView imageViewAnimation
+  - Label wrongNotification
+  - JFXCheckBox remember
+  - ImageView loadingIndicator
+  - Preferences prefs
+  - static int id
+  - static final String PREF_ACCOUNT
+  - static final String PREF_PASSWORD
+  - static final String PREF_REMEMBER_ME
+  - Image[] images
+  - int currentImageIndex
+  - Timeline timeline
+  - boolean forward
+  - long lastUpdate
+  - long spacetimeInNano
+  + StartController()
+  + void BackgroundRequest()
+  + void mainRequest()
+  + void togglePasswordVisibility()
+  + void removeAccount()
+  + void removePassword()
+  + void updateLogin()
+  + void updateImage()
+  + void setdefaultImage()
+  + void setTihiImage(boolean level)
+  + void LogInController(ActionEvent event) throws IOException
+  + void loadHomeScene(ActionEvent event)
+  + void initialize()
+  + static int getID()
+}
+
+class UsersController implements MainInfo {
+  - AnchorPane mainPane
+  - JFXButton deleteButton
+  - TextField nameTextField
+  - JFXListView<SuggestionView> userSuggestionsListView
+  - JFXListView<SuggestionView> usersListView
+  - TextField pageNumberTextField
+  - JFXButton nextPageButton
+  - JFXButton prevPageButton
+  - Label banListLabel
+  - JFXListView<SuggestionView> BanList
+  - ArrayList<Suggestion> listUser
+  - Queue<Thread> loadingThread
+  - Pane loadingPane
+  - Transition loadingTransition
+  + AnchorPane getMainPane()
+  + JFXButton getDeleteButton()
+  + TextField getNameTextField()
+  + JFXListView<SuggestionView> getUserSuggestionsListView()
+  + JFXListView<SuggestionView> getUsersListView()
+  + TextField getPageNumberTextField()
+  + JFXButton getNextPageButton()
+  + JFXButton getPrevPageButton()
+  + Label getBanListLabel()
+  + JFXListView<SuggestionView> getBanList()
+  + ArrayList<Suggestion> getListUser()
+  + Queue<Thread> getLoadingThread()
+  + Pane getLoadingPane()
+  + Transition getLoadingTransition()
+  + void initialize()
+  + void changePage()
+  + void switchToNextPage()
+  + void switchToPrevPage()
+  + void setListUsers(int pageNumber)
+  + void SetupFocusTextField()
+  + void setUpPageNumberTextField()
+  + void showUser(int idUser)
+  + void loadUserList()
+  + void DeleteContentOfTextField()
+  + void CreateUserSuggestions()
+  + void SelectUserFromUserListView()
+  + void initBannedUsersList()
+  + void SelectBannedUser()
+  + void initLoadingTransition()
+  + void initView()
+  + void deleteUserSuggestion(Suggestion suggestion)
+  + void fixUserSuggestion(Suggestion suggestion)
+  + void addUserSuggestion(Suggestion suggestion)
+  + void refresh()
+  + void applyDarkMode(boolean isDark)
+  + void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang, boolean isTranslate)
+  + void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang)
+}
+
+class WaitingController {
+  - ImageView center
+  - ImageView circle
+  - Transition transition
+  + void initialize()
+  + void stopTransition(Runnable runnable)
+  + Transition fadeTran(Node node)
+  + Transition rotateAndScaleTran(Node node, int time)
+}
+
+ReturnBookController --> returnTableData : contains
+ReturnBookController --> UserList : uses
+ReturnBookController --> BookShelf : uses
+ReturnBookController --> SuggestionView : contains
+ReturnBookController --> User : references
+ReturnBookController --> Book : references
+StartController --> Preferences : uses
+UsersController --> SuggestionView : contains
+UsersController --> Suggestion : contains
+WaitingController --> Transition : uses
+
+
+
+
+
+
+@enduml

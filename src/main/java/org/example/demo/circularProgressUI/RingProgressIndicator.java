@@ -20,7 +20,7 @@ import javafx.css.converter.SizeConverter; // Correct public converter
  * @author Andrea Vacondio
  */
 public class RingProgressIndicator extends ProgressCircleIndicator {
-    
+
   public RingProgressIndicator() {
     this.getStylesheets()
         .add(RingProgressIndicator.class.getResource(
