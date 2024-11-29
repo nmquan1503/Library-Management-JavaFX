@@ -27,7 +27,7 @@ public class Suggestion {
     id = user.getId();
     if (user.getAvatar() == null) {
       icon = new Image(Objects.requireNonNull(
-          getClass().getResourceAsStream("/org/example/demo/Assets/default_avatar.jpg")));
+          getClass().getResourceAsStream("/org/example/demo/Assets/default_avt_user.jpg")));
     } else {
       icon = user.getAvatar();
     }
