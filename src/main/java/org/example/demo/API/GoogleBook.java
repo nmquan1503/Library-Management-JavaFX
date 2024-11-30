@@ -21,7 +21,7 @@ public class GoogleBook {
    */
   public static ArrayList<Book> getBooks(String prefix) {
     ArrayList<Book> listBooks = new ArrayList<>();
-    if(!Network.isConnected()){
+    if (!Network.isConnected()) {
       return listBooks;
     }
     try {
@@ -38,7 +38,7 @@ public class GoogleBook {
         JsonNode items = jsonNode.get("items");
         if (items.isArray()) {
           for (JsonNode item : items) {
-            if(item.has("volumeInfo")) {
+            if (item.has("volumeInfo")) {
               listBooks.add(createBookFromJson(item.get("volumeInfo")));
             }
           }
@@ -68,7 +68,7 @@ public class GoogleBook {
     double averageRating = 0;
     int ratingsCount = 0;
     String imageLink = null;
-    int quantity=0;
+    int quantity = 0;
 
     if (jsonNode.has("title")) {
       title = jsonNode.get("title").asText();
@@ -113,7 +113,7 @@ public class GoogleBook {
     }
 
     return new Book(id, title, authors, publisher, publishedDate, description, pageCount,
-        categories, ratingsCount, averageRating, imageLink,quantity);
+        categories, ratingsCount, averageRating, imageLink, quantity);
   }
 
   public static void main(String[] args) {

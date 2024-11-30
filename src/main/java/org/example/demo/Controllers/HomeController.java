@@ -157,6 +157,9 @@ public class HomeController implements MainInfo {
 
   private Timeline shadowLabelTimeline;
 
+  /**
+   * oke.
+   */
   public void initialize() {
     displayTime();
     displayMiniPaneTotal();
@@ -166,6 +169,9 @@ public class HomeController implements MainInfo {
     displayArea();
   }
 
+  /**
+   * oke.
+   */
   public void refresh() {
     clearTimeline();
     displayTime();
@@ -176,6 +182,9 @@ public class HomeController implements MainInfo {
     displayArea();
   }
 
+  /**
+   * oke.
+   */
   public void displayTime() {
     Label[] digitLabels = {firstH, secH, colon, firstM, secM};
     DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -226,6 +235,9 @@ public class HomeController implements MainInfo {
     }
   }
 
+  /**
+   * oke.
+   */
   public void updateTime(Label[] digitLabels) {
     LocalDateTime now = LocalDateTime.now();
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -238,6 +250,9 @@ public class HomeController implements MainInfo {
     }
   }
 
+  /**
+   * oke.
+   */
   public void displayMiniPaneTotal() {
     Connection conn = null;
     PreparedStatement pstmt = null;
@@ -314,6 +329,9 @@ public class HomeController implements MainInfo {
     }
   }
 
+  /**
+   * oke.
+   */
   public void displayHomeTable() {
 
     Connection conn = null;
@@ -391,11 +409,17 @@ public class HomeController implements MainInfo {
 
   }
 
+  /**
+   * oke.
+   */
   @Override
   public void applyDarkMode(boolean isDark) {
     // no image here
   }
 
+  /**
+   * oke.
+   */
   static class LibrarianTable extends RecursiveTreeObject<LibrarianTable> {
 
     private final IntegerProperty id;
@@ -421,11 +445,18 @@ public class HomeController implements MainInfo {
     }
   }
 
+  /**
+   * oke.
+   */
   public void setLibName(String name) {
     librarianName.setText(name);
   }
 
   // Display borrowed books / total books
+
+  /**
+   * oke.
+   */
   private void displayCirclePro() {
     Connection conn = null;
     PreparedStatement preparedStatement = null;
@@ -555,6 +586,10 @@ public class HomeController implements MainInfo {
   }
 
   // Display number of books borrowed by publish year
+
+  /**
+   * oke.
+   */
   private void displayScatter() {
     Connection conn = null;
     PreparedStatement pstmt = null;
@@ -694,6 +729,9 @@ public class HomeController implements MainInfo {
     }
   }
 
+  /**
+   * oke.
+   */
   private void displayArea() {
     Connection conn = null;
     PreparedStatement preparedStatement = null;
@@ -777,6 +815,9 @@ public class HomeController implements MainInfo {
     }
   }
 
+  /**
+   * oke.
+   */
   @FXML
   public void scatterClick() {
     blur.setStyle("-fx-background-color: rgba(0,0,0,0.4);\n"
@@ -807,6 +848,9 @@ public class HomeController implements MainInfo {
     centerInParentDynamic(blur, fullyScatter, 0.6, 0.75);
   }
 
+  /**
+   * oke.
+   */
   private void scaleUp(AnchorPane anchorPane) {
     anchorPane.setScaleX(0.0);
     anchorPane.setScaleY(0.0);
@@ -820,6 +864,9 @@ public class HomeController implements MainInfo {
     scaleTransition.play();
   }
 
+  /**
+   * oke.
+   */
   private void scaleDown(AnchorPane anchorPane, AnchorPane blur) {
     ScaleTransition scaleDown = new ScaleTransition(Duration.seconds(0.3), anchorPane);
     scaleDown.setFromX(1.0);
@@ -839,6 +886,9 @@ public class HomeController implements MainInfo {
     scaleDown.play();
   }
 
+  /**
+   * oke.
+   */
   private void shadowEffect(AnchorPane anchorPane) {
     DropShadow dropShadow = new DropShadow();
     dropShadow.setRadius(15);
@@ -899,6 +949,9 @@ public class HomeController implements MainInfo {
     shadowTimeline.play();
   }
 
+  /**
+   * oke.
+   */
   private void shadowEffect(Label label) {
     DropShadow dropShadow = new DropShadow();
     dropShadow.setRadius(15);
@@ -951,6 +1004,9 @@ public class HomeController implements MainInfo {
     shadowLabelTimeline.play();
   }
 
+  /**
+   * oke.
+   */
   private ScatterChart<String, Number> createScatterChartCopy(
       ScatterChart<String, Number> originalScatter) {
     CategoryAxis xAxis = new CategoryAxis();
@@ -1029,6 +1085,9 @@ public class HomeController implements MainInfo {
     return copiedScatterChart;
   }
 
+  /**
+   * oke.
+   */
   private void customizeCopiedScatterLegend(ScatterChart<String, Number> scatterChart) {
     for (Node legendItem : scatterChart.lookupAll(".chart-legend-item")) {
       Label label = (Label) legendItem;
@@ -1048,6 +1107,9 @@ public class HomeController implements MainInfo {
     }
   }
 
+  /**
+   * oke.
+   */
   private void centerInParentDynamic(AnchorPane parent, AnchorPane child, double widthPercent,
       double heightPercent) {
     child.setPrefWidth(parent.getPrefWidth() * widthPercent);
@@ -1060,6 +1122,9 @@ public class HomeController implements MainInfo {
     AnchorPane.setLeftAnchor(child, leftAnchor);
   }
 
+  /**
+   * oke.
+   */
   public void resetClick() {
     if (homePane != null && blur != null) {
       blur.getChildren().clear();
@@ -1067,6 +1132,9 @@ public class HomeController implements MainInfo {
     }
   }
 
+  /**
+   * oke.
+   */
   @FXML
   public void allOnClick() {
     blur.setStyle("-fx-background-color: rgba(0,0,0,0.4);\n"
@@ -1178,6 +1246,9 @@ public class HomeController implements MainInfo {
     centerInParentDynamic(blur, fullyList, 0.6, 0.75);
   }
 
+  /**
+   * oke.
+   */
   @FXML
   public void areaClick() {
     blur.setStyle("-fx-background-color: rgba(0,0,0,0.4);\n"
@@ -1211,6 +1282,9 @@ public class HomeController implements MainInfo {
     centerInParentDynamic(blur, fullyList, 0.6, 0.75);
   }
 
+  /**
+   * oke.
+   */
   private AreaChart<String, Number> createAreaChartCopy(AreaChart<String, Number> originalArea) {
     CategoryAxis xAxis = new CategoryAxis();
     xAxis.setLabel(originalArea.getXAxis().getLabel());
@@ -1250,6 +1324,10 @@ public class HomeController implements MainInfo {
   }
 
   // Không gọi setUpLanguage ở đây
+
+  /**
+   * oke.
+   */
   @Override
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
       boolean isTranslate) {
@@ -1323,34 +1401,58 @@ public class HomeController implements MainInfo {
 
   }
 
+  /**
+   * oke.
+   */
   public Label getBanStuTxt() {
     return banStuTxt;
   }
 
+  /**
+   * oke.
+   */
   public Label getBorrowRateTxt() {
     return borrowRateTxt;
   }
 
+  /**
+   * oke.
+   */
   public Label getHelloTxt() {
     return helloTxt;
   }
 
+  /**
+   * oke.
+   */
   public Label getNumBookTxt() {
     return numBookTxt;
   }
 
+  /**
+   * oke.
+   */
   public Label getNumStuTxt() {
     return numStuTxt;
   }
 
+  /**
+   * oke.
+   */
   public Label getOverDueTxt() {
     return overDueTxt;
   }
 
+  /**
+   * oke.
+   */
   public Label getTableLibTxt() {
     return tableLibTxt;
   }
 
+  /**
+   * oke.
+   */
   private void renameSeries(ScatterChart<String, Number> scatter) {
     for (Series<String, Number> series : scatter.getData()) {
       String currentName = series.getName();
@@ -1376,6 +1478,10 @@ public class HomeController implements MainInfo {
   }
 
   // viLang lưu nội dung tiếng Việt gắn với Object, enLang lưu tiếng Anh
+
+  /**
+   * oke.
+   */
   @Override
   public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
     viLang.put(helloTxt, helloTxt.getText());
@@ -1386,6 +1492,9 @@ public class HomeController implements MainInfo {
         Translate.translate(tableLibTxt.getText(), Language.VIETNAMESE, Language.ENGLISH));
   }
 
+  /**
+   * oke.
+   */
   public void clearTimeline() {
     if (shadowTimeline != null) {
       shadowTimeline.stop();

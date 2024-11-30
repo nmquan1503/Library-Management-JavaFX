@@ -15,18 +15,27 @@ public class User extends Person {
 
   private Date banEndTime;
 
+  /**
+   * oke.
+   */
   public User(String name, Date birthday, String address, String email,
       String phoneNumber, Date banEndTime) {
     super(name, birthday, address, email, phoneNumber);
     this.banEndTime = banEndTime;
   }
 
+  /**
+   * oke.
+   */
   public User(String name, Date birthday, String address, String email,
       String phoneNumber, Image avatar, Date banEndTime) {
     super(name, birthday, address, email, phoneNumber, avatar);
     this.banEndTime = banEndTime;
   }
 
+  /**
+   * oke.
+   */
   public User(int id, String name, java.sql.Date birthday, String address, String email,
       Image avatar,
       String phoneNumber, Date banEndTime) {
@@ -34,15 +43,23 @@ public class User extends Person {
     this.banEndTime = banEndTime;
   }
 
+  /**
+   * oke.
+   */
   public Date getBanEndTime() {
     return banEndTime;
   }
 
+  /**
+   * oke.
+   */
   public void setBanEndTime(Date banEndTime) {
     this.banEndTime = banEndTime;
   }
 
-  // change with the UML:isUnBan->isBan
+  /**
+   * oke.
+   */
   public boolean isBan() {
 //    return LocalDate.now().isAfter(this.banEndTime.toLocalDate());
     if (this.banEndTime == null) {
@@ -53,7 +70,9 @@ public class User extends Person {
     return banEndTime.isAfter(now);
   }
 
-  // delete from database
+  /**
+   * oke.
+   */
   public static void deleteFromDb(int id) {
     Connection conn = null;
     PreparedStatement pstmt = null;
@@ -77,6 +96,9 @@ public class User extends Person {
     }
   }
 
+  /**
+   * oke.
+   */
   @Override
   public int SaveInfo() {
 
@@ -135,6 +157,9 @@ public class User extends Person {
     return this.getId();
   }
 
+  /**
+   * oke.
+   */
   public void removeInfo() {
     Connection connection = JDBC.getConnection();
 

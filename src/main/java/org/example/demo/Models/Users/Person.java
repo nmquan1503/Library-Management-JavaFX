@@ -29,9 +29,15 @@ public abstract class Person {
   protected String phoneNumber;
   protected Image avatar;
 
+  /**
+   * oke.
+   */
   public Person() {
   }
 
+  /**
+   * oke.
+   */
   public Person(String name, Date birthday, String address, String email,
       String phoneNumber) {
     this.name = name;
@@ -41,6 +47,9 @@ public abstract class Person {
     this.phoneNumber = phoneNumber;
   }
 
+  /**
+   * oke.
+   */
   public Person(String name, Date birthday, String address, String email, String phoneNumber,
       Image avatar) {
     this.name = name;
@@ -51,6 +60,9 @@ public abstract class Person {
     this.avatar = avatar;
   }
 
+  /**
+   * oke.
+   */
   public Person(int id, String name, Date birthday, String address, String email, Image avatar,
       String phoneNumber) {
     this.id = id;
@@ -123,8 +135,10 @@ public abstract class Person {
   public static void deleteFromDb(int id) {
   }
 
-  ;
 
+  /**
+   * oke.
+   */
   protected static byte[] convertImageToBytes(Image fxImage) {
     if (fxImage == null) {
       return null;
@@ -168,6 +182,9 @@ public abstract class Person {
     }
   }
 
+  /**
+   * oke.
+   */
   protected static byte[] downloadImageFromURL(String urlString) throws Exception {
     URL url = new URL(urlString);
     try (InputStream inputStream = url.openStream(); ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
@@ -180,6 +197,9 @@ public abstract class Person {
     }
   }
 
+  /**
+   * oke.
+   */
   protected static void retrieveImageFromDB(String outputImagePath)
       throws SQLException, IOException {
     Connection connection = JDBC.getConnection();
@@ -204,6 +224,9 @@ public abstract class Person {
     JDBC.closeConnection(connection);
   }
 
+  /**
+   * oke.
+   */
   protected static int getAddressId(String address) {
     Connection conn = null;
     PreparedStatement pstmt = null;
@@ -239,6 +262,9 @@ public abstract class Person {
     return -1;
   }
 
+  /**
+   * oke.
+   */
   protected static boolean isPhoneExist(String phone) {
     Connection connection = null;
     PreparedStatement preparedStatement = null;

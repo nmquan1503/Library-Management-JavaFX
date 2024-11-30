@@ -69,22 +69,40 @@ import org.example.demo.Models.Users.Date;
 
 public class BaseController {
 
+  /**
+   * oke.
+   */
   private static final IntegerProperty checkState = new SimpleIntegerProperty(1);
 
+  /**
+   * oke.
+   */
   public static int getBaseState() {
     return checkState.get();
   }
 
+  /**
+   * oke.
+   */
   public static void setBaseState(int val) {
     checkState.set(val);
   }
 
+  /**
+   * oke.
+   */
   private static final IntegerProperty libId = new SimpleIntegerProperty(-1);
 
+  /**
+   * oke.
+   */
   public static int getLibId() {
     return libId.get();
   }
 
+  /**
+   * oke.
+   */
   public static void setLibId(int val) {
     libId.set(val);
   }
@@ -92,9 +110,15 @@ public class BaseController {
   HashMap<Object, String> viLang = new HashMap<>();
   HashMap<Object, String> enLang = new HashMap<>();
 
+  /**
+   * oke.
+   */
   public static boolean isDark = false;
 
   // isTranslate = false ứng với lang = "vi", ngược lại = "en"
+  /**
+   * oke.
+   */
   public static boolean isTranslate = false;
 
   @FXML
@@ -121,21 +145,39 @@ public class BaseController {
   @FXML
   private Tooltip avtText;
 
+  /**
+   * oke.
+   */
   @FXML
   private static AnchorPane mainPane;
 
+  /**
+   * oke.
+   */
   @FXML
   private static AnchorPane bookPane;
 
+  /**
+   * oke.
+   */
   @FXML
   private static AnchorPane editPane;
 
+  /**
+   * oke.
+   */
   @FXML
   private static AnchorPane userPane;
 
+  /**
+   * oke.
+   */
   @FXML
   private static AnchorPane borrowPane;
 
+  /**
+   * oke.
+   */
   @FXML
   private static AnchorPane returnPane;
 
@@ -164,52 +206,97 @@ public class BaseController {
 
   private Popup popup;
 
+  /**
+   * oke.
+   */
   private final ArrayList<NotificationView> notificationList = new ArrayList<>();
 
+  /**
+   * oke.
+   */
   private static final IntegerProperty isBorrowingChanged = new SimpleIntegerProperty(0);
 
+  /**
+   * oke.
+   */
   public static void setIsBorrowingChanged(int val) {
     isBorrowingChanged.set(val);
   }
 
+  /**
+   * oke.
+   */
   public static int getIsBorrowingChanged() {
     return isBorrowingChanged.get();
   }
 
+  /**
+   * oke.
+   */
   public static AnchorPane getMainPane() {
     return mainPane;
   }
 
+  /**
+   * oke.
+   */
   public static AnchorPane getBookPane() {
     return bookPane;
   }
 
+  /**
+   * oke.
+   */
   public static AnchorPane getEditPane() {
     return editPane;
   }
 
+  /**
+   * oke.
+   */
   public static AnchorPane getUserPane() {
     return userPane;
   }
 
+  /**
+   * oke.
+   */
   public static AnchorPane getBorrowPane() {
     return borrowPane;
   }
 
+  /**
+   * oke.
+   */
   public static AnchorPane getReturnPane() {
     return returnPane;
   }
 
+  /**
+   * oke.
+   */
   private boolean isTranSetUp = false;
 
+  /**
+   * oke.
+   */
   private final HashMap<Integer, String> firstRead = new HashMap<>();
 
+  /**
+   * oke.
+   */
   private static final IntegerProperty dueUpdate = new SimpleIntegerProperty(0);
 
+  /**
+   * oke.
+   */
   public static int getDueUpdate() {
     return dueUpdate.get();
   }
 
+  /**
+   * oke.
+   */
   public static void setDueUpdate(int val) {
     dueUpdate.set(val);
   }
@@ -217,6 +304,9 @@ public class BaseController {
   @FXML
   private JFXListView<String> suggestionListView;
 
+  /**
+   * oke.
+   */
   private final List<String> allSuggestions = List.of("Dashboard", "User", "Sách", "Borrowing",
       "Trả",
       "Tùy chỉnh", "DarkMode", "LightMode", "Log out", "Chỉnh sửa thông tin", "Thông báo", "Dịch",
@@ -225,6 +315,9 @@ public class BaseController {
       "Người mượn", "Copy", "Lending", "Hoàn trả sách", "Edit", "Tối", "Sáng", "Logout", "Setting",
       "Announcement", "Convert Language");
 
+  /**
+   * oke.
+   */
   @FXML
   public void initialize() {
     libId.addListener((observable, oldValue, newValue) -> {
@@ -291,6 +384,9 @@ public class BaseController {
     borrowBookController.setReturnBookController(returnBookController);
   }
 
+  /**
+   * oke.
+   */
   private void loadLibrarianInfo() {
     Connection conn = null;
     PreparedStatement preparedStatement = null;
@@ -343,6 +439,9 @@ public class BaseController {
     }
   }
 
+  /**
+   * oke.
+   */
   private void loadDefaultAvatar() {
     try {
       Image defaultImage = new Image(
@@ -355,6 +454,9 @@ public class BaseController {
     }
   }
 
+  /**
+   * oke.
+   */
   public void styleListViewScrollBars(JFXListView<?> listView) {
     ScrollBar verticalScrollBar = (ScrollBar) listView.lookup(".scroll-bar:vertical");
     if (verticalScrollBar != null) {
@@ -363,10 +465,16 @@ public class BaseController {
     }
   }
 
+  /**
+   * oke.
+   */
   public void setupListViewWithStyledScrollBars(JFXListView<?> listView) {
     Platform.runLater(() -> styleListViewScrollBars(listView));
   }
 
+  /**
+   * oke.
+   */
   private void setupAutocomplete() {
     Popup suggestionPopup = new Popup();
     suggestionListView = new JFXListView<>();
@@ -518,6 +626,9 @@ public class BaseController {
 
   }
 
+  /**
+   * oke.
+   */
   private int getSuggestionIdx(String text) {
     for (int i = 0; i < allSuggestions.size(); i++) {
       if (text.equalsIgnoreCase(allSuggestions.get(i))) {
@@ -527,6 +638,9 @@ public class BaseController {
     return -1;
   }
 
+  /**
+   * oke.
+   */
   private void performActionStr(String txt) {
     int idx = getSuggestionIdx(txt);
     if (idx != -1) {
@@ -534,6 +648,9 @@ public class BaseController {
     }
   }
 
+  /**
+   * oke.
+   */
   private void performAction(int idx) {
     idx %= 12;
     if (idx == 0) {
@@ -570,6 +687,9 @@ public class BaseController {
     searchBase.setText("");
   }
 
+  /**
+   * oke.
+   */
   private class LoadMainTask extends Task<Void> {
 
     @Override
@@ -584,6 +704,9 @@ public class BaseController {
     }
   }
 
+  /**
+   * oke.
+   */
   private class LoadBookTask extends Task<Void> {
 
     @Override
@@ -598,6 +721,9 @@ public class BaseController {
     }
   }
 
+  /**
+   * oke.
+   */
   private class LoadEditTask extends Task<Void> {
 
     @Override
@@ -612,6 +738,9 @@ public class BaseController {
     }
   }
 
+  /**
+   * oke.
+   */
   private class LoadUserTask extends Task<Void> {
 
     @Override
@@ -626,6 +755,9 @@ public class BaseController {
     }
   }
 
+  /**
+   * oke.
+   */
   private class LoadBorrowBookTask extends Task<Void> {
 
     @Override
@@ -640,6 +772,9 @@ public class BaseController {
     }
   }
 
+  /**
+   * oke.
+   */
   private class LoadReturnBookTask extends Task<Void> {
 
     @Override
@@ -654,6 +789,9 @@ public class BaseController {
     }
   }
 
+  /**
+   * oke.
+   */
   private void loadMain() {
     try {
       FXMLLoader fxmlLoader = new FXMLLoader(
@@ -666,6 +804,9 @@ public class BaseController {
     }
   }
 
+  /**
+   * oke.
+   */
   private void loadBook() {
     try {
       FXMLLoader fxmlLoader = new FXMLLoader(
@@ -678,6 +819,9 @@ public class BaseController {
     }
   }
 
+  /**
+   * oke.
+   */
   private void loadEdit() {
     try {
       FXMLLoader fxmlLoader = new FXMLLoader(
@@ -690,6 +834,9 @@ public class BaseController {
     }
   }
 
+  /**
+   * oke.
+   */
   private void loadUser() {
     try {
       FXMLLoader fxmlLoader = new FXMLLoader(
@@ -702,6 +849,9 @@ public class BaseController {
     }
   }
 
+  /**
+   * oke.
+   */
   private void loadBorrow() {
     try {
       FXMLLoader fxmlLoader = new FXMLLoader(
@@ -714,6 +864,9 @@ public class BaseController {
     }
   }
 
+  /**
+   * oke.
+   */
   private void loadReturn() {
     try {
       FXMLLoader fxmlLoader = new FXMLLoader(
@@ -726,6 +879,9 @@ public class BaseController {
     }
   }
 
+  /**
+   * oke.
+   */
   @FXML
   public void darkMode() {
     if (!isDark) {
@@ -765,6 +921,9 @@ public class BaseController {
     isDark = !isDark;
   }
 
+  /**
+   * oke.
+   */
   private void avtMenuSetup() {
     avatarMenu.getItems().clear();
 
@@ -793,6 +952,9 @@ public class BaseController {
     avatarMenu.getItems().addAll(changeInfo, translate, logOut);
   }
 
+  /**
+   * oke.
+   */
   private void handleChangeAccountInfo() {
     setBaseState(0);
     AccountSettingController.setAccState(1);
@@ -800,6 +962,9 @@ public class BaseController {
     App.primaryStage.show();
   }
 
+  /**
+   * oke.
+   */
   private void handleLogout() {
     refresh();
     homeController.resetClick();
@@ -809,6 +974,9 @@ public class BaseController {
     App.primaryStage.show();
   }
 
+  /**
+   * oke.
+   */
   public void refresh() {
     if (isDark) {
       darkMode();
@@ -819,6 +987,9 @@ public class BaseController {
     searchBase.setText("");
   }
 
+  /**
+   * oke.
+   */
   private void setUpLang() {
 
     for (MenuItem item : avatarMenu.getItems()) {
@@ -854,6 +1025,9 @@ public class BaseController {
 
   }
 
+  /**
+   * oke.
+   */
   private void handleTranslate() {
     if (!Network.isConnected()) {
       bigPane.getChildren().add(new Warning("Lỗi mạng", "Vui lòng kiểm tra kết nối"));
@@ -905,6 +1079,9 @@ public class BaseController {
     isTranslate = !isTranslate;
   }
 
+  /**
+   * oke.
+   */
   @FXML
   public void avatarClicked() {
     for (MenuItem item : avatarMenu.getItems()) {
@@ -939,6 +1116,9 @@ public class BaseController {
     avatarMenu.show(avatar, menuX - 143, menuY + 5);
   }
 
+  /**
+   * oke.
+   */
   @FXML
   public void moveDashboard() {
     mainPane.setVisible(true);
@@ -950,6 +1130,9 @@ public class BaseController {
     returnPane.setVisible(false);
   }
 
+  /**
+   * oke.
+   */
   @FXML
   public void moveBooks() {
     homeController.clearTimeline();
@@ -962,6 +1145,9 @@ public class BaseController {
     returnPane.setVisible(false);
   }
 
+  /**
+   * oke.
+   */
   @FXML
   public void moveUser() {
     homeController.clearTimeline();
@@ -974,6 +1160,9 @@ public class BaseController {
     returnPane.setVisible(false);
   }
 
+  /**
+   * oke.
+   */
   @FXML
   public void moveEdit() {
     homeController.clearTimeline();
@@ -986,6 +1175,9 @@ public class BaseController {
     returnPane.setVisible(false);
   }
 
+  /**
+   * oke.
+   */
   @FXML
   public void moveBorrowBook() {
     homeController.clearTimeline();
@@ -998,6 +1190,9 @@ public class BaseController {
     borrowBookController.refresh();
   }
 
+  /**
+   * oke.
+   */
   @FXML
   public void moveReturnBook() {
     homeController.clearTimeline();
@@ -1010,6 +1205,9 @@ public class BaseController {
     returnBookController.refresh();
   }
 
+  /**
+   * oke.
+   */
   private void initNotificationList() {
     ArrayList<Borrowing> history = Library.getInstance().getListBorrowingNearingDeadline();
     for (Borrowing borrowing : history) {
@@ -1017,6 +1215,9 @@ public class BaseController {
     }
   }
 
+  /**
+   * oke.
+   */
   private void refreshNotification() {
     ArrayList<Borrowing> history = Library.getInstance().getListBorrowingNearingDeadline();
     ArrayList<Integer> ls = new ArrayList<>();
@@ -1038,6 +1239,9 @@ public class BaseController {
     }
   }
 
+  /**
+   * oke.
+   */
   private void putValueRead(int idBorrowing, String name) {
     Connection conn = null;
     PreparedStatement preparedStatement = null;
@@ -1075,6 +1279,9 @@ public class BaseController {
   }
 
 
+  /**
+   * oke.
+   */
   private void setUpFirstRead() {
     Connection conn = null;
     PreparedStatement preparedStatement = null;
@@ -1116,12 +1323,18 @@ public class BaseController {
     }
   }
 
+  /**
+   * oke.
+   */
   private void translateList() {
     for (NotificationView notificationView : notificationList) {
       notificationView.applyTranslate(viLang, enLang, isTranslate);
     }
   }
 
+  /**
+   * oke.
+   */
   @FXML
   private void notificationClick() {
     translateList();
@@ -1341,6 +1554,9 @@ public class BaseController {
     popup.show(bell, popupX, popupY);
   }
 
+  /**
+   * oke.
+   */
   protected static void showQRCodeWindow(String email, String subject, String body) {
     String mailtoLink = "mailto:" + email + "?subject=" + subject + "&body=" + body;
     WritableImage qrImage = generateQRCodeImage(mailtoLink, 300, 300);
@@ -1354,6 +1570,9 @@ public class BaseController {
     qrStage.show();
   }
 
+  /**
+   * oke.
+   */
   protected static WritableImage generateQRCodeImage(String text, int width, int height) {
     Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
     hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");

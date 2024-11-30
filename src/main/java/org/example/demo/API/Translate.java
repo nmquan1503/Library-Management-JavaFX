@@ -18,7 +18,7 @@ public class Translate {
    * @return translation of text
    */
   public static String translate(String text, Language srcLanguage, Language dstLanguage) {
-    if(!Network.isConnected()){
+    if (!Network.isConnected()) {
       return text;
     }
     try {

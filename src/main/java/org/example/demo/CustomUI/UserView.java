@@ -149,7 +149,7 @@ public class UserView extends ScrollPane implements MainInfo {
   private void setImage(User user) {
     if (user.getAvatar() == null || !Network.isConnected()) {
       imageUser.setImage(new Image(Objects.requireNonNull(
-          getClass().getResourceAsStream("/org/example/demo/Assets/default_avatar.jpg"))));
+          getClass().getResourceAsStream("/org/example/demo/Assets/default_avt_user.jpg"))));
     } else {
       imageUser.setImage(user.getAvatar());
     }

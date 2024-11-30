@@ -45,14 +45,26 @@ import org.example.demo.Database.JDBC;
 
 public class AccountSettingController {
 
+  /**
+   * oke.
+   */
   private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
 
+  /**
+   * oke.
+   */
   private static final IntegerProperty checkState = new SimpleIntegerProperty(0);
 
+  /**
+   * oke.
+   */
   public static int getAccState() {
     return checkState.get();
   }
 
+  /**
+   * oke.
+   */
   public static void setAccState(int val) {
     checkState.set(val);
   }
@@ -101,6 +113,9 @@ public class AccountSettingController {
 
   private Timeline fadeOutTimeline;
 
+  /**
+   * oke.
+   */
   public void initialize() {
     loadInfo();
     loadAddress();
@@ -139,6 +154,9 @@ public class AccountSettingController {
     });
   }
 
+  /**
+   * oke.
+   */
   public void updateAvatar(String path, int id) {
     try (Connection conn = JDBC.getConnection()) {
       String sql = "UPDATE librarian SET avatar = ? WHERE id_librarian = ?";
@@ -158,6 +176,9 @@ public class AccountSettingController {
     }
   }
 
+  /**
+   * oke.
+   */
   private void loadDefaultAvatar() {
     try {
       Image defaultImage = new Image(
@@ -171,6 +192,9 @@ public class AccountSettingController {
     }
   }
 
+  /**
+   * oke.
+   */
   private void loadInfo() {
     Connection conn = null;
     PreparedStatement preparedStatement = null;
@@ -245,6 +269,9 @@ public class AccountSettingController {
     }
   }
 
+  /**
+   * oke.
+   */
   private void handleChooseAvatarClick(MouseEvent event) {
 
     FileChooser fileChooser = new FileChooser();
@@ -263,6 +290,9 @@ public class AccountSettingController {
     }
   }
 
+  /**
+   * oke.
+   */
   public void resetDefaultAvt() {
     updateAvatar(Objects.requireNonNull(
             getClass().getResource("/org/example/demo/Assets/default_avatar.jpg")).getPath(),
@@ -271,6 +301,9 @@ public class AccountSettingController {
     succeedNotification();
   }
 
+  /**
+   * oke.
+   */
   private void setCameraHoverEffect() {
     cameraIcon.setOnMouseEntered(event -> {
       onHoverArc(true);
@@ -289,6 +322,9 @@ public class AccountSettingController {
     });
   }
 
+  /**
+   * oke.
+   */
   private void onHoverArc(boolean isHovered) {
     if (isHovered) {
       chooseAvtFileBtn.setFill(Color.rgb(105, 105, 105, 0.7));
@@ -299,6 +335,9 @@ public class AccountSettingController {
     }
   }
 
+  /**
+   * oke.
+   */
   @FXML
   private void saveName() {
     String newName = promptName.getText().trim();
@@ -327,6 +366,9 @@ public class AccountSettingController {
     }
   }
 
+  /**
+   * oke.
+   */
   @FXML
   private void saveBirthday() {
     LocalDate birthday = promptBirth.getValue();
@@ -355,6 +397,9 @@ public class AccountSettingController {
     }
   }
 
+  /**
+   * oke.
+   */
   @FXML
   private void saveEmail() {
     String email = promptEmail.getText().trim();
@@ -383,6 +428,9 @@ public class AccountSettingController {
     }
   }
 
+  /**
+   * oke.
+   */
   @FXML
   private void saveAddress() {
     String selectedAddress = promptAddress.getValue();
@@ -414,6 +462,9 @@ public class AccountSettingController {
     }
   }
 
+  /**
+   * oke.
+   */
   @FXML
   private void eyeSee() {
     if (eyeIcon.getGlyphName().equals("EYE")) {
@@ -429,6 +480,9 @@ public class AccountSettingController {
     }
   }
 
+  /**
+   * oke.
+   */
   @FXML
   private void savePassword() {
     Alert confirmationAlert = new Alert(AlertType.CONFIRMATION);
@@ -486,6 +540,9 @@ public class AccountSettingController {
   @FXML
   private JFXButton btnReset;
 
+  /**
+   * oke.
+   */
   private void btnDisable() {
     btnName.setDisable(true);
     btnBirth.setDisable(true);
@@ -495,6 +552,9 @@ public class AccountSettingController {
     btnReset.setDisable(true);
   }
 
+  /**
+   * oke.
+   */
   private void btnEnable() {
     btnName.setDisable(false);
     btnBirth.setDisable(false);
@@ -504,6 +564,9 @@ public class AccountSettingController {
     btnReset.setDisable(false);
   }
 
+  /**
+   * oke.
+   */
   private void succeedNotification() {
     succeedPane.setVisible(true);
     succeedPane.setOpacity(1.0);
@@ -532,6 +595,9 @@ public class AccountSettingController {
     fadeOutTimeline.play();
   }
 
+  /**
+   * oke.
+   */
   private void errorNotification() {
     errorPane.setVisible(true);
     errorPane.setOpacity(1.0);
@@ -560,6 +626,9 @@ public class AccountSettingController {
     fadeOutTimeline.play();
   }
 
+  /**
+   * oke.
+   */
   private void loadAddress() {
     List<String> addresses = new ArrayList<>();
 
@@ -581,6 +650,9 @@ public class AccountSettingController {
     promptAddress.getItems().addAll(addresses);
   }
 
+  /**
+   * oke.
+   */
   @FXML
   private void moveToBase() {
     BaseController.setBaseState(1);
