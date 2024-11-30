@@ -32,7 +32,7 @@ public class Book {
   public Book(int idBook, String title, ArrayList<String> authors, String publisher,
       int publishedDate,
       String description, int pageCount, ArrayList<String> categories, int ratingsCount,
-      double averageRating, String imageLink,int quantity) {
+      double averageRating, String imageLink, int quantity) {
     this.idBook = idBook;
     this.title = title;
     this.authors = authors;
@@ -44,7 +44,7 @@ public class Book {
     this.ratingsCount = ratingsCount;
     this.averageRating = averageRating;
     this.imageLink = imageLink;
-    this.quantity=quantity;
+    this.quantity = quantity;
   }
 
   public Book() {
@@ -140,9 +140,13 @@ public class Book {
     this.imageLink = imageLink;
   }
 
-  public int getQuantity(){return quantity;}
+  public int getQuantity() {
+    return quantity;
+  }
 
-  public void setQuantity(int quantity){this.quantity=quantity;}
+  public void setQuantity(int quantity) {
+    this.quantity = quantity;
+  }
 
   public int SaveInfo() {
     try (Connection connection = JDBC.getConnection()) {
@@ -159,7 +163,7 @@ public class Book {
       statement.setInt(6, ratingsCount);
       statement.setDouble(7, averageRating);
       statement.setString(8, imageLink);
-      statement.setInt(9,quantity);
+      statement.setInt(9, quantity);
       try {
         statement.executeUpdate();
         ResultSet generatedKeys1 = statement.getGeneratedKeys();
@@ -177,7 +181,7 @@ public class Book {
         }
         return idBook;
       }
-      if(authors!=null) {
+      if (authors != null) {
         String sql1 = "INSERT INTO authors (name_author) VALUES (?)";
         String selectQuery = "SELECT id_author FROM authors WHERE name_author = ?";
         ArrayList<Integer> idAuthor = new ArrayList<>();
@@ -209,7 +213,7 @@ public class Book {
         }
         statement2.executeBatch();
       }
-      if(categories!=null) {
+      if (categories != null) {
         ArrayList<Integer> idCate = new ArrayList<>();
         String sql3 = "INSERT INTO categories (name_category) VALUES (?)";
         String selectQuery = "SELECT id_category FROM categories WHERE name_category = ?";

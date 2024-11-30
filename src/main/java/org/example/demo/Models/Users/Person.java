@@ -135,7 +135,6 @@ public abstract class Person {
   public static void deleteFromDb(int id) {
   }
 
-  ;
 
   /**
    * oke.
