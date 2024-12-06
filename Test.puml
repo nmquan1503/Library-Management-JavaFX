@@ -17,12 +17,8 @@ class TrieNode {
   + TrieNode()
   + TrieNode(ArrayList<Integer> listID)
   + TrieNode(ArrayList<Integer> listID, HashMap<Character, TrieNode> children)
-  + ArrayList<Integer> getListID()
-  + HashMap<Character, TrieNode> getChildren()
-  + void setListID(ArrayList<Integer> listID)
-  + void setChildren(HashMap<Character, TrieNode> children)
-  + void addChildren(Character x, TrieNode y)
-  + void addList(Integer id)
+  + getter()
+  + setter()
   + void deleteList(Integer id)
 }
 
@@ -68,20 +64,8 @@ abstract class Person {
   + Person(String name, Date birthday, String address, String email, String phoneNumber)
   + Person(String name, Date birthday, String address, String email, String phoneNumber, Image avatar)
   + Person(int id, String name, Date birthday, String address, String email, Image avatar, String phoneNumber)
-  + int getId()
-  + void setId(int id)
-  + String getName()
-  + void setName(String name)
-  + Date getBirthday()
-  + void setBirthday(Date birthday)
-  + String getAddress()
-  + void setAddress(String address)
-  + String getEmail()
-  + void setEmail(String email)
-  + String getPhoneNumber()
-  + void setPhoneNumber(String phoneNumber)
-  + Image getAvatar()
-  + void setAvatar(Image avatar)
+  + getter()
+  + setter()
   + abstract int SaveInfo()
   + static void deleteFromDb(int id)
   + static byte[] convertImageToBytes(Image fxImage)
@@ -115,12 +99,8 @@ class Librarian extends Person {
   + Librarian(String name, Date birthday, String address, String email, String phoneNumber, Image avatar, ArrayList<Notification> notificationsList)
   + Librarian(String name, Date birthday, String address, String email, String phoneNumber, Image avatar, String username_account, String password_account)
   + Librarian(String username_account, String password_account)
-  + ArrayList<Notification> getNotificationsList()
-  + void setNotificationsList(ArrayList<Notification> notificationsList)
-  + String getPassword_account()
-  + void setPassword_account(String password_account)
-  + String getUsername_account()
-  + void setUsername_account(String username_account)
+  + getter()
+  + setter()
   + static void deleteFromDb(int id)
   + int SaveInfo()
 }
@@ -152,30 +132,8 @@ class Book {
   - int quantity
   + Book(int idBook, String title, ArrayList<String> authors, String publisher, int publishedDate, String description, int pageCount, ArrayList<String> categories, int ratingsCount, double averageRating, String imageLink, int quantity)
   + Book()
-  + int getId()
-  + void setId(int id)
-  + String getTitle()
-  + void setTitle(String title)
-  + ArrayList<String> getAuthors()
-  + void setAuthors(ArrayList<String> authors)
-  + int getPublishedDate()
-  + void setPublishedDate(int publishedDate)
-  + String getPublisher()
-  + void setPublisher(String publisher)
-  + String getDescription()
-  + void setDescription(String description)
-  + int getPageCount()
-  + void setPageCount(int pageCount)
-  + ArrayList<String> getCategories()
-  + void setCategories(ArrayList<String> categories)
-  + double getAverageRating()
-  + void setAverageRating(double averageRating)
-  + int getRatingsCount()
-  + void setRatingsCount(int ratingsCount)
-  + String getImageLink()
-  + void setImageLink(String imageLink)
-  + int getQuantity()
-  + void setQuantity(int quantity)
+  + setter()
+  + getter()
   + int SaveInfo()
   + void removeInfo()
 }
@@ -204,18 +162,8 @@ class Borrowing {
   - Date dueDate
   - Date returnedDate
   + Borrowing(int idBorrowing, int idBook, int idUser, Date borrowedDate, Date dueDate, Date returnedDate)
-  + int getIdBorrowing()
-  + void setIdBorrowing(int idBorrowing)
-  + int getIdBook()
-  + void setIdBook(int idBook)
-  + int getIdUser()
-  + void setIdUser(int idUser)
-  + Date getBorrowedDate()
-  + void setBorrowedDate(Date borrowedDate)
-  + Date getDueDate()
-  + void setDueDate(Date dueDate)
-  + Date getReturnedDate()
-  + void setReturnedDate(Date returnedDate)
+  + setter()
+  + getter()
 }
 
 class BorrowHistory {
@@ -240,12 +188,8 @@ class Suggestion {
   - String content
   + Suggestion(Book book)
   + Suggestion(User user)
-  + int getId()
-  + void setId(int id)
-  + Image getIcon()
-  + void setIcon(Image icon)
-  + String getContent()
-  + void setContent(String content)
+  + getter()
+  + setter()
 }
 
 enum Language {
@@ -440,14 +384,8 @@ class TableData {
   - String book
   - String date
   + TableData(String action, String user, String book, String date)
-  + String getAction()
-  + void setAction(String action)
-  + String getUser()
-  + void setUser(String user)
-  + String getBook()
-  + void setBook(String book)
-  + String getDate()
-  + void setDate(String date)
+  + getter()
+  + setter()
 }
 
 class NotificationView extends HBox implements MainInfo {
@@ -491,22 +429,8 @@ class returnTableData {
   - LocalDate due
   - int idBorrowing
   + returnTableData(String user, String book, String borrowedDate, String dueDate)
-  + int getIdUser()
-  + LocalDate getDue()
-  + void setDue(LocalDate due)
-  + void setIdUser(int idUser)
-  + int getIdBook()
-  + void setIdBook(int idBook)
-  + String getBorrowedDate()
-  + void setBorrowedDate(String borrowedDate)
-  + String getUser()
-  + void setUser(String user)
-  + String getBook()
-  + void setBook(String book)
-  + String getDueDate()
-  + void setDueDate(String dueDate)
-  + int getIdBorrowing()
-  + void setIdBorrowing(int idBorrowing)
+  + getter()
+  + setter()
 }
 
 RingProgressIndicatorSkin --> RingProgressIndicator : uses
@@ -929,32 +853,7 @@ class BooksController implements MainInfo {
   - Queue<Thread> loadingThread
   - Pane loadingPane
   - Transition loadingTransition
-  + Label getTopChoicesLabel()
-  + AnchorPane getAdvertisementPane()
-  + ImageView getContent1()
-  + ImageView getContent2()
-  + ImageView getContent3()
-  + RadioButton getRadioButton1()
-  + RadioButton getRadioButton2()
-  + RadioButton getRadioButton3()
-  + Queue<Transition> getAdvertisementTransitions()
-  + Timeline getTimeline()
-  + JFXComboBox<String> getCategoryComboBox()
-  + TextField getCategoryTextField()
-  + JFXListView<String> getCategoriesListView()
-  + TextField getTitleTextField()
-  + JFXButton getRemoveTextFieldButton()
-  + JFXListView<SuggestionView> getTitleListView()
-  + TextField getPageNumberTextField()
-  + JFXButton getNextPageButton()
-  + JFXButton getPrevPageButton()
-  + JFXListView<SuggestionView> getListBooks()
-  + ArrayList<Suggestion> getListSuggestions()
-  + Trie getCategories()
-  + AnchorPane getMainPane()
-  + Queue<Thread> getLoadingThread()
-  + Pane getLoadingPane()
-  + Transition getLoadingTransition()
+  + getter()
   - void initialize()
   - enum Direction {  }
   - Transition advertisementTransition(Direction direction)
@@ -1124,23 +1023,7 @@ class EditController implements MainInfo {
   - TextField bookSuggestionsTextField
   - JFXButton removeButton
   - JFXListView<SuggestionView> googleBooksListView
-  + BooksController getBooksController()
-  + UsersController getUsersController()
-  + TextField getPageBookNumberTextField()
-  + JFXButton getNextPageBookButton()
-  + JFXButton getPrevPageBookButton()
-  + JFXButton getAddBookButton()
-  + JFXListView<EditBox> getListViewBooks()
-  + ArrayList<Suggestion> getListBooks()
-  + TextField getPageUserNumberTextField()
-  + JFXButton getNextPageUserButton()
-  + JFXButton getPrevPageUserButton()
-  + JFXButton getAddUserButton()
-  + JFXListView<EditBox> getListViewUsers()
-  + ArrayList<Suggestion> getListUsers()
-  + TextField getBookSuggestionsTextField()
-  + JFXButton getRemoveButton()
-  + JFXListView<SuggestionView> getGoogleBooksListView()
+  + getter()
   - void initialize()
   - void initListView()
   - void switchToNextPageBook()
@@ -1482,10 +1365,6 @@ StartController --> Preferences : uses
 UsersController --> SuggestionView : contains
 UsersController --> Suggestion : contains
 WaitingController --> Transition : uses
-
-
-
-
 
 
 @enduml
