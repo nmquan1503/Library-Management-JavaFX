@@ -83,6 +83,9 @@ public class ReturnBookController implements MainInfo {
 
   @FXML
   private Label pageNumber;
+  /**
+   * oke.
+   */
   private int pageNow = 1;
 
   @FXML
@@ -219,17 +222,23 @@ public class ReturnBookController implements MainInfo {
   @FXML
   private Label successLabel;
 
+  /**
+   * oke.
+   */
   private void addBox() {
     if (!sortBox.getItems().isEmpty()) {
       return;
     }
     sortBox.getItems().addAll(
-        "Tìm Kiếm Theo Người Mượn",
-        "Tìm Kiếm Theo Sách"
+            "Tìm Kiếm Theo Người Mượn",
+            "Tìm Kiếm Theo Sách"
     );
     sortBox.setValue("Tìm Kiếm Theo Người Mượn");
   }
 
+  /**
+   * oke.
+   */
   @FXML
   private void rightController() {
     pageNow++;
@@ -243,10 +252,13 @@ public class ReturnBookController implements MainInfo {
       x = 5 * pageNow;
     }
     tableView.setItems(
-        FXCollections.observableArrayList(dataList.subList(5 * (pageNow - 1), x)));
+            FXCollections.observableArrayList(dataList.subList(5 * (pageNow - 1), x)));
     updateVisibleReturnButton();
   }
 
+  /**
+   * oke.
+   */
   @FXML
   private void leftController() {
     pageNow--;
@@ -259,14 +271,20 @@ public class ReturnBookController implements MainInfo {
     }
     x = 5 * pageNow;
     tableView.setItems(
-        FXCollections.observableArrayList(dataList.subList(5 * (pageNow - 1), x)));
+            FXCollections.observableArrayList(dataList.subList(5 * (pageNow - 1), x)));
     updateVisibleReturnButton();
   }
 
+  /**
+   * oke.
+   */
   public void setPageNumber(int x) {
     pageNumber.setText("" + 1);
   }
 
+  /**
+   * oke.
+   */
   public void updateHistory(int userID) {
     pageNow = 1;
     if (userID != -2) {
@@ -302,7 +320,7 @@ public class ReturnBookController implements MainInfo {
           String dueDateFormatted = dueDate.format(formatter);
 
           returnTableData tableData = new returnTableData(user, nameBook,
-              borrowedDateFormatted, dueDateFormatted);
+                  borrowedDateFormatted, dueDateFormatted);
           tableData.setIdUser(userList.getUser(x.getIdUser()).getId());
           tableData.setIdBook(bookList.getBook(x.getIdBook()).getId());
           tableData.setDue(dueDate);
@@ -339,7 +357,7 @@ public class ReturnBookController implements MainInfo {
         }
         int x = Math.min(dataList.size(), pageNow * 5);
         tableView.setItems(
-            FXCollections.observableArrayList(dataList.subList(5 * (pageNow - 1), x))
+                FXCollections.observableArrayList(dataList.subList(5 * (pageNow - 1), x))
         );
 
         right.setDisable(dataList.size() <= 5);
@@ -360,6 +378,9 @@ public class ReturnBookController implements MainInfo {
   }
 
 
+  /**
+   * oke.
+   */
   public void updateHistory1(int bookID) {
     pageNow = 1;
     if (bookID != -2) {
@@ -421,7 +442,7 @@ public class ReturnBookController implements MainInfo {
     }
     int x = Math.min(dataList.size(), pageNow * 5);
     tableView.setItems(
-        FXCollections.observableArrayList(dataList.subList(5 * (pageNow - 1), x)));
+            FXCollections.observableArrayList(dataList.subList(5 * (pageNow - 1), x)));
     if (dataList.size() > 5) {
       right.setDisable(false);
     } else {
@@ -430,6 +451,9 @@ public class ReturnBookController implements MainInfo {
     updateVisibleReturnButton();
   }
 
+  /**
+   * oke.
+   */
   private void createErrorText(String content) {
 
     if (wrongNotification.isVisible()) {
@@ -446,7 +470,7 @@ public class ReturnBookController implements MainInfo {
     }
     wrongNotification.setVisible(true);
     ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(0.2),
-        wrongNotification);
+            wrongNotification);
     wrongNotification.setText(content);
     scaleTransition.setFromX(0);  // Bắt đầu từ kích thước 0 (nhỏ tí)
     scaleTransition.setFromY(0);
@@ -454,7 +478,7 @@ public class ReturnBookController implements MainInfo {
     scaleTransition.setToY(1);
     PauseTransition pause1 = new PauseTransition(Duration.seconds(1.5));
     ScaleTransition scaleDown = new ScaleTransition(Duration.seconds(0.2),
-        wrongNotification);
+            wrongNotification);
     scaleDown.setFromX(1);  // Bắt đầu từ kích thước gốc
     scaleDown.setFromY(1);
     scaleDown.setToX(0);    // Thu nhỏ lại về kích thước 0
@@ -462,11 +486,14 @@ public class ReturnBookController implements MainInfo {
 
     // Tạo SequentialTransition để nối hai animation lại với nhau
     SequentialTransition sequentialTransition = new SequentialTransition(scaleTransition,
-        pause1, scaleDown);
+            pause1, scaleDown);
     sequentialTransition.setOnFinished(event -> wrongNotification.setVisible(false));
     sequentialTransition.play();
   }
 
+  /**
+   * oke.
+   */
   @FXML
   private void searchButtonController() {
     if (userIdBox.isVisible()) {
@@ -477,7 +504,6 @@ public class ReturnBookController implements MainInfo {
       int id = Integer.parseInt(userIdBox.getText());
       User user = userList.getUser(id);
       if (user == null) {
-        System.out.println("YES");
         userSearchBox.setText("");
         createErrorText("User ID không tồn tại");
         return;
@@ -500,10 +526,16 @@ public class ReturnBookController implements MainInfo {
     }
   }
 
+  /**
+   * oke.
+   */
   private void searchButtonController1() {
     updateHistory(-2);
   }
 
+  /**
+   * oke.
+   */
   private void updateVisibleReturnButton() {
     button1.setVisible(true);
     button1.setDisable(false);
@@ -542,6 +574,9 @@ public class ReturnBookController implements MainInfo {
     }
   }
 
+  /**
+   * oke.
+   */
   private void createPaneTransition() {
     if (returnPane.isVisible()) {
       return;
@@ -554,7 +589,7 @@ public class ReturnBookController implements MainInfo {
     });
     returnPane.setVisible(true);
     ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(0.5),
-        returnPane);
+            returnPane);
     scaleTransition.setFromX(0);
     scaleTransition.setFromY(0);
     scaleTransition.setToX(1);
@@ -566,8 +601,14 @@ public class ReturnBookController implements MainInfo {
     sequentialTransition.play();
   }
 
+  /**
+   * oke.
+   */
   private returnTableData returnProcessing;
 
+  /**
+   * oke.
+   */
   @FXML
   private void returnAction(ActionEvent actionEvent) {
     createPaneTransition();
@@ -593,14 +634,14 @@ public class ReturnBookController implements MainInfo {
       userAvatar.setImage(image);
     } else {
       userAvatar.setImage(new Image(
-          getClass().getResource("/org/example/demo/Assets/default_avt_user.jpg")
-              .toExternalForm()));
+              getClass().getResource("/org/example/demo/Assets/default_avt_user.jpg")
+                      .toExternalForm()));
     }
     String s = bookList.getBook(returnProcessing.getIdBook()).getImageLink();
     if (s == null || s.isEmpty()) {
       bookAvatar.setImage(
-          new Image(getClass().getResource("/org/example/demo/Assets/basic.jpg")
-              .toExternalForm()));
+              new Image(getClass().getResource("/org/example/demo/Assets/basic.jpg")
+                      .toExternalForm()));
     } else {
       //System.out.println(s);
       new Thread(() -> {
@@ -619,10 +660,13 @@ public class ReturnBookController implements MainInfo {
     datePicker.setValue(returnProcessing.getDue());
   }
 
+  /**
+   * oke.
+   */
   @FXML
   private void closeAction() {
     ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(0.5),
-        returnPane);
+            returnPane);
     scaleTransition.setFromX(1);  // Bắt đầu từ kích thước 0 (nhỏ tí)
     scaleTransition.setFromY(1);
     scaleTransition.setToX(0);    // Kết thúc ở kích thước gốc
@@ -645,6 +689,9 @@ public class ReturnBookController implements MainInfo {
     sequentialTransition.play();
   }
 
+  /**
+   * oke.
+   */
   @FXML
   private void returnButtonAction() {
     returnPane.getChildren().forEach(node -> {
@@ -668,6 +715,9 @@ public class ReturnBookController implements MainInfo {
     declineButton.setText(" No");
   }
 
+  /**
+   * oke.
+   */
   @FXML
   private void changeButtonAction() {
     returnPane.getChildren().forEach(node -> {
@@ -691,6 +741,9 @@ public class ReturnBookController implements MainInfo {
     declineButton.setText(" No");
   }
 
+  /**
+   * oke.
+   */
   @FXML
   private void DeclineButtonAction() {
     returnPane.getChildren().forEach(node -> {
@@ -707,6 +760,9 @@ public class ReturnBookController implements MainInfo {
   private Timer timer;
   private Timer timer1;
 
+  /**
+   * oke.
+   */
   @FXML
   private void initialize() {
     addBox();
@@ -716,7 +772,7 @@ public class ReturnBookController implements MainInfo {
     sortBox.valueProperty().addListener((observable, oldValue, newValue) -> {
       if (oldValue != newValue) {
         if (newValue.equals("Tìm Kiếm Theo Người Mượn") || newValue.equals(
-            "Search By Borrower")) {
+                "Search By Borrower")) {
           bookIdBox.clear();
           bookSearchBox.clear();
           userIdBox.setVisible(true);
@@ -779,7 +835,7 @@ public class ReturnBookController implements MainInfo {
 
       @Override
       public void changed(ObservableValue<? extends Boolean> observableValue,
-          Boolean oldValue, Boolean newValue) {
+              Boolean oldValue, Boolean newValue) {
         if (!newValue) {
           suggestionUser.setVisible(true);
           suggestionUser.getItems().clear();
@@ -795,7 +851,7 @@ public class ReturnBookController implements MainInfo {
           suggestionUser.setVisible(true);
           CreateUserSuggestions();
           if (!Pane1.getStyleClass().contains("newShape")
-              && suggestionUser.getHeight() > 0) {
+                  && suggestionUser.getHeight() > 0) {
             Pane1.getStyleClass().add("newShape");
           }
         }
@@ -806,7 +862,7 @@ public class ReturnBookController implements MainInfo {
 
       @Override
       public void changed(ObservableValue<? extends Boolean> observableValue,
-          Boolean oldValue, Boolean newValue) {
+              Boolean oldValue, Boolean newValue) {
         if (!newValue) {
           suggestionUser.setVisible(true);
           suggestionUser.getItems().clear();
@@ -822,7 +878,7 @@ public class ReturnBookController implements MainInfo {
           suggestionUser.setVisible(true);
           CreateBookSuggestions();
           if (!Pane1.getStyleClass().contains("newShape")
-              && suggestionUser.getHeight() > 0) {
+                  && suggestionUser.getHeight() > 0) {
             Pane1.getStyleClass().add("newShape");
           }
         }
@@ -866,7 +922,7 @@ public class ReturnBookController implements MainInfo {
             // Chạy Task trong một thread riêng biệt
             Thread taskThread = new Thread(searchTask);
             taskThread.setDaemon(
-                true);  // Đảm bảo thread không chặn việc thoát ứng dụng
+                    true);  // Đảm bảo thread không chặn việc thoát ứng dụng
             taskThread.start();
           }
         }, 100);
@@ -908,7 +964,7 @@ public class ReturnBookController implements MainInfo {
             // Chạy Task trong một thread riêng biệt
             Thread taskThread = new Thread(searchTask);
             taskThread.setDaemon(
-                true);  // Đảm bảo thread không chặn việc thoát ứng dụng
+                    true);  // Đảm bảo thread không chặn việc thoát ứng dụng
             taskThread.start();
           }
         }, 100);
@@ -916,64 +972,64 @@ public class ReturnBookController implements MainInfo {
     });
 
     suggestionUser.getSelectionModel().selectedItemProperty()
-        .addListener((observable, oldValue, newValue) -> {
-          if (suggestionUser.getItems().isEmpty()) {
-            return;
-          }
-          if (newValue != null) {
-
-            Task<Void> updateTask = new Task<Void>() {
-              @Override
-              protected Void call() {
-                Platform.runLater(() -> {
-                  Pane1.requestFocus();
-                  if (userSearchBox.isVisible()) {
-                    userSearchBox.setText(
-                        newValue.getContent()); // Đặt giá trị của TextField thành gợi ý đã chọn
-
-                    userIdBox.setText("" + newValue.getID());
-                    updateHistory(newValue.getID());
-                    userSearchBox.positionCaret(
-                        userSearchBox.getText().length());
-                  } else {
-                    bookSearchBox.setText(
-                        newValue.getContent()); // Đặt giá trị của TextField thành gợi ý đã chọn
-
-                    bookIdBox.setText("" + newValue.getID());
-                    updateHistory1(newValue.getID());
-                    bookSearchBox.positionCaret(
-                        bookSearchBox.getText().length());
-                  }
-                  if (!suggestionUser.getItems().isEmpty()) {
-                    suggestionUser.getItems().clear();
-                    suggestionUser.setVisible(false);
-                    suggestionUser.setMinHeight(0);
-                    suggestionUser.setMaxHeight(0);
-                    VBox1.setMinHeight(35);
-                    VBox1.setMaxHeight(35);
-                    // Xóa class "newShape" khỏi Pane1 nếu tồn tại
-                    if (Pane1.getStyleClass().contains("newShape")) {
-                      Pane1.getStyleClass().remove("newShape");
-                    }
-                  }
-                });
-                return null;
+            .addListener((observable, oldValue, newValue) -> {
+              if (suggestionUser.getItems().isEmpty()) {
+                return;
               }
-            };
-            new Thread(updateTask).start();
-          }
-        });
+              if (newValue != null) {
+
+                Task<Void> updateTask = new Task<Void>() {
+                  @Override
+                  protected Void call() {
+                    Platform.runLater(() -> {
+                      Pane1.requestFocus();
+                      if (userSearchBox.isVisible()) {
+                        userSearchBox.setText(
+                                newValue.getContent()); // Đặt giá trị của TextField thành gợi ý đã chọn
+
+                        userIdBox.setText("" + newValue.getID());
+                        updateHistory(newValue.getID());
+                        userSearchBox.positionCaret(
+                                userSearchBox.getText().length());
+                      } else {
+                        bookSearchBox.setText(
+                                newValue.getContent()); // Đặt giá trị của TextField thành gợi ý đã chọn
+
+                        bookIdBox.setText("" + newValue.getID());
+                        updateHistory1(newValue.getID());
+                        bookSearchBox.positionCaret(
+                                bookSearchBox.getText().length());
+                      }
+                      if (!suggestionUser.getItems().isEmpty()) {
+                        suggestionUser.getItems().clear();
+                        suggestionUser.setVisible(false);
+                        suggestionUser.setMinHeight(0);
+                        suggestionUser.setMaxHeight(0);
+                        VBox1.setMinHeight(35);
+                        VBox1.setMaxHeight(35);
+                        // Xóa class "newShape" khỏi Pane1 nếu tồn tại
+                        if (Pane1.getStyleClass().contains("newShape")) {
+                          Pane1.getStyleClass().remove("newShape");
+                        }
+                      }
+                    });
+                    return null;
+                  }
+                };
+                new Thread(updateTask).start();
+              }
+            });
 
     borrowedDateColumn.setReorderable(false);
     userColumn.setReorderable(false);
     bookColumn.setReorderable(false);
     dueDateColumn.setReorderable(false);
     borrowedDateColumn.setCellValueFactory(
-        new PropertyValueFactory<returnTableData, String>("borrowedDate"));
+            new PropertyValueFactory<returnTableData, String>("borrowedDate"));
     userColumn.setCellValueFactory(new PropertyValueFactory<returnTableData, String>("user"));
     bookColumn.setCellValueFactory(new PropertyValueFactory<returnTableData, String>("book"));
     dueDateColumn.setCellValueFactory(
-        new PropertyValueFactory<returnTableData, String>("dueDate"));
+            new PropertyValueFactory<returnTableData, String>("dueDate"));
 
     bookColumn.setCellFactory(tc -> {
       return new javafx.scene.control.TableCell<returnTableData, String>() {
@@ -989,9 +1045,9 @@ public class ReturnBookController implements MainInfo {
             String sanitizedText = item.replace("\n", "").trim();
             text.setText(sanitizedText);
             text.wrappingWidthProperty()
-                .bind(getTableColumn().widthProperty()); // Đặt wrappingWidth để tự động xuống dòng
+                    .bind(getTableColumn().widthProperty()); // Đặt wrappingWidth để tự động xuống dòng
             text.setStyle(
-                "-fx-fill: #8e8e8e;-fx-font-size: 17px;");
+                    "-fx-fill: #8e8e8e;-fx-font-size: 17px;");
             text.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
             setAlignment(javafx.geometry.Pos.CENTER); // Căn giữa nội dung trong ô
             setGraphic(text);
@@ -1012,9 +1068,9 @@ public class ReturnBookController implements MainInfo {
             String sanitizedText = item.replace("\n", "").trim();
             text.setText(sanitizedText);
             text.wrappingWidthProperty()
-                .bind(getTableColumn().widthProperty()); // Đặt wrappingWidth để tự động xuống dòng
+                    .bind(getTableColumn().widthProperty()); // Đặt wrappingWidth để tự động xuống dòng
             text.setStyle(
-                "-fx-fill: #8e8e8e;-fx-font-size: 17px;");
+                    "-fx-fill: #8e8e8e;-fx-font-size: 17px;");
             text.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
             setAlignment(javafx.geometry.Pos.CENTER); // Căn giữa nội dung trong ô
             setGraphic(text);
@@ -1025,11 +1081,14 @@ public class ReturnBookController implements MainInfo {
     updateHistory(-1);
     tableView.setPrefHeight(5 * 55 + 54);
     tableView.setItems(
-        FXCollections.observableArrayList(
-            dataList.subList(0, Math.min(5, dataList.size()))));
+            FXCollections.observableArrayList(
+                    dataList.subList(0, Math.min(5, dataList.size()))));
     updateVisibleReturnButton();
   }
 
+  /**
+   * oke.
+   */
   private void CreateUserSuggestions() {
     String prefixName = userSearchBox.getText();
     if (prefixName.isEmpty()) {
@@ -1046,7 +1105,7 @@ public class ReturnBookController implements MainInfo {
     }
     Thread thread = new Thread(() -> {
       ArrayList<Suggestion> listSuggestions = Library.getInstance()
-          .getUserSuggestions(prefixName);
+              .getUserSuggestions(prefixName);
       ObservableList<SuggestionView> observableList = FXCollections.observableArrayList();
 
       Platform.runLater(() -> {
@@ -1078,6 +1137,9 @@ public class ReturnBookController implements MainInfo {
     thread.start();
   }
 
+  /**
+   * oke.
+   */
   private void CreateBookSuggestions() {
     String prefixName = bookSearchBox.getText();
     if (prefixName.isEmpty()) {
@@ -1094,7 +1156,7 @@ public class ReturnBookController implements MainInfo {
     }
     Thread thread = new Thread(() -> {
       ArrayList<Suggestion> listSuggestions = Library.getInstance()
-          .getBookSuggestions(prefixName);
+              .getBookSuggestions(prefixName);
       ObservableList<SuggestionView> observableList = FXCollections.observableArrayList();
 
       Platform.runLater(() -> {
@@ -1126,10 +1188,13 @@ public class ReturnBookController implements MainInfo {
     thread.start();
   }
 
+  /**
+   * oke.
+   */
   @FXML
   private void confirmButtonAction() {
     if (confirmTitle.getText().equals("Thay Đổi Hạn Trả Sách") || confirmTitle.getText()
-        .equals("Changing Book's Due Date")) {
+            .equals("Changing Book's Due Date")) {
       LocalDate date = datePicker.getValue();
       Date x = new Date(date.getYear(), date.getMonthValue(), date.getDayOfMonth());
       if (x.isBefore(Date.today())) {
@@ -1167,17 +1232,20 @@ public class ReturnBookController implements MainInfo {
     backButton.setStyle("-fx-background-color: #d5e6f9;");
     gifView.setImage(new Image(getClass().getResource("/images/success.gif").toExternalForm()));
     PauseTransition delay = new PauseTransition(
-        Duration.seconds(2)); // Thời gian delay bằng với thời lượng GIF
+            Duration.seconds(2)); // Thời gian delay bằng với thời lượng GIF
     delay.setOnFinished(e -> {
       backButton.setDisable(false);
       gifView.setImage(
-          new Image(getClass().getResource("/images/sucessimage.png").toExternalForm()));
+              new Image(getClass().getResource("/images/sucessimage.png").toExternalForm()));
       backButton.setStyle("-fx-background-color: #4899f7;-fx-font-size:13px;");
 
     });
     delay.play();
   }
 
+  /**
+   * oke.
+   */
   @FXML
   private void backButtonAction() {
     DeclineButtonAction();
@@ -1207,6 +1275,9 @@ public class ReturnBookController implements MainInfo {
     BaseController.setDueUpdate(1 - BaseController.getDueUpdate());
   }
 
+  /**
+   * oke.
+   */
   public void refresh() {
     returnPane.setVisible(false);
     returnPane.setDisable(true);
@@ -1239,6 +1310,9 @@ public class ReturnBookController implements MainInfo {
   }
 
 
+  /**
+   * oke.
+   */
   @Override
   public void applyDarkMode(boolean isDark) {
     if (isDark) {
@@ -1266,9 +1340,13 @@ public class ReturnBookController implements MainInfo {
   }
 
   // Không gọi setUpLanguage ở đây
+
+  /**
+   * oke.
+   */
   @Override
   public void applyTranslate(HashMap<Object, String> viLang, HashMap<Object, String> enLang,
-      boolean isTranslate) {
+          boolean isTranslate) {
     if (isTranslate) {
       titleLabel.setText("Return Book Interface");
 
@@ -1344,6 +1422,10 @@ public class ReturnBookController implements MainInfo {
   }
 
   // viLang lưu nội dung tiếng Việt gắn với Object, enLang lưu tiếng Anh
+
+  /**
+   * oke.
+   */
   @Override
   public void setUpLanguage(HashMap<Object, String> viLang, HashMap<Object, String> enLang) {
 

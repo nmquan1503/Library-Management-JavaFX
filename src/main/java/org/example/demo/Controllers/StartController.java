@@ -95,31 +95,64 @@ public class StartController {
   private Preferences prefs;
 
 
+  /**
+   * oke.
+   */
   private static int id;
 
   public StartController() {
     prefs = Preferences.userNodeForPackage(StartController.class);
   }
 
+  /**
+   * oke.
+   */
   private static final String PREF_ACCOUNT = "account";
+  /**
+   * oke.
+   */
   private static final String PREF_PASSWORD = "password";
+  /**
+   * oke.
+   */
   private static final String PREF_REMEMBER_ME = "rememberMe";
 
   private Image[] images;
+  /**
+   * oke.
+   */
   private int currentImageIndex = 0;
   private Timeline timeline;
+  /**
+   * oke.
+   */
   private boolean forward = true;
+  /**
+   * oke.
+   */
   private long lastUpdate = 0; // Thời gian cập nhật lần cuối
+  /**
+   * oke.
+   */
   private long spacetimeInNano = (long) (50_000_000); // Chuyển đổi spacetime sang nano giây
 
+  /**
+   * oke.
+   */
   public void BackgroundRequest() {
     BackgroundPane.requestFocus();
   }
 
+  /**
+   * oke.
+   */
   public void mainRequest() {
     mainPane.requestFocus();
   }
 
+  /**
+   * oke.
+   */
   @FXML
   public void togglePasswordVisibility() {
     if (passwordField.isVisible()) {
@@ -150,11 +183,17 @@ public class StartController {
     }
   }
 
+  /**
+   * oke.
+   */
   public void removeAccount() {
     accountField.setText("");
     accountField.requestFocus();
   }
 
+  /**
+   * oke.
+   */
   public void removePassword() {
     passwordField.setText("");
     passwordText.setText("");
@@ -165,11 +204,14 @@ public class StartController {
     }
   }
 
+  /**
+   * oke.
+   */
   public void updateLogin() {
     if (!accountField.getText().isEmpty() && (!passwordField.getText().isEmpty())
-        && !passwordText.getText().isEmpty()) {
+            && !passwordText.getText().isEmpty()) {
       LogIn.setStyle(
-          "-fx-background-color: rgba(250, 110, 150, 1);-fx-text-fill: white;"); // Đổi màu khi cả hai trường đều có chữ
+              "-fx-background-color: rgba(250, 110, 150, 1);-fx-text-fill: white;"); // Đổi màu khi cả hai trường đều có chữ
       LogIn.setDisable(false);
 
     } else {
@@ -179,63 +221,75 @@ public class StartController {
     }
   }
 
+  /**
+   * oke.
+   */
   private void updateImage() {
     images = new Image[]{
-        new Image(getClass().getResource("/images/openeye.png").toExternalForm()),
-        new Image(getClass().getResource("/images/hideeye1.png").toExternalForm()),
-        new Image(getClass().getResource("/images/hideeye2.png").toExternalForm()),
-        new Image(getClass().getResource("/images/hideeye3.png").toExternalForm()),
-        new Image(getClass().getResource("/images/hideeye4.png").toExternalForm()),
-        new Image(getClass().getResource("/images/hideeye5.png").toExternalForm())
+            new Image(getClass().getResource("/images/openeye.png").toExternalForm()),
+            new Image(getClass().getResource("/images/hideeye1.png").toExternalForm()),
+            new Image(getClass().getResource("/images/hideeye2.png").toExternalForm()),
+            new Image(getClass().getResource("/images/hideeye3.png").toExternalForm()),
+            new Image(getClass().getResource("/images/hideeye4.png").toExternalForm()),
+            new Image(getClass().getResource("/images/hideeye5.png").toExternalForm())
     };
   }
 
+  /**
+   * oke.
+   */
   private void setdefaultImage() {
     images = new Image[]{
-        new Image(getClass().getResource("/images/openeye.png").toExternalForm()),
-        new Image(getClass().getResource("/images/closeeye.png").toExternalForm()),
-        new Image(getClass().getResource("/images/halfeye.png").toExternalForm()),
-        new Image(getClass().getResource("/images/openeye.png").toExternalForm())
+            new Image(getClass().getResource("/images/openeye.png").toExternalForm()),
+            new Image(getClass().getResource("/images/closeeye.png").toExternalForm()),
+            new Image(getClass().getResource("/images/halfeye.png").toExternalForm()),
+            new Image(getClass().getResource("/images/openeye.png").toExternalForm())
     };
   }
 
+  /**
+   * oke.
+   */
   private void setTihiImage(boolean level) {
     if (level == true) {
       images = new Image[]{
-          new Image(getClass().getResource("/images/openeye.png").toExternalForm()),
-          new Image(getClass().getResource("/images/hideeye1.png").toExternalForm()),
-          new Image(getClass().getResource("/images/hideeye2.png").toExternalForm()),
-          new Image(getClass().getResource("/images/hideeye3.png").toExternalForm()),
-          new Image(getClass().getResource("/images/hideeye4.png").toExternalForm()),
-          new Image(getClass().getResource("/images/hideeye5.png").toExternalForm()),
-          new Image(getClass().getResource("/images/tihi1.png").toExternalForm()),
-          new Image(getClass().getResource("/images/tihi2.png").toExternalForm()),
-          new Image(getClass().getResource("/images/tihi3.png").toExternalForm()),
-          new Image(getClass().getResource("/images/tihi4.png").toExternalForm()),
+              new Image(getClass().getResource("/images/openeye.png").toExternalForm()),
+              new Image(getClass().getResource("/images/hideeye1.png").toExternalForm()),
+              new Image(getClass().getResource("/images/hideeye2.png").toExternalForm()),
+              new Image(getClass().getResource("/images/hideeye3.png").toExternalForm()),
+              new Image(getClass().getResource("/images/hideeye4.png").toExternalForm()),
+              new Image(getClass().getResource("/images/hideeye5.png").toExternalForm()),
+              new Image(getClass().getResource("/images/tihi1.png").toExternalForm()),
+              new Image(getClass().getResource("/images/tihi2.png").toExternalForm()),
+              new Image(getClass().getResource("/images/tihi3.png").toExternalForm()),
+              new Image(getClass().getResource("/images/tihi4.png").toExternalForm()),
       };
     } else {
       images = new Image[]{
-          new Image(getClass().getResource("/images/hideeye5.png").toExternalForm()),
-          new Image(getClass().getResource("/images/tihi1.png").toExternalForm()),
-          new Image(getClass().getResource("/images/tihi2.png").toExternalForm()),
-          new Image(getClass().getResource("/images/tihi3.png").toExternalForm()),
-          new Image(getClass().getResource("/images/tihi4.png").toExternalForm()),
+              new Image(getClass().getResource("/images/hideeye5.png").toExternalForm()),
+              new Image(getClass().getResource("/images/tihi1.png").toExternalForm()),
+              new Image(getClass().getResource("/images/tihi2.png").toExternalForm()),
+              new Image(getClass().getResource("/images/tihi3.png").toExternalForm()),
+              new Image(getClass().getResource("/images/tihi4.png").toExternalForm()),
       };
     }
   }
 
+  /**
+   * oke.
+   */
   public void LogInController(ActionEvent event) throws IOException {
     String tk = accountField.getText();
     String mk =
-        eyeIcon.getGlyphName().equals("EYE") ? passwordText.getText()
-            : passwordField.getText();
+            eyeIcon.getGlyphName().equals("EYE") ? passwordText.getText()
+                    : passwordField.getText();
     boolean check = false;
 
     // Tạo một loading indicator
 
     loadingIndicator.setVisible(true);
     loadingIndicator.setImage(new Image(
-        getClass().getResource("/images/Ripple@1x-1.0s-200px-200px.gif").toExternalForm()));
+            getClass().getResource("/images/Ripple@1x-1.0s-200px-200px.gif").toExternalForm()));
     LogIn.setRipplerFill(null);
     LogIn.setDisable(true);
     LogIn.setStyle(""); // Khôi phục màu mặc định nếu không đủ điều kiện;
@@ -285,11 +339,11 @@ public class StartController {
         long elapsedTime = endTime - startTime; // Tính thời gian thực hiện
         Random random = new Random();
         long minLoadTime =
-            1500 + random.nextInt(2000 - 1500 + 1); // Thời gian tối thiểu (1 giây)
+                1500 + random.nextInt(2000 - 1500 + 1); // Thời gian tối thiểu (1 giây)
 
         // Dùng PauseTransition để đảm bảo thời gian chờ tối thiểu
         PauseTransition pause = new PauseTransition(
-            Duration.millis(Math.max(elapsedTime, minLoadTime)));
+                Duration.millis(Math.max(elapsedTime, minLoadTime)));
         pause.setOnFinished(e -> {
 
           if (!check) {
@@ -297,14 +351,14 @@ public class StartController {
             updateLogin();
             wrongNotification.setVisible(true);
             ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(0.2),
-                wrongNotification);
+                    wrongNotification);
             scaleTransition.setFromX(0);  // Bắt đầu từ kích thước 0 (nhỏ tí)
             scaleTransition.setFromY(0);
             scaleTransition.setToX(1);    // Kết thúc ở kích thước gốc
             scaleTransition.setToY(1);
             PauseTransition pause1 = new PauseTransition(Duration.seconds(1.0));
             ScaleTransition scaleDown = new ScaleTransition(Duration.seconds(0.2),
-                wrongNotification);
+                    wrongNotification);
             scaleDown.setFromX(1);  // Bắt đầu từ kích thước gốc
             scaleDown.setFromY(1);
             scaleDown.setToX(0);    // Thu nhỏ lại về kích thước 0
@@ -312,8 +366,8 @@ public class StartController {
 
             // Tạo SequentialTransition để nối hai animation lại với nhau
             SequentialTransition sequentialTransition = new SequentialTransition(
-                scaleTransition,
-                pause1, scaleDown);
+                    scaleTransition,
+                    pause1, scaleDown);
             sequentialTransition.play();
 
 
@@ -343,6 +397,9 @@ public class StartController {
     loginThread.start();
   }
 
+  /**
+   * oke.
+   */
   private void loadHomeScene(ActionEvent event) {
     new Thread(() -> {
       // Logic xử lý trong thread
@@ -385,6 +442,9 @@ public class StartController {
   }
 
 
+  /**
+   * oke.
+   */
   @FXML
   public void initialize() {
 
@@ -416,7 +476,7 @@ public class StartController {
     LogIn.setOnMouseEntered(event -> {
       if (!LogIn.isDisable()) { // Kiểm tra nếu nút Log In không bị vô hiệu hóa
         if (!accountField.getText().isEmpty() && (!passwordField.getText().isEmpty())
-            && !passwordText.getText().isEmpty()) {
+                && !passwordText.getText().isEmpty()) {
           LogIn.setCursor(Cursor.HAND);
           LogIn.setDisable(false);
         } else {
@@ -428,7 +488,7 @@ public class StartController {
     LogIn.setOnMousePressed(event -> {
       if (!LogIn.isDisable()) { // Kiểm tra nếu nút Log In không bị vô hiệu hóa
         if (!accountField.getText().isEmpty() && (!passwordField.getText().isEmpty())
-            && !passwordText.getText().isEmpty()) {
+                && !passwordText.getText().isEmpty()) {
           LogIn.setCursor(Cursor.HAND);
           LogIn.setDisable(false);
         } else {
@@ -441,7 +501,7 @@ public class StartController {
     LogIn.setOnMouseReleased(event -> {
       if (!LogIn.isDisable()) {
         if (!accountField.getText().isEmpty() && (!passwordField.getText().isEmpty())
-            && !passwordText.getText().isEmpty()) {
+                && !passwordText.getText().isEmpty()) {
           LogIn.setCursor(Cursor.HAND);
           LogIn.setDisable(false);
         } else {
@@ -476,16 +536,16 @@ public class StartController {
           lastUpdate = now; // Cập nhật thời gian lần cuối
 
           if (passwordField.isFocused() || passwordText.isFocused()
-              || hidePassword.isPressed()) {
+                  || hidePassword.isPressed()) {
             if ((hidePassword.isPressed() || deletePassword.isPressed())
-                && images.length == 4
-                && eyeIcon.getGlyphName().equals("EYE_SLASH")) {
+                    && images.length == 4
+                    && eyeIcon.getGlyphName().equals("EYE_SLASH")) {
               setTihiImage(true);
               currentImageIndex = 0;
               spacetimeInNano = 25_000_000;
             } else if (passwordText.isPressed() && images.length == 4
-                && eyeIcon.getGlyphName()
-                .equals("EYE")) {
+                    && eyeIcon.getGlyphName()
+                    .equals("EYE")) {
               setTihiImage(true);
               currentImageIndex = 0;
               spacetimeInNano = 25_000_000;
@@ -586,7 +646,11 @@ public class StartController {
     animationTimer.start(); // Bắt đầu animation
   }
 
+  /**
+   * oke.
+   */
   public static int getID() {     // lấy id người quản lý
     return id;
   }
 }
+
