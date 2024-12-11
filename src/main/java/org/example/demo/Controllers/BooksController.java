@@ -593,8 +593,8 @@ public class BooksController implements MainInfo {
       pageNumber = 1;
       pageNumberTextField.setText("1");
     }
-      nextPageButton.setVisible(pageNumber < (listSuggestions.size() - 1) / 20 + 1);
-      prevPageButton.setVisible(pageNumber > 1);
+    nextPageButton.setVisible(pageNumber < (listSuggestions.size() - 1) / 20 + 1);
+    prevPageButton.setVisible(pageNumber > 1);
     int start = pageNumber * 20 - 20;
     int end = Math.min(start + 19, listSuggestions.size() - 1);
     Thread thread = new Thread(() -> {
@@ -1107,7 +1107,9 @@ public class BooksController implements MainInfo {
     titleListView.setMaxHeight(0);
     titleListView.setVisible(false);
 
-    initTopChoicesBook();
+    Thread thread = new Thread(() -> {
+      initTopChoicesBook();
+    });
     Search();
 
   }
