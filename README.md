@@ -91,6 +91,7 @@ This project utilizes the following technologies and libraries:
 - **Google Text-to-Speech (TTS) API**: To enable the application to read book information aloud using text-to-speech technology, providing an accessible feature for users.
 - **Google Translate API**: For supporting multi-language translation, allowing users to switch between English and Vietnamese in the application interface.
 - **ZXing Library**: Used for generating QR codes to encode borrower details, enabling quick access to email drafting functionality.
+- **Network Connectivity Management**: Enables the application to seamlessly operate in both online and offline modes by checking and adapting to the network status.
 
 
 ---
