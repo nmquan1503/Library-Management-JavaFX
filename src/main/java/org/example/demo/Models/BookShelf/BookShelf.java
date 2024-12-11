@@ -167,11 +167,11 @@ public class BookShelf {
 
   public ArrayList<Book> getTop3Book(){
     ArrayList<Book> list=new ArrayList<>();
-    String query = "select books.id_book "
+    String query = "select books.id_book as id, count(*) as num "
         + "from books "
         + "left join borrowing on books.id_book = borrowing.id_book "
         + "group by books.id_book "
-        + "order by count(*) desc "
+        + "order by num desc "
         + "limit 3;";
     Connection connection=JDBC.getConnection();
 
@@ -179,7 +179,7 @@ public class BookShelf {
       PreparedStatement statement=connection.prepareStatement(query);
       ResultSet resultSet=statement.executeQuery();
       while (resultSet.next()){
-        int id=resultSet.getInt(1);
+        int id=resultSet.getInt("id");
         list.add(getBook(id));
       }
     }

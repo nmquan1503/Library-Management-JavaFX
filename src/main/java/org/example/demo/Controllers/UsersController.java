@@ -561,6 +561,7 @@ public class UsersController implements MainInfo {
     nameTextField.setText("");
     BanList.scrollTo(0);
     loadUserList();
+    initBannedUsersList();
   }
 
   /**

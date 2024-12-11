@@ -593,8 +593,8 @@ public class BooksController implements MainInfo {
       pageNumber = 1;
       pageNumberTextField.setText("1");
     }
-      nextPageButton.setVisible(pageNumber < (listSuggestions.size() - 1) / 20 + 1);
-      prevPageButton.setVisible(pageNumber > 1);
+    nextPageButton.setVisible(pageNumber < (listSuggestions.size() - 1) / 20 + 1);
+    prevPageButton.setVisible(pageNumber > 1);
     int start = pageNumber * 20 - 20;
     int end = Math.min(start + 19, listSuggestions.size() - 1);
     Thread thread = new Thread(() -> {
@@ -841,7 +841,7 @@ public class BooksController implements MainInfo {
       });
     }
     if (list.size() > 1) {
-      if (list.getFirst().getImageLink() != null && Network.isConnected()) {
+      if (list.get(1).getImageLink() != null && Network.isConnected()) {
         content2.setImage(new Image(list.get(1).getImageLink()));
       }
       content2.setOnMouseClicked(e -> {
@@ -849,7 +849,7 @@ public class BooksController implements MainInfo {
       });
     }
     if (list.size() > 2) {
-      if (list.getFirst().getImageLink() != null && Network.isConnected()) {
+      if (list.get(2).getImageLink() != null && Network.isConnected()) {
         content3.setImage(new Image(list.get(2).getImageLink()));
       }
       content3.setOnMouseClicked(e -> {
@@ -1107,7 +1107,11 @@ public class BooksController implements MainInfo {
     titleListView.setMaxHeight(0);
     titleListView.setVisible(false);
 
+    Thread thread = new Thread(() -> {
+      initTopChoicesBook();
+    });
     Search();
+
   }
 
   /**
