@@ -29,7 +29,10 @@ The application is designed to cater to libraries of all sizes, offering a user-
 - **Home screen**  
 *The Home Screen provides an overview of the Library. It displays key summary information such as the total number of books, borrowers,...*
 ![](image/pic1.png)
-![](image/pic7.png)
+![](image/pic7.png)  
+*The system automatically generates overdue notifications for borrowers who exceed their return deadlines. Additionally, it includes a scanning feature to generate an email draft with borrower details when scanning a specific code.*
+![](image/pic18.png)
+![](image/pic19.png)
 
 
 - **Books Screen**  
@@ -87,6 +90,8 @@ This project utilizes the following technologies and libraries:
 - **Google Books API**: To retrieve book information such as titles, authors, and descriptions from an external source, making it easier to fetch book data.
 - **Google Text-to-Speech (TTS) API**: To enable the application to read book information aloud using text-to-speech technology, providing an accessible feature for users.
 - **Google Translate API**: For supporting multi-language translation, allowing users to switch between English and Vietnamese in the application interface.
+- **ZXing Library**: Used for generating QR codes to encode borrower details, enabling quick access to email drafting functionality.
+- **Network Connectivity Management**: Enables the application to seamlessly operate in both online and offline modes by checking and adapting to the network status.
 
 
 ---
@@ -102,5 +107,5 @@ Download and install MySQL from [MySQL official website](https://dev.mysql.com/d
     - Import this file into MySQL to create the necessary database schema and tables.
     - You can use a MySQL management tool like [MySQL Workbench](https://dev.mysql.com/downloads/workbench/) or run the SQL script directly from the MySQL command line.
 - **Open the Project in IntelliJ**  
-After installing IntelliJ, open the project folder in IntelliJ IDEA. IntelliJ will automatically detect the project settings, and you can start coding and running the application.
+After installing IntelliJ, open the project folder in IntelliJ IDEA. IntelliJ will automatically detect the project settings, and you can start coding and running the application. You can log in using the account already added in the database with the username "admin" and password "admin".
 
