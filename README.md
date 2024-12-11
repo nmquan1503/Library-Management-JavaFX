@@ -29,7 +29,10 @@ The application is designed to cater to libraries of all sizes, offering a user-
 - **Home screen**  
 *The Home Screen provides an overview of the Library. It displays key summary information such as the total number of books, borrowers,...*
 ![](image/pic1.png)
-![](image/pic7.png)
+![](image/pic7.png)  
+*The system automatically generates overdue notifications for borrowers who exceed their return deadlines. Additionally, it includes a scanning feature to generate an email draft with borrower details when scanning a specific code.*
+![](image/pic18.png)
+![](image/pic19.png)
 
 
 - **Books Screen**  
@@ -87,6 +90,7 @@ This project utilizes the following technologies and libraries:
 - **Google Books API**: To retrieve book information such as titles, authors, and descriptions from an external source, making it easier to fetch book data.
 - **Google Text-to-Speech (TTS) API**: To enable the application to read book information aloud using text-to-speech technology, providing an accessible feature for users.
 - **Google Translate API**: For supporting multi-language translation, allowing users to switch between English and Vietnamese in the application interface.
+- **ZXing Library**: Used for generating QR codes to encode borrower details, enabling quick access to email drafting functionality.
 
 
 ---
