@@ -107,5 +107,5 @@ Download and install MySQL from [MySQL official website](https://dev.mysql.com/d
     - Import this file into MySQL to create the necessary database schema and tables.
     - You can use a MySQL management tool like [MySQL Workbench](https://dev.mysql.com/downloads/workbench/) or run the SQL script directly from the MySQL command line.
 - **Open the Project in IntelliJ**  
-After installing IntelliJ, open the project folder in IntelliJ IDEA. IntelliJ will automatically detect the project settings, and you can start coding and running the application.
+After installing IntelliJ, open the project folder in IntelliJ IDEA. IntelliJ will automatically detect the project settings, and you can start coding and running the application. You can log in using the account already added in the database with the username "admin" and password "admin".
 
