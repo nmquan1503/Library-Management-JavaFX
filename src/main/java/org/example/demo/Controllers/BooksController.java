@@ -1107,7 +1107,10 @@ public class BooksController implements MainInfo {
     titleListView.setMaxHeight(0);
     titleListView.setVisible(false);
 
-    initTopChoicesBook();
+    Thread thread=new Thread(()->{
+      initTopChoicesBook();
+    });
+    thread.start();
     Search();
 
   }
